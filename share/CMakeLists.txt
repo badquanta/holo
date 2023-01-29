@@ -1,0 +1,1 @@
+configure_file(Hack-Regular.ttf Hack-Regular.ttf COPYONLY)

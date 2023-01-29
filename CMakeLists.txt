@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.8)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(holo)
+
+
+set(SDL2PP_WITH_IMAGE ON)
+set(SDL2PP_WITH_MIXER ON)
+set(SDL2PP_WITH_TTF ON)
+add_subdirectory(ext/libSDL2pp)
+add_subdirectory(ext/boost)
+#find_package(SDL2 REQUIRED)
+#find_package(SDL2_image REQUIRED)
+add_subdirectory(share)
+add_subdirectory(src)
