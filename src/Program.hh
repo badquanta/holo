@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "SdlRootEvt.hh"
+#include "holo-cfg.hh"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2pp/Font.hh>
@@ -12,8 +13,10 @@
 #include <SDL2pp/SDLMixer.hh>
 #include <SDL2pp/SDLTTF.hh>
 #include <SDL2pp/Texture.hh>
+#include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
+#include <filesystem>
 namespace holo {
   /** Program/Engine wrapper
    * \ingroup general
@@ -22,9 +25,10 @@ namespace holo {
     public:
       using sRenderer = std::shared_ptr<SDL2pp::Renderer>;
       using sPtr      = std::shared_ptr<Program>;
-      static sPtr Init();
+      static sPtr Get();
       static bool Configure(int, char*[]);
       using CliHelp = boost::program_options::options_description;
+      static boost::filesystem::path const location;
 
     private:
       static sPtr instance;

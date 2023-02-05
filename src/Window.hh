@@ -62,7 +62,7 @@ namespace holo {
       /** Event tree associated with this window instance. */
       std::shared_ptr<SdlRootEvt> const events{ std::make_shared<SdlRootEvt>() };
       /** Reference to the `Program` singleton. */
-      Program::sPtr const               program{ Program::Init() };
+      Program::sPtr const               program{ Program::Get() };
       /** Rendering callbacks */
       RenderDispatcher::sPtr const      render{ std::make_shared<RenderDispatcher>() };
       /** Strong ref. to `SDL2pp::Window` */

@@ -1,5 +1,7 @@
 #include "Program.hh"
 #include "Window.hh"
+#include <boost/dll/runtime_symbol_info.hpp>
+#include <filesystem>
 #include <boost/format.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
@@ -7,11 +9,17 @@
 #include <stdlib.h>
 
 namespace holo {
-  Program::sPtr Program::instance;
-  bool          Program::quit = false;
-  bool          Program::Configure(int ac, char* av[]) {
+  Program::sPtr                 Program::instance;
+  bool                          Program::quit = false;
+  boost::filesystem::path const Program::location{
+    boost::dll::program_location().parent_path().parent_path()
+  };
+  bool Program::Configure(int ac, char* av[]) {
     namespace logging = boost::log;
     namespace po      = boost::program_options;
+
+    BOOST_LOG_TRIVIAL(info) << "program location: " << location / "share";
+
     po::options_description desc("Allowed options");
     desc.add_options()                 //
       ("help", "produce help message") //
@@ -50,7 +58,7 @@ namespace holo {
     }
     return true;
   }
-  Program::sPtr Program::Init() {
+  Program::sPtr Program::Get() {
     if (!instance) {
       instance = std::shared_ptr<Program>(new Program());
     }

@@ -152,6 +152,7 @@ namespace holo {
   }
 
   void Window::GlActivateContext() {
+
     if (SDL_GL_MakeCurrent(sdlWin->Get(), glContext) != 0) {
       throw std::runtime_error(SDL_GetError());
     }
