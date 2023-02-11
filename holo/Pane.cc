@@ -1,16 +1,19 @@
-#include "Window.hh"
+#include "Pane.hh"
+#include <boost/log/trivial.hpp>
 #include <exception>
 #include <functional>
-
 namespace holo {
   using namespace std::placeholders;
   using std::bind;
-  std::map<Uint32, Window::wPtr> Window::open;
-  /** CONSTRUCT a window.
-   * \details
-   *  Creates an OpenGL context.
-   */
-  Window::Window(std::shared_ptr<SdlWin> w)
+  Pane::Pane() {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+  }
+
+  Pane::~Pane() {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+  }
+  /** inaccessible */
+  SdlPane::SdlPane(SdlWinPtr w)
     : sdlWin{ w }
     , GetSize{ bind(&SdlWin::GetSize, w) }
     , GetWidth{ bind(&SdlWin::GetWidth, w) }
@@ -65,6 +68,25 @@ namespace holo {
     , SetResizable{ bind(&SdlWin::SetResizable, w, _1) }
 #endif
   {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+  }
+  /** virtual */
+  SdlPane::~SdlPane() {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+  }
+  /** virtual */
+  Uint32 SdlPane::GetID() const {
+    return SDL_GetWindowID(sdlWin->Get());
+  }
+
+  std::map<Uint32, SdlPane::wPtr> SdlPane::open;
+  SdlGlPane::Defaults             SdlGlPane::NEXT;
+  /** CONSTRUCT a window.
+   * \details
+   *  Creates an OpenGL context.
+   */
+  SdlGlPane::SdlGlPane(std::shared_ptr<SdlWin> w)
+    : SdlPane::SdlPane(w) {
     BOOST_LOG_TRIVIAL(trace) << "Window created.";
     glContext = SDL_GL_CreateContext(sdlWin->Get());
     if (glContext == NULL) {
@@ -73,10 +95,9 @@ namespace holo {
     GlActivateContext();
     if (!initGl())
       throw std::runtime_error("Failed to initialize OpenGL");
-
   }
-  bool Window::glWasInit{ false };
-  bool Window::initGl() {
+  bool SdlGlPane::glWasInit{ false };
+  bool SdlGlPane::initGl() {
     if (!glWasInit) {
       BOOST_LOG_TRIVIAL(trace) << "Initializing OpenGL";
       glewExperimental = GL_TRUE;
@@ -96,7 +117,7 @@ namespace holo {
   /**
    *
    */
-  void Window::Dispatch(SDL_Event& e) {
+  void SdlGlPane::Dispatch(SDL_Event& e) {
     Uint32 winId = 0;
     switch (e.type) {
       case SDL_DROPBEGIN:
@@ -151,31 +172,30 @@ namespace holo {
     }
   }
 
-  void Window::GlActivateContext() {
+  void SdlGlPane::GlActivateContext() {
 
     if (SDL_GL_MakeCurrent(sdlWin->Get(), glContext) != 0) {
       throw std::runtime_error(SDL_GetError());
     }
   }
-  void Window::GlSwap() {
+  void SdlGlPane::GlSwap() {
     SDL_GL_SwapWindow(sdlWin->Get());
   }
 
-  void Window::RenderAll() {
+  void SdlGlPane::RenderAll() {
     for (auto pair : open) {
       if (!pair.second.expired()) {
-        Window::sPtr win = pair.second.lock();
+        SdlGlPane::sPtr win = pair.second.lock();
         win->GlActivateContext();
+        win->preRender->Trigger(win);
         win->render->Trigger(win);
+        win->postRender->Trigger(win);
         win->GlSwap();
       }
     }
   }
 
-  Uint32 Window::GetID() {
-    return SDL_GetWindowID(sdlWin->Get());
-  }
-  Window::~Window() {
+  SdlGlPane::~SdlGlPane() {
     BOOST_LOG_TRIVIAL(trace) << "Window destroyed";
     SDL_GL_DeleteContext(glContext);
     open.erase(GetID());
@@ -190,19 +210,22 @@ namespace holo {
    * \param f Flags
    * \note Flags will always have `SDL_WINDOW_OPENGL` set.
    */
-  Window::sPtr Window::Create(std::string t, int x, int y, int w, int h, int f) {
-    sPtr tmp(new Window(std::make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
+  SdlGlPane::sPtr SdlGlPane::Create(std::string t, int x, int y, int w, int h, int f) {
+    BOOST_LOG_TRIVIAL(trace) << "Window::Create(t='" << t << "', x=" << x << ", y=" << y
+                             << ", w=" << w << ", h=" << h << ", f=" << f << ")";
+    sPtr tmp(new SdlGlPane(std::make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
     open[tmp->GetID()] = tmp;
     return tmp;
   }
-
-  Window::sPtr Window::Create(std::string t, int w, int h) {
-    return Create(t, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, 0);
+  SdlGlPane::sPtr SdlGlPane::Create(std::string t, int w, int h, int f) {
+    return Create(t, NEXT.x, NEXT.y, w, h, f);
+  }
+  SdlGlPane::sPtr SdlGlPane::Create(std::string t, int w, int h) {
+    return Create(t, NEXT.x, NEXT.y, w, h, NEXT.f);
   }
 
-  Window::sPtr Window::Create(int w, int h) {
+  SdlGlPane::sPtr SdlGlPane::Create(int w, int h) {
     return Create("Untitled", w, h);
   }
-
 
 }

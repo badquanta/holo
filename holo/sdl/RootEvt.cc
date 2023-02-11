@@ -2,7 +2,7 @@
 #include <utility>
 namespace holo {
   SdlRootEvt::SdlRootEvt() {
-    /** \todo Examine why passing the following to the parent constructor failed. */
+    /** \todo Examine why passing the following to the parent via a constructor failed. */
     SpecialHandlers = {
       {                    SDL_QUIT,          Quit},
       {         SDL_APP_TERMINATING,           App},

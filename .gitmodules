@@ -1,36 +1,6 @@
 [submodule "ext/libSDL2pp"]
 	path = ext/libSDL2pp
 	url = https://github.com/libSDL2pp/libSDL2pp
-[submodule "ext/json"]
-	path = ext/json
-	url = https://github.com/boostorg/json
-[submodule "ext/core"]
-	path = ext/core
-	url = https://github.com/boostorg/core
-[submodule "ext/system"]
-	path = ext/system
-	url = https://github.com/boostorg/system
-[submodule "ext/throw_exception"]
-	path = ext/throw_exception
-	url = https://github.com/boostorg/throw_exception
-[submodule "ext/describe"]
-	path = ext/describe
-	url = https://github.com/boostorg/describe
-[submodule "ext/assert"]
-	path = ext/assert
-	url = https://github.com/boostorg/assert
-[submodule "ext/config"]
-	path = ext/config
-	url = https://github.com/boostorg/config
-[submodule "ext/variant2"]
-	path = ext/variant2
-	url = https://github.com/boostorg/variant2
-[submodule "ext/mp11"]
-	path = ext/mp11
-	url = https://github.com/boostorg/mp11
-[submodule "ext/container_hash"]
-	path = ext/container_hash
-	url = https://github.com/boostorg/container_hash
 [submodule "ext/boost"]
 	path = ext/boost
 	url = https://github.com/boostorg/boost

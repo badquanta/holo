@@ -1,0 +1,29 @@
+#include <holo/sdl/WinEvt.hh>
+namespace holo {
+  /** \todo review implementation of window events*/
+  SdlWindowEvt::SdlWindowEvt(){
+    SpecialHandlers = {
+      {SDL_WINDOWEVENT_SHOWN, Shown},
+      {SDL_WINDOWEVENT_HIDDEN, Hidden},
+      {SDL_WINDOWEVENT_EXPOSE, Expose},
+      {SDL_WINDOWEVENT_MOVED, Moved},
+      {SDL_WINDOWEVENT_RESIZED, Resized},
+      {SDL_WINDOWEVENT_SIZE_CHANGED, SizeChanged},
+      {SDL_WINDOWEVENT_MINIMIZED, Minimized},
+      {SDL_WINDOWEVENT_MAXIMIZED, Maximized},
+      {SDL_WINDOWEVENT_RESTORED, Restored},
+      {SDL_WINDOWEVENT_ENTER, Enter}
+      {SDL_WINDOWEVENT_FOCUS_GAINED, FocusGained},
+      {SDL_WINDOWEVENT_FOCUS_LOST, FocusLost},
+      {SDL_WINDOWEVENT_CLOSE, Close},
+      {SDL_WINDOWEVENT_TAKE_FOCUS, TakeFocus},
+      {SDL_WINDOWEVENT_HIT_TEST, HitTest},
+      {SDL_WINDOWEVENT_ICCPROF_CHANGED, IccProfChanged}
+    };
+  }
+  SDL_WindowEventID SdlWindowEvt::ExtractSwitch(SDL_Event&) const {
+    assert(e.type == SDL_WINDOWEVENT);
+    assert(e.window.event != SDL_WINDOWEVENT_NONE);
+    return e.window.event;
+  }
+}

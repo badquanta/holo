@@ -1,10 +1,7 @@
-#include "GlProgram.hh"
-#include "Program.hh"
-#include <boost/log/trivial.hpp>
+#include "Gl.hh"
+#include "boost/log/trivial.hpp"
 #include <fstream>
-#include <stdexcept>
-#include <filesystem>
-#include <string>
+#include "Arch.hh"
 namespace holo {
 
   GlShader::sPtr GlShader::Create(GLenum type) {
@@ -18,10 +15,8 @@ namespace holo {
   }
 
   GlShader::sPtr GlShader::Load(GLenum type, const std::string& srcFile) {
-    std::string searchPath{(Program::location / "share" / srcFile).string()};
-    if(!std::filesystem::exists(searchPath)){
-      throw std::runtime_error(searchPath+" Does not exist");
-    };
+
+    std::string searchPath{ Arch::FindPath(srcFile) };
 
     std::ifstream file(searchPath);
     if (!file.is_open()) {
@@ -82,74 +77,4 @@ namespace holo {
       return "Invalid shader ID";
     }
   }
-
-  GlProgram::sPtr GlProgram::Create() {
-    return sPtr(new GlProgram());
-  }
-
-  GlProgram::GlProgram()
-    : ID{ glCreateProgram() } {
-    if (ID == 0) {
-      throw std::runtime_error("Unable to create GL Program");
-    }
-    BOOST_LOG_TRIVIAL(trace) << "GlProgram#" << ID << " created.";
-  }
-
-  GlProgram::~GlProgram() {
-    BOOST_LOG_TRIVIAL(trace) << "GlProgram#" << ID << " destroyed.";
-    glDeleteProgram(ID);
-  }
-
-  void GlProgram::Attach(GlShader::sPtr shader) {
-    glAttachShader(ID, shader->ID);
-  }
-
-  bool GlProgram::GetLinkStatus() {
-    GLint linkStatus = GL_FALSE;
-    glGetProgramiv(ID, GL_LINK_STATUS, &linkStatus);
-    BOOST_LOG_TRIVIAL(debug) << "GlProgram#" << ID << " link status: " << linkStatus;
-    return linkStatus == GL_TRUE;
-  }
-
-  bool GlProgram::Link() {
-    glLinkProgram(ID);
-    return GetLinkStatus();
-  }
-
-  GLint GlProgram::GetAttribLocation(std::string name) {
-    GLint loc = glGetAttribLocation(ID, name.c_str());
-    if (loc == -1) {
-      throw std::runtime_error("Unable to get attribute location.");
-    }
-    return loc;
-  }
-
-  std::string GlProgram::GetLog() {
-    if (glIsProgram(ID)) {
-      int maxLength = 0, logLength = 0;
-      glGetProgramiv(ID, GL_INFO_LOG_LENGTH, &maxLength);
-      char* logStr = new char[maxLength];
-      glGetProgramInfoLog(ID, maxLength, &logLength, logStr);
-      std::string log;
-      if (logLength > 0) {
-        log = logStr;
-      }
-      delete[] logStr;
-      BOOST_LOG_TRIVIAL(debug) << "GlShader#" << ID << " LOG maxLength=" << maxLength
-                               << " logLength=" << logLength << "\n"
-                               << log;
-      return log;
-    } else {
-      return "Invalid program ID";
-    }
-  }
-
-  void GlProgram::Use() {
-    glUseProgram(ID);
-  }
-
-  void GlProgram::StopUse() {
-    glUseProgram(0);
-  }
-
 }

@@ -1,5 +1,10 @@
 #version 140
-out vec4 LFragment;
+in vec3 fColor;
+in vec2 fTexCoord;
+out vec4 FragColorOut;
+
+uniform sampler2D activeTexture;
+
 void main(){
-  LFragment=vec4(1.,1.,1.,1.);
+  FragColorOut=texture(activeTexture, fTexCoord) + (vec4(fColor,1.0)*0.25);
 }

@@ -6,25 +6,25 @@ AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: Right
 AlignConsecutiveAssignments:
   Enabled:         true
-  AcrossEmptyLines: true
+  AcrossEmptyLines: false
   AcrossComments:  true
   AlignCompound:   true
   PadOperators:    true
 AlignConsecutiveBitFields:
   Enabled:         true
-  AcrossEmptyLines: true
+  AcrossEmptyLines: false
   AcrossComments:  true
   AlignCompound:   true
   PadOperators:    true
 AlignConsecutiveDeclarations:
   Enabled:         true
-  AcrossEmptyLines: true
+  AcrossEmptyLines: false
   AcrossComments:  true
   AlignCompound:   true
   PadOperators:    true
 AlignConsecutiveMacros:
   Enabled:         true
-  AcrossEmptyLines: true
+  AcrossEmptyLines: false
   AcrossComments:  true
   AlignCompound:   true
   PadOperators:    true

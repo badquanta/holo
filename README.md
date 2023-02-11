@@ -1,15 +1,25 @@
 # Holo
 
-Holo holo, holo holo holo... holo.
+## Immediate Goals
+
+* loading OpenGL textures from SDL Surfaces.
+* separate external code into provider modules.
+
+## External dependencies
+
+The source code depends on [libSDL2pp](https://github.com/libSDL2pp/libSDL2pp) & [boost](https://github.com/boostorg/boost).
+
+
 
 ## Build setup
 
-I wanted to make use of Boost::json.  Boost::json wouldn't work unless I pulled in _A LOT_ of Boost in general.
-So I decided just to pull in all of Boost via their git repository.
-Maybe this was a bad idea; since checking out all the sub-repositories takes _a long_ time.
+Ensure all submodules are initialized with something like:
 
-But hopefully this is just something you need to do once:
+    git clone --recursive https://github.com/BadQuanta/holo.git
 
+or
+
+    cd holo
     git submodule update --init --recursive
     mkdir build
     cd build
@@ -21,4 +31,4 @@ Just enter into your build directory and run `cmake --build`
 
     ninja
 
-
+or `make` or whatever build system cmake defaults to creating for your platform.

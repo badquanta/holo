@@ -1,0 +1,5 @@
+include(CTest)
+add_executable(OnlySdl OnlySdl.cc)
+target_link_libraries(OnlySdl holo)
+target_include_directories(OnlySdl PRIVATE ${PROJECT_SOURCE_DIR} "${PROJECT_BINARY_DIR}/holo")
+add_test(NAME testOnlySdl COMMAND OnlySdl )
