@@ -16,6 +16,12 @@ set(DOXYGEN_REFERENCED_BY_RELATION YES)
 set(DOXYGEN_REFERENCES_RELATION YES)
 set(DOXYGEN_USE_HTAGS NO)
 set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md )
-doxygen_add_docs(docs ${PROJECT_SOURCE_DIR}/holo  ${PROJECT_SOURCE_DIR}/README.md "${PROJECT_SOURCE_DIR}/test/Testing.md" COMMENT "Generate documentation")
+doxygen_add_docs(docs
+    ${PROJECT_SOURCE_DIR}/holo
+    ${PROJECT_SOURCE_DIR}/README.md
+    "${PROJECT_SOURCE_DIR}/test/Testing.md"
+    "${PROJECT_SOURCE_DIR}/share/Credits.md"
+    COMMENT "Generate documentation"
+)
 
 add_custom_target(open-docs "xdg-open" "${PROJECT_BINARY_DIR}/docs/html/index.html" DEPENDS docs)
