@@ -1,4 +1,4 @@
-#include "Gl.hh"
+#include <holo/Gl.hh>
 #include <boost/log/trivial.hpp>
 namespace holo {
   /** \details Request open gl*/

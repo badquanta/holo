@@ -1,15 +1,15 @@
-#include "Gl.hh"
-#include "Arch.hh"
-#include "boost/log/trivial.hpp"
+#include <boost/log/trivial.hpp>
+#include <holo/Arch.hh>
+#include <holo/Gl.hh>
 namespace holo {
   GlTexture::sPtr GlTexture::Load(std::string path) {
     BOOST_LOG_TRIVIAL(info) << "GlTexture::Load('" << path << "')";
     std::string found = Arch::FindPath(path);
-    SurfacePtr  surf  = std::make_shared<SDL2pp::Surface>(found);
+    SdlSurfacePtr  surf  = std::make_shared<SDL2pp::Surface>(found);
     return Create(surf);
   }
 
-  GlTexture::sPtr GlTexture::Create(SurfacePtr surf) {
+  GlTexture::sPtr GlTexture::Create(SdlSurfacePtr surf) {
     sPtr created{ Create() };
     created->Set(surf);
     return created;
@@ -29,11 +29,11 @@ namespace holo {
     glBindTexture(GL_TEXTURE_2D, ID);
   }
 
-  void GlTexture::Set(SurfacePtr surf) {
+  void GlTexture::Set(SdlSurfacePtr surf) {
     Set(surf, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
   }
 
-  void GlTexture::Set(SurfacePtr surf, GLint ws, GLint wt, GLint mf, GLint Mf) {
+  void GlTexture::Set(SdlSurfacePtr surf, GLint ws, GLint wt, GLint mf, GLint Mf) {
     SDL2pp::Surface converted{ surf->Convert(SDL_PIXELFORMAT_RGBA32) };
     Bind();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ws);

@@ -1,4 +1,4 @@
-#include "Pane.hh"
+#include <holo/sdl/PaneGl.hh>
 #include "holo/holo-cfg.hh"
 
 using namespace holo;
@@ -6,9 +6,9 @@ using namespace holo;
 int main(int ac, char** av) {
   try {
     Arch::Configure(ac, av);
-    SdlGlPane::sPtr win{ SdlGlPane::Create("Holo-Deck", 300, 200, SDL_WINDOW_RESIZABLE) };
+    SdlPaneGl::sPtr win{ SdlPaneGl::Create("Holo-Deck", 300, 200, SDL_WINDOW_RESIZABLE) };
 
-    GlProgram::sPtr glProgram{ GlProgram::Create() };
+    GlSlProgram::sPtr glProgram{ GlSlProgram::Create() };
     {
       GlShader::sPtr glVertexShader{ GlShader::Load(GL_VERTEX_SHADER, "shaders/v1.vert") };
       if (!glVertexShader->Compile()) {
@@ -63,7 +63,7 @@ int main(int ac, char** av) {
 
     bool wireframe = false;
 
-    SdlEvent::CallbackFunction requestQuit{ [win](const SDL_Event& evt) { win->arch->RequestQuit(); } };
+    SdlEvt::CallbackFunction requestQuit{ [win](const SDL_Event& evt) { win->arch->RequestQuit(); } };
     win->events->Quit->On(requestQuit);
     win->events->Key->Code(SDLK_ESCAPE)->On(requestQuit);
     win->events->Key->Code(SDLK_w)->Down->On([&wireframe](SDL_Event& e) {
@@ -74,11 +74,10 @@ int main(int ac, char** av) {
       std::cout << "Attribute " << i << " is " << glProgram->GetAttributeName(i) << std::endl;
     }
     win->preRender->VOID->On([] {
-      int secTicks = SDL_GetTicks() % 1000;
       glClearColor(0.f, 0.f, 0.f, 1.f);
       glClear(GL_COLOR_BUFFER_BIT);
     });
-    win->render->VOID->On([VAO, &wireframe, firstTex, vertPos2D, vertColor3D, vertTex2D, glProgram, VBO,
+    win->render->On([VAO, &wireframe, firstTex, vertPos2D, vertColor3D, vertTex2D, glProgram, VBO,
                            IBO]() {
       glProgram->Use();
       VAO->Bind();

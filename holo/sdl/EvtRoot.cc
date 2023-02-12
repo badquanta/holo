@@ -1,7 +1,6 @@
-#include "SdlRootEvt.hh"
-#include <utility>
+#include <holo/sdl/EvtRoot.hh>
 namespace holo {
-  SdlRootEvt::SdlRootEvt() {
+  SdlEvtRoot::SdlEvtRoot() {
     /** \todo Examine why passing the following to the parent via a constructor failed. */
     SpecialHandlers = {
       {                    SDL_QUIT,          Quit},
@@ -76,7 +75,7 @@ namespace holo {
     };
   }
 
-  SDL_EventType SdlRootEvt::ExtractSwitch(SDL_Event& e) const {
+  SDL_EventType SdlEvtRoot::ExtractSwitch(SDL_Event& e) const {
     return (SDL_EventType)e.type;
   }
 }

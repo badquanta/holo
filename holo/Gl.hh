@@ -1,5 +1,5 @@
 #pragma once
-#include "Types.hh"
+#include <holo/sdl/Primitives.hh>
 #include <GL/glew.h>
 #include <vector>
 namespace holo {
@@ -22,7 +22,7 @@ namespace holo {
       /** Create an empty texture. */
       static sPtr  Create();
       /** Create a new texture from SDL Surface data.*/
-      static sPtr  Create(SurfacePtr);
+      static sPtr  Create(SdlSurfacePtr);
       /** Load a texture from the hard drive.*/
       static sPtr  Load(std::string);
       /** Read-only ID*/
@@ -35,8 +35,8 @@ namespace holo {
     public:
       ~GlTexture();
       void Bind() const;
-      void Set(SurfacePtr);
-      void Set(SurfacePtr, GLint ws, GLint wt, GLint mf, GLint Mf);
+      void Set(SdlSurfacePtr);
+      void Set(SdlSurfacePtr, GLint ws, GLint wt, GLint mf, GLint Mf);
   };
   template<GLenum BufferType, typename DataType, GLenum DataUsage>
   class GlBuffer {
@@ -92,17 +92,17 @@ namespace holo {
       GLenum const Type;
   };
 
-  class GlProgram {
+  class GlSlProgram {
     public:
-      using sPtr = std::shared_ptr<GlProgram>;
+      using sPtr = std::shared_ptr<GlSlProgram>;
       const GLuint ID;
       static sPtr  Create();
 
     private:
-      GlProgram();
+      GlSlProgram();
 
     public:
-      ~GlProgram();
+      ~GlSlProgram();
       void                     Attach(GlShader::sPtr);
       bool                     Link();
       bool                     GetLinkStatus();
