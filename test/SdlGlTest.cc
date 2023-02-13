@@ -3,14 +3,21 @@ int main(int ac, char** av) {
   try {
     using namespace holo;
     Arch::Configure(ac, av);
-    shared_ptr<SdlPaneGl> whPane{ SdlPaneGl::Create("Sdl & OpenGL tests..") };
+    shared_ptr<SdlPaneGl> pane{ SdlPaneGl::Create("Sdl & OpenGL tests..") };
     // Hitting escape in any window means the test
     // failed.
-    whPane->sdl->events->Key->Code(SDLK_ESCAPE)->Up->VOID->On([]() {
+    pane->sdl->events->Key->Code(SDLK_ESCAPE)->Up->VOID->On([]() {
       throw std::runtime_error("Escape key pressed.");
     });
-    whPane->sdl->events->Quit->VOID->On(&Arch::RequestQuit);
-    whPane->sdl->events->Key->Code(SDLK_RETURN)->Up->VOID->On(&Arch::RequestQuit);
+    pane->sdl->events->Quit->VOID->On(&Arch::RequestQuit);
+    pane->sdl->events->Key->Code(SDLK_RETURN)->Up->VOID->On(&Arch::RequestQuit);
+
+
+
+    pane->render->On([](){
+
+    });
+
   } catch (holo::Arch::CliHelp& e) {
     std::cerr << "Runtime error: " << e << std::endl;
     return 1;

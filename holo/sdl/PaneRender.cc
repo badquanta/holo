@@ -18,8 +18,25 @@ namespace holo {
     return Create(t, NEXT.x, NEXT.y, w, h, NEXT.f);
   }
 
+  shared_ptr<SdlPaneRender> SdlPaneRender::Create(std::string t, int w, int h, int f) {
+    return Create(t, NEXT.x, NEXT.y, w, h, f);
+  }
+
   void SdlPaneRender::Render(){
+    renderer->Clear();
     //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     SdlPane::Render();
+
+    renderer->Present();
   }
+
+  shared_ptr<SdlTexture> SdlPaneRender::CreateTexture(shared_ptr<SdlSurface> surface){
+    return make_shared<SdlTexture>(*renderer, *surface);
+  }
+
+  shared_ptr<SdlTexture> SdlPaneRender::LoadTexture(string path){
+    string found = Arch::FindPath(path);
+    return CreateTexture(make_shared<SdlSurface>(found));
+  }
+
 }

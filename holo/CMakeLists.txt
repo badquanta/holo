@@ -23,15 +23,14 @@ set(HOLO_GL_SOURCES
 
 set(HOLO_SOURCES
   "Arch.cc"
-  "holo.cc"
   "Pane.cc"
 )
 
-add_library(holo holo.cc Arch.cc Pane.cc ${HOLO_SDL_SOURCES} ${HOLO_GL_SOURCES})
+add_library(holo ${HOLO_SOURCES} ${HOLO_SDL_SOURCES} ${HOLO_GL_SOURCES})
 target_include_directories(holo PUBLIC "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}")
 
-target_link_libraries(holo SDL2pp::SDL2pp Boost::log Boost::program_options Boost::filesystem GLEW OpenGL)
+target_link_libraries(holo glm SDL2pp::SDL2pp Boost::log Boost::program_options Boost::filesystem GLEW OpenGL)
 
 add_executable(holo-deck holo-deck.cc)
 

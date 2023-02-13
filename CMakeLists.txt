@@ -11,13 +11,18 @@ set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 find_package(GLU REQUIRED)
 find_package(GLEW REQUIRED)
+# GLM
+add_subdirectory("ext/glm")
+
+# Dependency SDL2pp
 set(SDL2PP_WITH_IMAGE ON)
 set(SDL2PP_WITH_MIXER ON)
 set(SDL2PP_WITH_TTF ON)
 add_subdirectory("ext/libSDL2pp")
-
+# Boost
 set(BOOST_INCLUDE_LIBRARIES json log filesystem program_options)
 add_subdirectory("ext/boost")
+
 # Project assets
 add_subdirectory("share")
 # Main library & main demo.

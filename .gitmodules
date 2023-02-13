@@ -4,3 +4,6 @@
 [submodule "ext/boost"]
 	path = ext/boost
 	url = https://github.com/boostorg/boost
+[submodule "ext/glm"]
+	path = ext/glm
+	url = https://github.com/g-truc/glm
