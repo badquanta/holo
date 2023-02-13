@@ -1,8 +1,9 @@
-#include <holo/sdl/Sys.hh>
 #include <holo/sdl/Pane.hh>
+#include <holo/sdl/Sys.hh>
 namespace holo {
- /** Protected */
-  weak_ptr<SdlSys> SdlSys::instance;
+  /** Protected */
+  weak_ptr<SdlSys>                  SdlSys::instance;
+  map<Uint32, weak_ptr<SdlEvtRoot>> SdlSys::windows;
   /** */
   SdlSys::SdlSys()
     : InputID{ arch->Input->On(bind(&SdlSys::Input, this)) } {
@@ -18,7 +19,21 @@ namespace holo {
     SDL_Event evt;
     while (SDL_PollEvent(&evt)) {
       events->Trigger(evt);
-      SdlPane::Dispatch(evt);
+      Uint32 winId = SdlEvt::GetWindowID(evt);
+      if (winId != 0) {
+        // Dispatch ONLY to the specified window ID
+        if (windows.contains(winId)) {
+          if (!(windows.at(winId).expired())) {
+            windows[winId].lock()->Trigger(evt);
+          }
+        }
+      } else {
+        // Dispatch to ALL windows
+        for (auto pair : windows) {
+          if (!pair.second.expired())
+            pair.second.lock()->Trigger(evt);
+        }
+      }
     }
   }
 

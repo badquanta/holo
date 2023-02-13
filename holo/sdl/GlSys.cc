@@ -1,5 +1,5 @@
 #include <holo/sdl/GlSys.hh>
-#include <holo/boostPrimitives.hh>
+
 namespace holo {
 
   weak_ptr<SdlGlSys> SdlGlSys::instance;

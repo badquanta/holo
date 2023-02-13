@@ -6,7 +6,6 @@
 
 #include <holo/AbstractDispatcher.hh>
 #include <holo/boostPrimitives.hh>
-#include <holo/stdPrimitives.hh>
 namespace holo {
 
   /** Program/Engine wrapper.
@@ -30,7 +29,7 @@ namespace holo {
       Arch();
 
       static weak_ptr<Arch> instance;
-      bool                  exitRequested{ false };
+      static bool           exitRequested;
       static TimeoutID      exitRequestedAt;
 
       typedef std::map<TimeoutID, VoidDispatcher::CallbackFunction> TimeoutMap;
@@ -42,7 +41,7 @@ namespace holo {
       typedef high_resolution_clock::time_point Hrc_t;
       typedef uint64_t                          CycleID;
       CycleID                                   cycles{ 0 };
-      CycleID const                             reportEvery{ 100 };
+      CycleID const                             reportEvery{ 1000 };
       std::vector<milliseconds>                 lastCycleTicks{ reportEvery, milliseconds{ 0 } };
 
     public:

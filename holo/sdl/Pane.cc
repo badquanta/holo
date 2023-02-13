@@ -3,6 +3,7 @@
 namespace holo {
   using namespace std::placeholders;
   map<Uint32, weak_ptr<SdlPane>> SdlPane::open;
+  SdlPane::Defaults              SdlPane::NEXT;
   /** inaccessible */
   SdlPane::SdlPane(SdlWinPtr w)
     : sdlWin{ w }
@@ -59,11 +60,12 @@ namespace holo {
     , SetResizable{ bind(&SdlWin::SetResizable, w, _1) }
 #endif
   {
-
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    sdl->windows[GetID()]=events;
+    BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << " ID=" << GetID();
   }
   /** virtual */
   SdlPane::~SdlPane() {
+    sdl->windows.erase(GetID());
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
   /** virtual */
@@ -71,70 +73,4 @@ namespace holo {
     return SDL_GetWindowID(sdlWin->Get());
   }
 
-  void SdlPane::RenderAll() {
-    for (auto pair : open) {
-      if (!pair.second.expired()) {
-        auto win = pair.second.lock();
-        win->Render();
-      }
-    }
-  }
-
-  /**
-   *
-   */
-  void SdlPane::Dispatch(SDL_Event& e) {
-    Uint32 winId = 0;
-    switch (e.type) {
-      case SDL_DROPBEGIN:
-      case SDL_DROPFILE:
-      case SDL_DROPTEXT:
-      case SDL_DROPCOMPLETE:
-        winId = e.drop.windowID;
-        break;
-      case SDL_MOUSEWHEEL:
-        winId = e.wheel.windowID;
-        break;
-      case SDL_MOUSEBUTTONDOWN:
-      case SDL_MOUSEBUTTONUP:
-        winId = e.button.windowID;
-        break;
-      case SDL_MOUSEMOTION:
-        winId = e.motion.windowID;
-        break;
-      case SDL_TEXTINPUT:
-        winId = e.text.windowID;
-        break;
-      case SDL_TEXTEDITING_EXT:
-        winId = e.editExt.windowID;
-        break;
-      case SDL_TEXTEDITING:
-        winId = e.edit.windowID;
-        break;
-      case SDL_KEYDOWN:
-      case SDL_KEYUP:
-        winId = e.key.windowID;
-        break;
-      case SDL_WINDOWEVENT:
-        winId = e.window.windowID;
-        break;
-    }
-    if ((e.type >= SDL_USEREVENT) && (e.type < SDL_LASTEVENT)) {
-      winId = e.user.windowID;
-    }
-    if (winId != 0) {
-      // Dispatch ONLY to the specified window ID
-      if (open.contains(winId)) {
-        if (!open.at(winId).expired()) {
-          open[winId].lock()->events->Trigger(e);
-        }
-      }
-    } else {
-      // Dispatch to ALL windows
-      for (auto pair : open) {
-        if (!pair.second.expired())
-          pair.second.lock()->events->Trigger(e);
-      }
-    }
-}
 }

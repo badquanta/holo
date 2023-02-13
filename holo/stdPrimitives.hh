@@ -8,6 +8,8 @@
 #include <filesystem>
 #include <vector>
 #include <string>
+#include <numeric>
+#include <stdlib.h>
 namespace holo {
   using std::string;
   using std::function;
@@ -30,6 +32,7 @@ namespace holo {
   using std::chrono::steady_clock;
   using std::chrono::high_resolution_clock;
   using std::chrono::duration;
+  using std::endl;
 
 
 }

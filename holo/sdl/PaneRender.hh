@@ -5,14 +5,16 @@ namespace holo {
   class SdlPaneRender : public SdlPane {
     public:
       using sPtr = std::shared_ptr<SdlPaneRender>;
-      SdlRendererPtr renderer;
+      SdlRendererPtr                   renderer;
       /** Create a window. **/
-      static sPtr    Create(std::string t, int x, int y, int w, int h, int f);
+      static shared_ptr<SdlPaneRender> Create(std::string t, int x, int y, int w, int h, int f);
+      static shared_ptr<SdlPaneRender> Create(std::string t, int w, int h);
 
     private:
       SdlPaneRender(SdlWinPtr);
 
     public:
       virtual ~SdlPaneRender() override;
+      virtual void Render() override;
   };
 }

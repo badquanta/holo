@@ -4,10 +4,11 @@
 namespace holo {
   /** Common SDL . */
   class SdlPane : public Pane {
-    using Point = SDL2pp::Point;
+      using Point = SDL2pp::Point;
+
     public: /** SDL interface */
       SdlWinPtr const              sdlWin;
-      shared_ptr<SdlSys> const     sdl          { SdlSys::Get() };
+      shared_ptr<SdlSys> const     sdl{ SdlSys::Get() };
       /** Event tree associated w+ith this window instance. */
       shared_ptr<SdlEvtRoot> const events{ make_shared<SdlEvtRoot>() };
       /** Dispatches an SDL_Event to the appropriate window(s)
@@ -16,8 +17,12 @@ namespace holo {
        *  Otherwise all `open` instances of a Window will receive the event.
        */
       static void                  Dispatch(SDL_Event& e);
-      /** Calls the render void event of all `open` windows */
-      static void                  RenderAll();
+
+    public: /** Class-Properties: Defaults for new window, if otherwise unspecified. */
+      static struct Defaults {
+          std::string title{ "Untitled" };
+          int x{ SDL_WINDOWPOS_CENTERED }, y{ SDL_WINDOWPOS_CENTERED }, w{ 320 }, h{ 230 }, f{ 0 };
+      } NEXT;
 
     protected:
       SdlPane(SdlWinPtr);

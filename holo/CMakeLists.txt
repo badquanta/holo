@@ -4,6 +4,7 @@ configure_file(.input.holo.hh holo.hh)
 set(HOLO_SDL_SOURCES
   "sdl/Sys.cc"
   "sdl/GlSys.cc"
+  "sdl/Evt.cc"
   "sdl/EvtKeyCode.cc"
   "sdl/EvtKeyPress.cc"
   "sdl/EvtWin.cc"
@@ -11,7 +12,6 @@ set(HOLO_SDL_SOURCES
   "sdl/Pane.cc"
   "sdl/PaneGl.cc"
   "sdl/PaneRender.cc"
-  "Sdl.cc"
 )
 
 set(HOLO_GL_SOURCES

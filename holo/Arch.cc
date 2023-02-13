@@ -1,20 +1,16 @@
-#include "Arch.hh"
-#include "sdl/Pane.hh"
-
 #include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/format.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
-#include <filesystem>
+#include <holo/Arch.hh>
 
-#include <numeric>
-#include <stdlib.h>
 namespace holo {
   weak_ptr<Arch> Arch::instance;
   vector<string> Arch::FileSearchPaths{};
 
   Arch::TimeoutID Arch::exitRequestedAt;
-  bool   Arch::Configure(int ac, char* av[]) {
+  bool Arch::exitRequested{false};
+  bool            Arch::Configure(int ac, char* av[]) {
     namespace logging = boost::log;
     namespace po      = boost::program_options;
     FileSearchPaths.push_back(boost::dll::program_location().parent_path().parent_path().string());
@@ -30,7 +26,7 @@ namespace holo {
     po::options_description desc("Allowed options");
     desc.add_options()                 //
       ("help", "produce help message") //
-      ("log", po::value<int>()->default_value(2), "set log level");
+      ("log", po::value<int>()->default_value(5), "set log level");
     po::variables_map vm;
     po::store(po::parse_command_line(ac, av, desc), vm);
     po::notify(vm);
@@ -110,8 +106,7 @@ namespace holo {
     }
     timedDispatches[actual] = callback;
     if (actual != wanted) {
-      BOOST_LOG_TRIVIAL(debug) << "Arch::Timeout postponed by "
-                               << actual - wanted << "ms.";
+      BOOST_LOG_TRIVIAL(debug) << "Arch::Timeout postponed by " << actual - wanted << "ms.";
     }
     return actual;
   }
@@ -133,21 +128,22 @@ namespace holo {
       Hrc_t   loopEndTime           = high_resolution_clock::now();
       CycleID cycleReportId         = cycles % reportEvery;
       lastCycleTicks[cycleReportId] = duration_cast<milliseconds>(loopEndTime - loopStartTime);
-      if ((cycles % reportEvery) == (reportEvery - 1)) {
-        milliseconds sumTicks  = std::accumulate(lastCycleTicks.begin(), lastCycleTicks.end(), milliseconds(0));
-        milliseconds avgTicks  = (sumTicks / reportEvery);
-        BOOST_LOG_TRIVIAL(debug) << "Loop Cycle #" << cycles
-                                 << ", avg:" << avgTicks  << " ms.";
+      if (false && (cycles % reportEvery) == (reportEvery - 1)) {
+        milliseconds sumTicks =
+          std::accumulate(lastCycleTicks.begin(), lastCycleTicks.end(), milliseconds(0));
+        milliseconds avgTicks = (sumTicks / reportEvery);
+        BOOST_LOG_TRIVIAL(debug) << "Loop Cycle #" << cycles << ", avg:" << avgTicks << " ms.";
       }
       cycles++;
     }
   }
   void Arch::CancelQuit() {
-    exitRequested=false;
+    exitRequested = false;
     exitRequestedAt;
   }
   void Arch::RequestQuitAt(milliseconds at) {
     exitRequestedAt = steady_clock::now() + at;
+    exitRequested = true;
     BOOST_LOG_TRIVIAL(debug) << "Arch::RequestQuit in " << at << " ticks.";
   }
   /** \details to quitting after 100ms delay to allow system fully deinitialize */

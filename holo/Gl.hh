@@ -1,13 +1,14 @@
 #pragma once
-#include <holo/sdl/Primitives.hh>
 #include <GL/glew.h>
-#include <vector>
+#include <holo/sdl/Primitives.hh>
+
 namespace holo {
   class GlVertexArray {
     public:
       using sPtr = std::shared_ptr<GlVertexArray>;
-      static sPtr Create();
+      static sPtr  Create();
       GLuint const ID;
+
     private:
       explicit GlVertexArray(GLuint);
 

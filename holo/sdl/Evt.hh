@@ -8,5 +8,7 @@ namespace holo {
     public:
       /** \depreciated */
       using sPtr = shared_ptr<SdlEvt>;
+
+      static Uint32 GetWindowID(SDL_Event&);
   };
 }

@@ -13,7 +13,7 @@ namespace holo {
     public:
       shared_ptr<Arch> const    arch{ Arch::Get() };
       static shared_ptr<SdlSys> Get();
-
+      static map<Uint32, weak_ptr<SdlEvtRoot>> windows;
     protected:
       SdlSys();
       static weak_ptr<SdlSys> instance;
@@ -21,6 +21,7 @@ namespace holo {
     public:
       ~SdlSys();
       void                              Input();
+
       CallbackID const                  InputID;
       std::shared_ptr<SdlEvtRoot> const events{ std::make_shared<SdlEvtRoot>() };
       shared_ptr<SDL2pp::SDL>           sdl{ std::make_shared<SDL2pp::SDL>(SDL_INIT_EVERYTHING) };

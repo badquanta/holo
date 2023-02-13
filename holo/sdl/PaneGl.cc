@@ -5,14 +5,14 @@ namespace holo {
     this->render->Trigger();
     this->GlSwap();
   }
-  SdlPaneGl::Defaults SdlPaneGl::NEXT;
+
   /** CONSTRUCT a window.
    * \details
    *  Creates an OpenGL context.
    */
   SdlPaneGl::SdlPaneGl(std::shared_ptr<SdlWin> w)
     : SdlPane::SdlPane(w) {
-    BOOST_LOG_TRIVIAL(trace) << "Window created.";
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     glContext = SDL_GL_CreateContext(sdlWin->Get());
     if (glContext == NULL) {
       throw new std::runtime_error(SDL_GetError());
@@ -68,8 +68,8 @@ namespace holo {
    */
   SdlPaneGl::sPtr SdlPaneGl::Create(std::string t, int x, int y, int w, int h, int f) {
     BOOST_LOG_TRIVIAL(trace) << "Window::Create(t='" << t << "', x=" << x << ", y=" << y
-                             << ", w=" << w << ", h=" << h << ", f=" << f << ")";
-    sPtr tmp(new SdlPaneGl(std::make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
+                             << ", w=" << w << ", h=" << h << ", f=" << (f | SDL_WINDOW_OPENGL) << ")";
+    sPtr tmp(new SdlPaneGl(make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
     open[tmp->GetID()] = tmp;
     return tmp;
   }
@@ -78,6 +78,9 @@ namespace holo {
   }
   SdlPaneGl::sPtr SdlPaneGl::Create(std::string t, int w, int h) {
     return Create(t, NEXT.x, NEXT.y, w, h, NEXT.f);
+  }
+  shared_ptr<SdlPaneGl> SdlPaneGl::Create(std::string t){
+    return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, NEXT.f);
   }
 
   SdlPaneGl::sPtr SdlPaneGl::Create(int w, int h) {

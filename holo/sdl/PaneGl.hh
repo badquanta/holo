@@ -1,6 +1,7 @@
 #pragma once
 #include <holo/Gl.hh>
 #include <holo/sdl/Pane.hh>
+#include <holo/sdl/GlSys.hh>
 namespace holo {
   /** Engine-level Window wrapper.
    * \ingroup windows
@@ -11,6 +12,7 @@ namespace holo {
       SdlPaneGl(SdlWinPtr);
 
     public: /** Typedefs **********************************/
+      shared_ptr<SdlGlSys> const sdlGl { SdlGlSys::Get()};
       /** Strong ref. to `Pane` */
       using sPtr             = std::shared_ptr<SdlPaneGl>;
       /** Weak ref. to `Pane` */
@@ -18,11 +20,7 @@ namespace holo {
       /** \todo Maybe make this a virtual function? */
       using RenderDispatcher = TypeDispatcher<SdlPaneGl::sPtr>;
 
-    public: /** Class-Properties: Defaults for new window, if otherwise unspecified. */
-      static struct Defaults {
-          std::string title{ "Untitled" };
-          int x{ SDL_WINDOWPOS_CENTERED }, y{ SDL_WINDOWPOS_CENTERED }, w{ 320 }, h{ 230 }, f{ 0 };
-      } NEXT;
+
 
     public: /** Class-Methods *****************************/
       /** Create a window. **/
