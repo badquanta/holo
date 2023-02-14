@@ -13,7 +13,7 @@ namespace holo {
   SdlPaneGl::SdlPaneGl(std::shared_ptr<SdlWin> w)
     : SdlPane::SdlPane(w) {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
-    glContext = SDL_GL_CreateContext(sdlWin->Get());
+    glContext = SDL_GL_CreateContext(w->Get());
     if (glContext == NULL) {
       throw new std::runtime_error(SDL_GetError());
     }
@@ -43,6 +43,7 @@ namespace holo {
   void SdlPaneGl::GlActivateContext() {
 
     if (SDL_GL_MakeCurrent(sdlWin->Get(), glContext) != 0) {
+      string errStr{SDL_GetError()};
       throw std::runtime_error(SDL_GetError());
     }
   }

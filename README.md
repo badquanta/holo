@@ -9,16 +9,22 @@
 
 The source code depends on [libSDL2pp](https://github.com/libSDL2pp/libSDL2pp) & [boost](https://github.com/boostorg/boost).
 
-### References:
-
 Various external references used in building.
 
 * [SDL2pp API](https://sdl2pp.amdmi3.ru/)
 * [Sdl2 API](https://wiki.libsdl.org/SDL2/CategoryAPI)
+* [glm](https://github.com/g-truc/glm)
+* [opengl api](https://registry.khronos.org/OpenGL-Refpages/gl4/html/index.php)
 * boost/
   * [log/trivial](https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/log/tutorial.html)
-* [c++ & standard library](https://en.cppreference.com/w/cpp)
+* c++ & std libs
+  * [cppreference.com](https://en.cppreference.com/w/cpp)
+  * [cplusplus.com](https://cplusplus.com/)
+  * [std::chrono](https://cplusplus.com/reference/chrono/)
+* glsl
+  * __TODO__ link to some glsl guidance.
 
+* [cmake](https://cmake.org/cmake/help/v3.24/manual/cmake-commands.7.html)
 
 ## Build setup
 

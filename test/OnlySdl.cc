@@ -54,7 +54,7 @@ int main(int ac, char** av) {
       whPane->renderer->Copy(*something.text,something.srcRect,something.GetDestRect());
     });
     auto QUIT_TIMEOUT_ID = whPane->arch->Timeout(5000, &Arch::RequestQuit);
-    whPane->events->Key->Code(SDLK_SPACE)->Up->VOID->On([QUIT_TIMEOUT_ID]() {
+    whPane->events->Key->Code(SDLK_SPACE)->Up->VOID->Once([QUIT_TIMEOUT_ID]() {
       if (Arch::Get()->CancelTimeout(QUIT_TIMEOUT_ID)) {
         std::cout << "QUIT TIMEOUT CANCELED\n";
       } else {

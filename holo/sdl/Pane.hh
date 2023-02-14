@@ -6,7 +6,7 @@ namespace holo {
   class SdlPane : public Pane {
 
     public: /** SDL interface */
-      SdlWinPtr const              sdlWin;
+      shared_ptr<SdlWin> const              sdlWin;
       shared_ptr<SdlSys> const     sdl{ SdlSys::Get() };
       /** Event tree associated w+ith this window instance. */
       shared_ptr<SdlEvtRoot> const events{ make_shared<SdlEvtRoot>() };
@@ -24,7 +24,7 @@ namespace holo {
       } NEXT;
 
     protected:
-      SdlPane(SdlWinPtr);
+      SdlPane(shared_ptr<SdlWin>);
       // Instances of SDL Windows that are open.
       static map<Uint32, weak_ptr<SdlPane>> open;
 

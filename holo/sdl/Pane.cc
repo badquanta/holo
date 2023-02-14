@@ -5,7 +5,7 @@ namespace holo {
   map<Uint32, weak_ptr<SdlPane>> SdlPane::open;
   SdlPane::Defaults              SdlPane::NEXT;
   /** inaccessible */
-  SdlPane::SdlPane(SdlWinPtr w)
+  SdlPane::SdlPane(shared_ptr<SdlWin> w)
     : sdlWin{ w }
     , GetSize{ bind(&SdlWin::GetSize, w) }
     , GetWidth{ bind(&SdlWin::GetWidth, w) }

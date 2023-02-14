@@ -16,7 +16,7 @@ namespace holo {
       shared_ptr<SdlTexture> LoadTexture(string);
 
     private:
-      SdlPaneRender(SdlWinPtr);
+      SdlPaneRender(shared_ptr<SdlWin>);
 
     public:
       virtual ~SdlPaneRender() override;

@@ -9,7 +9,7 @@ namespace holo {
   class SdlPaneGl : public SdlPane {
     private:
       /** \note Inaccessible constructor */
-      SdlPaneGl(SdlWinPtr);
+      SdlPaneGl(shared_ptr<SdlWin>);
 
     public: /** Typedefs **********************************/
       shared_ptr<SdlGlSys> const sdlGl { SdlGlSys::Get()};
@@ -44,20 +44,16 @@ namespace holo {
       /** \brief Ensures `open` map is updated. */
       virtual ~SdlPaneGl();
 
-    private: /** Instance Methods ****************************************/
+    public: /** Instance Methods ****************************************/
       void GlActivateContext();
       void GlSwap();
 
     public: /** Instance properties **********************/
-      /** Reference to the `Program` singleton. */
-
       /** Render step callbacks */
       RenderDispatcher::sPtr const  preRender{ std::make_shared<RenderDispatcher>() };
 
-      //RenderDispatcher::sPtr const  render{ std::make_shared<RenderDispatcher>() };
       RenderDispatcher::sPtr const  postRender{ std::make_shared<RenderDispatcher>() };
-      /** Strong ref. to `SDL2pp::Window` */
-      std::shared_ptr<SdlWin> const sdlWin;
+
       /** GLContext associated with window. */
       SDL_GLContext                 glContext;
   };

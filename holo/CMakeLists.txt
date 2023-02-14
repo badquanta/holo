@@ -22,6 +22,7 @@ set(HOLO_GL_SOURCES
 )
 
 set(HOLO_SOURCES
+  "Evt.cc"
   "Arch.cc"
   "Pane.cc"
 )

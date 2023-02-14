@@ -1,8 +1,8 @@
 #pragma once
 #include <holo/stdPrimitives.hh>
-#include <holo/boostPrimitives.hh>
 namespace holo {
-  typedef unsigned int CallbackID;
+  typedef uint64_t CallbackID;
+  CallbackID NextEvtID();
   /**
    * \brief Abstract "event" dispatcher.
    * \param Types... list of parameter types used in dispatching
@@ -12,15 +12,12 @@ namespace holo {
     public:
       /** \depreciated */
       using sPtr = shared_ptr<EvtAbstract<Types...>>;
-
-      typedef std::function<void(CallbackID, Types...)> CallbackFunctionWithID;
+      /** */
       typedef std::function<void(Types...)>             CallbackFunction;
       /** map of IDs to their callbacks. */
       typedef std::map<CallbackID, CallbackFunction>    CallbackMap;
 
     private:
-      /** \brief Every handler registered is given an ID. */
-      CallbackID  nextId{ 0 }, erasedCount{ 0 };
       CallbackMap registeredOnce;
       CallbackMap registered;
 
@@ -30,12 +27,12 @@ namespace holo {
        * \return integer id value, for use if `handler` needs to be later removed.
        */
       virtual CallbackID On(CallbackFunction handler) {
-        CallbackID id  = nextId++;
+        CallbackID id  = NextEvtID();
         registered[id] = handler;
         return id;
       };
       virtual CallbackID Once(CallbackFunction handler) {
-        CallbackID id      = nextId++;
+        CallbackID id      = NextEvtID();
         registeredOnce[id] = handler;
         return id;
       }
@@ -43,11 +40,14 @@ namespace holo {
       /** \brief Removes a callback from the list to be triggered.
        * \param id integer returned by `On` when registering the handler.
        */
-      virtual void Off(CallbackID id) { registered.erase(id); };
+      virtual void Off(CallbackID id) {
+        registered.erase(id);
+        registeredOnce.erase(id);
+      };
       virtual void Clear() { registered.clear(); };
 
-      void TriggerMap(CallbackMap& mapList, Types... eventData ) {
-        for (auto pair : mapList){
+      void TriggerMap(CallbackMap& mapList, Types... eventData) {
+        for (auto pair : mapList) {
           pair.second(eventData...);
         }
       }
@@ -58,6 +58,7 @@ namespace holo {
       virtual void Trigger(Types... eventData) {
         TriggerMap(registered, eventData...);
         TriggerMap(registeredOnce, eventData...);
+        registeredOnce.clear();
       }
       /** \brief Simply an alias for `Trigger`, making the class usable as a `Handler` */
       void operator()(Types... eventData) { return this->Trigger(eventData...); }
