@@ -96,8 +96,9 @@ namespace holo {
   class GlSlProgram {
     public:
       using sPtr = std::shared_ptr<GlSlProgram>;
-      const GLuint ID;
-      static sPtr  Create();
+      const GLuint                        ID;
+      static std::shared_ptr<GlSlProgram> Create();
+      static std::shared_ptr<GlSlProgram> Build(string vertSrc, string fragSrc);
 
     private:
       GlSlProgram();
