@@ -1,7 +1,7 @@
 #include "holo/sdl/EvtKeyPress.hh"
 namespace holo {
 
-  void SdlKeyPressEvt::Trigger(SDL_Event& e) const {
+  void SdlKeyPressEvt::Trigger(SDL_Event& e) {
     assert((e.type == SDL_KEYDOWN) || (e.type == SDL_KEYUP));
     switch (e.type) {
       case SDL_KEYDOWN:

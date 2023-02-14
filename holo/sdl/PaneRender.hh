@@ -12,6 +12,7 @@ namespace holo {
       static shared_ptr<SdlPaneRender> Create(string t, int w, int h);
 
       shared_ptr<SdlTexture> CreateTexture(shared_ptr<SdlSurface>);
+      shared_ptr<SdlTexture> CreateTexture(SdlSurface);
       shared_ptr<SdlTexture> LoadTexture(string);
 
     private:

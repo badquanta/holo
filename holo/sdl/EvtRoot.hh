@@ -4,7 +4,7 @@
 namespace holo {
   /** \brief Breaks out SDL_Event(s) into their major sub-types.  */
 
-  class SdlEvtRoot : public AbstractSpecialer<SDL_EventType, SDL_Event&> {
+  class SdlEvtRoot : public EvtAbstractTypeSwitch<SDL_EventType, SDL_Event&> {
     public:
       shared_ptr<SdlEvt> const     Quit          = make_shared<SdlEvt>();
       shared_ptr<SdlEvt> const       App           = make_shared<SdlEvt>();

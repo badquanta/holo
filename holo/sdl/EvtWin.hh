@@ -3,7 +3,7 @@
 namespace holo {
 
   /** \brief SDL_Event dispatcher for window events */
-  class SdlEvtWin : public AbstractSpecialer<SDL_WindowEventID, SDL_Event&> {
+  class SdlEvtWin : public EvtAbstractTypeSwitch<SDL_WindowEventID, SDL_Event&> {
     public:
       std::shared_ptr<SdlEvt> const Shown          = std::make_shared<SdlEvt>();
       std::shared_ptr<SdlEvt> const Hidden         = std::make_shared<SdlEvt>();

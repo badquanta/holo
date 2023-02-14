@@ -9,6 +9,15 @@
 
 The source code depends on [libSDL2pp](https://github.com/libSDL2pp/libSDL2pp) & [boost](https://github.com/boostorg/boost).
 
+### References:
+
+Various external references used in building.
+
+* [SDL2pp API](https://sdl2pp.amdmi3.ru/)
+* [Sdl2 API](https://wiki.libsdl.org/SDL2/CategoryAPI)
+* boost/
+  * [log/trivial](https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/log/tutorial.html)
+* [c++ & standard library](https://en.cppreference.com/w/cpp)
 
 
 ## Build setup

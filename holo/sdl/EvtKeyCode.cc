@@ -1,7 +1,7 @@
 #include <holo/sdl/EvtKeyCode.hh>
 namespace holo {
 
-  void SdlKeyCodeEvt::Trigger(SDL_Event& e) const {
+  void SdlKeyCodeEvt::Trigger(SDL_Event& e)  {
     assert((e.type == SDL_KEYDOWN) || (e.type == SDL_KEYUP));
     SDL_Keycode sym = e.key.keysym.sym;
     if (Sym.contains(sym)) {

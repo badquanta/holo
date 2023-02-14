@@ -2,10 +2,9 @@
  * \author BadQuanta
  */
 #pragma once
-#include <holo/holo-cfg.hh>
-
-#include <holo/AbstractDispatcher.hh>
+#include <holo/Evt.hh>
 #include <holo/boostPrimitives.hh>
+#include <holo/holo-cfg.hh>
 namespace holo {
 
   /** Program/Engine wrapper.
@@ -23,7 +22,8 @@ namespace holo {
       static string           FindPath(const string&);
       static string           FindPath(const string& aPath, const vector<string>& searchPaths);
 
-      TimeoutID Timeout(unsigned int, VoidDispatcher::CallbackFunction);
+      TimeoutID Timeout(unsigned int, EvtVoid::CallbackFunction);
+      bool      CancelTimeout(TimeoutID);
 
     private:
       Arch();
@@ -32,7 +32,7 @@ namespace holo {
       static bool           exitRequested;
       static TimeoutID      exitRequestedAt;
 
-      typedef std::map<TimeoutID, VoidDispatcher::CallbackFunction> TimeoutMap;
+      typedef std::map<TimeoutID, EvtVoid::CallbackFunction> TimeoutMap;
 
       TimeoutMap timedDispatches;
 
@@ -41,8 +41,8 @@ namespace holo {
       typedef high_resolution_clock::time_point Hrc_t;
       typedef uint64_t                          CycleID;
       CycleID                                   cycles{ 0 };
-      CycleID const                             reportEvery{ 1000 };
-      std::vector<milliseconds>                 lastCycleTicks{ reportEvery, milliseconds{ 0 } };
+      CycleID const                             reportEvery{ 10000 };
+      std::vector<microseconds>                 lastCycleTicks{ reportEvery, microseconds{ 0 } };
 
     public:
       virtual ~Arch();
@@ -50,10 +50,10 @@ namespace holo {
       // SDLTTF   ttf;
       // Renderer renderer;
 
-      shared_ptr<VoidDispatcher> const NEXT{ make_shared<VoidDispatcher>() };
-      shared_ptr<VoidDispatcher> const Input{ make_shared<VoidDispatcher>() };
-      shared_ptr<VoidDispatcher> const Step{ make_shared<VoidDispatcher>() };
-      shared_ptr<VoidDispatcher> const Output{ make_shared<VoidDispatcher>() };
+      shared_ptr<EvtVoid> const NEXT{ make_shared<EvtVoid>() };
+      shared_ptr<EvtVoid> const Input{ make_shared<EvtVoid>() };
+      shared_ptr<EvtVoid> const Step{ make_shared<EvtVoid>() };
+      shared_ptr<EvtVoid> const Output{ make_shared<EvtVoid>() };
 
       CycleID     GetCycle();
       void        MainLoop();

@@ -59,7 +59,7 @@ namespace holo {
         snprintf(buffer, 50, "Invalid log level: %d", logLvl);
         throw std::runtime_error(std::string(buffer));
     }
-    BOOST_LOG_TRIVIAL(trace) << "Program::Configure()";
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     return true;
   }
   shared_ptr<Arch> Arch::Get() {
@@ -72,13 +72,13 @@ namespace holo {
   }
 
   Arch::Arch() {
-    BOOST_LOG_TRIVIAL(trace) << "Arch Startup";
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
 
     // mainRenderer = std::make_shared<SDL2pp::Renderer>(*mainWindow, -1, SDL_RENDERER_ACCELERATED);
   }
 
   Arch::~Arch() {
-    BOOST_LOG_TRIVIAL(trace) << "Arch Shutdown";
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
 
   void Arch::NextTimeouts() {
@@ -96,7 +96,7 @@ namespace holo {
     }
   }
 
-  Arch::TimeoutID Arch::Timeout(unsigned int timeout, VoidDispatcher::CallbackFunction callback) {
+  Arch::TimeoutID Arch::Timeout(unsigned int timeout, EvtVoid::CallbackFunction callback) {
     // TimeoutID const wanted = SDL_GetTicks() + timeout;
     TimeoutID wanted = steady_clock::now() + duration<int, std::milli>(timeout);
     TimeoutID actual = wanted;
@@ -110,6 +110,15 @@ namespace holo {
     }
     return actual;
   }
+
+  bool Arch::CancelTimeout(Arch::TimeoutID id){
+    if(timedDispatches.contains(id)){
+      return (timedDispatches.erase(id) > 0);
+    }
+    return false;
+  }
+
+
   Arch::CycleID Arch::GetCycle() {
     return cycles;
   }
@@ -127,12 +136,12 @@ namespace holo {
 
       Hrc_t   loopEndTime           = high_resolution_clock::now();
       CycleID cycleReportId         = cycles % reportEvery;
-      lastCycleTicks[cycleReportId] = duration_cast<milliseconds>(loopEndTime - loopStartTime);
-      if (false && (cycles % reportEvery) == (reportEvery - 1)) {
-        milliseconds sumTicks =
-          std::accumulate(lastCycleTicks.begin(), lastCycleTicks.end(), milliseconds(0));
-        milliseconds avgTicks = (sumTicks / reportEvery);
-        BOOST_LOG_TRIVIAL(debug) << "Loop Cycle #" << cycles << ", avg:" << avgTicks << " ms.";
+      lastCycleTicks[cycleReportId] = duration_cast<microseconds>(loopEndTime - loopStartTime);
+      if ((cycles % reportEvery) == (reportEvery - 1)) {
+        microseconds sumTicks =
+          std::accumulate(lastCycleTicks.begin(), lastCycleTicks.end(), microseconds(0));
+        microseconds avgTicks = (sumTicks / reportEvery);
+        BOOST_LOG_TRIVIAL(debug) << "Loop Cycle #" << cycles << ", avg:" << avgTicks << " ns.";
       }
       cycles++;
     }

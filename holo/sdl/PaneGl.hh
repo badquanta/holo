@@ -18,7 +18,7 @@ namespace holo {
       /** Weak ref. to `Pane` */
       using wPtr             = std::weak_ptr<SdlPaneGl>;
       /** \todo Maybe make this a virtual function? */
-      using RenderDispatcher = TypeDispatcher<SdlPaneGl::sPtr>;
+      using RenderDispatcher = EvtAbstractType<SdlPaneGl::sPtr>;
 
 
 

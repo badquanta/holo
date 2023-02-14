@@ -7,7 +7,7 @@ namespace holo {
     public: /** Shared references */
       using sPtr = shared_ptr<Pane>;
       shared_ptr<Arch> const     arch{ Arch::Get() };
-      shared_ptr<VoidDispatcher> render{ make_shared<VoidDispatcher>() };
+      shared_ptr<EvtVoid> render{ make_shared<EvtVoid>() };
       CallbackID const           OutputID;
 
     protected: /** inaccessible constructor */

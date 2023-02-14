@@ -29,7 +29,9 @@ namespace holo {
 
     renderer->Present();
   }
-
+  shared_ptr<SdlTexture> SdlPaneRender::CreateTexture(SdlSurface surface){
+    return make_shared<SdlTexture>(*renderer, surface);
+  }
   shared_ptr<SdlTexture> SdlPaneRender::CreateTexture(shared_ptr<SdlSurface> surface){
     return make_shared<SdlTexture>(*renderer, *surface);
   }

@@ -23,12 +23,12 @@ namespace holo {
     , Show{ bind(&SdlWin::Show, w) }
     , SetFullscreen{ bind(&SdlWin::SetFullscreen, w, _1) }
     , SetSizeWH{ bind(static_cast<SdlWin& (SdlWin::*)(int, int)>(&SdlWin::SetSize), w, _1, _2) }
-    , SetSize{ bind(static_cast<SdlWin& (SdlWin::*)(const Point&)>(&SdlWin::SetSize), w, _1) }
+    , SetSize{ bind(static_cast<SdlWin& (SdlWin::*)(const SdlPoint&)>(&SdlWin::SetSize), w, _1) }
     , GetBrightness{ bind(&SdlWin::GetBrightness, w) }
     , SetBrightness{ bind(&SdlWin::SetBrightness, w, _1) }
     , GetPosition{ bind(&SdlWin::GetPosition, w) }
     , SetPosition{ bind(
-        static_cast<SdlWin& (SdlWin::*)(const Point&)>(&SdlWin::SetPosition), w, _1
+        static_cast<SdlWin& (SdlWin::*)(const SdlPoint&)>(&SdlWin::SetPosition), w, _1
       ) }
     , SetPositionXY{ bind(
         static_cast<SdlWin& (SdlWin::*)(int, int)>(&SdlWin::SetPosition), w, _1, _2
@@ -38,14 +38,14 @@ namespace holo {
         static_cast<SdlWin& (SdlWin::*)(int, int)>(&SdlWin::SetMinimumSize), w, _1, _2
       ) }
     , SetMinimumSize{ bind(
-        static_cast<SdlWin& (SdlWin::*)(const Point&)>(&SdlWin::SetMaximumSize), w, _1
+        static_cast<SdlWin& (SdlWin::*)(const SdlPoint&)>(&SdlWin::SetMaximumSize), w, _1
       ) }
     , GetMaximumSize{ bind(&SdlWin::GetMaximumSize, w) }
     , SetMaximumSizeWH{ bind(
         static_cast<SdlWin& (SdlWin::*)(int, int)>(&SdlWin::SetMaximumSize), w, _1, _2
       ) }
     , SetMaximumSize{ bind(
-        static_cast<SdlWin& (SdlWin::*)(const Point&)>(&SdlWin::SetMaximumSize), w, _1
+        static_cast<SdlWin& (SdlWin::*)(const SdlPoint&)>(&SdlWin::SetMaximumSize), w, _1
       ) }
     , GetGrab{ bind(&SdlWin::GetGrab, w) }
     , SetGrab{ bind(&SdlWin::SetGrab, w, _1) }
@@ -61,7 +61,7 @@ namespace holo {
 #endif
   {
     sdl->windows[GetID()]=events;
-    BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << " ID=" << GetID();
+    BOOST_LOG_TRIVIAL(trace) <<  __PRETTY_FUNCTION__ << " ID=" << GetID();
   }
   /** virtual */
   SdlPane::~SdlPane() {

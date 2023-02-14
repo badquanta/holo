@@ -4,7 +4,6 @@
 namespace holo {
   /** Common SDL . */
   class SdlPane : public Pane {
-      using Point = SDL2pp::Point;
 
     public: /** SDL interface */
       SdlWinPtr const              sdlWin;
@@ -37,9 +36,9 @@ namespace holo {
 
     public: /** CONVIENCE FORWARDERS to SDL2pp::Window instance */
       /** \brief Convience accessors to methods on `SDL2pp::Window` instance
-       * \return[Point]
-       * \fn Point GetSize() **/
-      function<Point()> const                     GetSize;
+       * \return[SdlPoint]
+       * \fn SdlPoint GetSize() **/
+      function<SdlPoint()> const                  GetSize;
       /** \brief Get the width of the window
        * \returns int
        * \fn int GetWidth
@@ -50,11 +49,11 @@ namespace holo {
        * \fn int GetHeight
        */
       function<int()> const                       GetHeight;
-      /** Get the drawable size * \fn Point GetDrawableSize()
+      /** Get the drawable size * \fn SdlPoint GetDrawableSize()
        * \see https://wiki.libsdl.org/SDL2/SDL_GL_GetDrawableSize
        * \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html#a5b75c003e803029db8a54230dcf2ba7e
        */
-      function<Point()> const                     GetDrawableSize;
+      function<SdlPoint()> const                  GetDrawableSize;
       /** Get drawable width \fn int GetDrawableWidth */
       function<int()> const                       GetDrawableWidth;
       /** Get drawable height \fn int GetDrawableHeight */
@@ -74,19 +73,19 @@ namespace holo {
       function<SdlWin&()> const                   Raise;
       function<SdlWin&()> const                   Show;
       function<SdlWin&(Uint32)> const             SetFullscreen;
-      function<SdlWin&(const Point&)> const       SetSize;
+      function<SdlWin&(const SdlPoint&)> const    SetSize;
       function<SdlWin&(int, int)> const           SetSizeWH;
       function<float()> const                     GetBrightness;
       function<SdlWin&(float)> const              SetBrightness;
-      function<Point()> const                     GetPosition;
+      function<SdlPoint()> const                  GetPosition;
       function<SdlWin&(int, int)> const           SetPositionXY;
-      function<SdlWin&(const Point&)> const       SetPosition;
-      function<Point()> const                     GetMinimumSize;
+      function<SdlWin&(const SdlPoint&)> const    SetPosition;
+      function<SdlPoint()> const                  GetMinimumSize;
       function<SdlWin&(int, int)> const           SetMinimumSizeWH;
-      function<SdlWin&(const Point&)> const       SetMinimumSize;
-      function<Point()> const                     GetMaximumSize;
+      function<SdlWin&(const SdlPoint&)> const    SetMinimumSize;
+      function<SdlPoint()> const                  GetMaximumSize;
       function<SdlWin&(int, int)> const           SetMaximumSizeWH;
-      function<SdlWin&(const Point&)> const       SetMaximumSize;
+      function<SdlWin&(const SdlPoint&)> const    SetMaximumSize;
       function<bool()> const                      GetGrab;
       function<SdlWin&(bool)> const               SetGrab;
       function<int()> const                       GetDisplayIndex;
