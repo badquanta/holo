@@ -8,5 +8,6 @@ namespace holo {
       SdlEvt::sPtr Up{ std::make_shared<SdlEvt>() };
       SdlEvt::sPtr Down{ std::make_shared<SdlEvt>() };
       virtual void Trigger(SDL_Event&) override;
+      virtual void Off(CallbackID) override;
   };
 }

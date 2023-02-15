@@ -1,5 +1,20 @@
 #include <holo/sdl/Evt.hh>
 namespace holo {
+  Uint32 SdlEvt::GetMouseID(SDL_Event& e) {
+    Uint32 mouseID = 0;
+    switch(e.type){
+      case SDL_MOUSEBUTTONDOWN:
+      case SDL_MOUSEBUTTONUP:
+        mouseID = e.button.which;
+        break;
+      case SDL_MOUSEMOTION:
+        mouseID = e.motion.which;
+        break;
+      case SDL_MOUSEWHEEL:
+        mouseID = e.wheel.which;
+    }
+    return mouseID;
+  }
   Uint32 SdlEvt::GetWindowID(SDL_Event& e) {
     Uint32 winId = 0;
     switch (e.type) {

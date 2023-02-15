@@ -2,7 +2,7 @@
 #include <holo/stdPrimitives.hh>
 namespace holo {
   typedef uint64_t CallbackID;
-  CallbackID NextEvtID();
+  CallbackID       NextEvtID();
   /**
    * \brief Abstract "event" dispatcher.
    * \param Types... list of parameter types used in dispatching
@@ -13,9 +13,9 @@ namespace holo {
       /** \depreciated */
       using sPtr = shared_ptr<EvtAbstract<Types...>>;
       /** */
-      typedef std::function<void(Types...)>             CallbackFunction;
+      typedef std::function<void(Types...)>          CallbackFunction;
       /** map of IDs to their callbacks. */
-      typedef std::map<CallbackID, CallbackFunction>    CallbackMap;
+      typedef std::map<CallbackID, CallbackFunction> CallbackMap;
 
     private:
       CallbackMap registeredOnce;
@@ -110,11 +110,12 @@ namespace holo {
         std::map<SwitchType, std::shared_ptr<EvtAbstract<TypeName, MoreTypes...>>>;
       /** \todo give this a better name. */
       SpecialHandlers_t SpecialHandlers;
-
-      // EvtAbstractTypeSwitch(SpecialHandlers_t h)
-      //   : SpecialHandlers{ h } {}
-      virtual SwitchType ExtractSwitch(TypeName, MoreTypes...) const = 0;
-      virtual void       Trigger(TypeName data, MoreTypes... eventData) {
+      using SwitchTypeExtractor = function<SwitchType(TypeName, MoreTypes...)>;
+      SwitchTypeExtractor ExtractSwitch;
+      EvtAbstractTypeSwitch(SwitchTypeExtractor extractor, const SpecialHandlers_t& h = {})
+        : ExtractSwitch{ extractor }
+        , SpecialHandlers{ h } {}
+      virtual void Trigger(TypeName data, MoreTypes... eventData) {
         SwitchType switchVal = ExtractSwitch(data, eventData...);
         if (SpecialHandlers.contains(switchVal)) {
           SpecialHandlers.at(switchVal)->Trigger(data, eventData...);

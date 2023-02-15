@@ -9,6 +9,7 @@
 #include <stack>
 #include <stdlib.h>
 #include <string>
+#include <sstream>
 #include <utility>
 #include <vector>
 namespace holo {
@@ -18,6 +19,7 @@ namespace holo {
   using std::map;
   using std::shared_ptr;
   using std::string;
+  using std::stringstream;
   using std::unreachable;
   using std::vector;
   using std::weak_ptr;

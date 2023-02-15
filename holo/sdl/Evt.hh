@@ -10,5 +10,6 @@ namespace holo {
       using sPtr = shared_ptr<SdlEvt>;
 
       static Uint32 GetWindowID(SDL_Event&);
+      static Uint32 GetMouseID(SDL_Event&);
   };
 }

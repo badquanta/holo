@@ -1,5 +1,5 @@
 #pragma once
-#include <holo/sdl/Evt.hh>
+#include <holo/sdl/EvtTypeSwitch.hh>
 namespace holo {
 
   /** \brief SDL_Event dispatcher for window events */
@@ -24,6 +24,6 @@ namespace holo {
       std::shared_ptr<SdlEvt> const IccProfChanged = std::make_shared<SdlEvt>();
       std::shared_ptr<SdlEvt> const DisplayChanged = std::make_shared<SdlEvt>();
       SdlEvtWin();
-      virtual SDL_WindowEventID ExtractSwitch(SDL_Event&) const override;
+      //virtual SDL_WindowEventID ExtractSwitch(SDL_Event&) const override;
   };
 }

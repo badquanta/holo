@@ -15,13 +15,15 @@ int main(int ac, char** av) {
     // Pressing the enter key cancels
     pane->sdl->events->Key->Code(SDLK_RETURN)->Up->VOID->On(&Arch::RequestQuit);
     auto QUIT_TIMEOUT_ID = pane->arch->Timeout(5000, &Arch::RequestQuit);
-    pane->events->Key->Code(SDLK_SPACE)->Up->VOID->Once([QUIT_TIMEOUT_ID]() {
+    auto CancelQuitTimeoutOnce{ [QUIT_TIMEOUT_ID]() {
       if (Arch::Get()->CancelTimeout(QUIT_TIMEOUT_ID)) {
         std::cout << "QUIT TIMEOUT CANCELED\n";
       } else {
         std::cout << "QUIT TIMEOUT ALREADY CANCELED\n";
       };
-    });
+    } };
+    pane->events->Key->Code(SDLK_SPACE)->Up->VOID->Once(CancelQuitTimeoutOnce);
+    pane->events->Mouse->Button->Down->VOID->Once(CancelQuitTimeoutOnce);
     pane->GlActivateContext();
     auto glProgram{ GlSlProgram::Build("share/shaders/test1.vert", "share/shaders/test1.frag") };
     auto VAO{ GlVertexArray::Create() };
@@ -62,8 +64,8 @@ int main(int ac, char** av) {
       texture2->Bind();
 
       glm::mat4 transform{ 1.0f };
-      transform = glm::translate(transform, glm::vec3(0.5f,-0.5f,0.5f));
-      transform = glm::rotate(transform, 0.0f ,glm::vec3(0.0f,0.0f,1.0f));
+      transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.5f));
+      transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
       glProgram->Use();
       auto transformLoc = glProgram->GetUniformLocation("transform");
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));

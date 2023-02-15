@@ -15,4 +15,10 @@ namespace holo {
     }
     SdlEvt::Trigger(e);
   }
+  /** propagate off signals to Down & Up */
+  void SdlKeyPressEvt::Off(CallbackID id){
+    SdlEvt::Off(id);;
+    Down->Off(id);
+    Up->Off(id);
+  }
 }
