@@ -2,22 +2,24 @@
 #include <holo/Arch.hh>
 #include <holo/Gl.hh>
 namespace holo {
-  GlTexture::sPtr GlTexture::Load(std::string path) {
+  shared_ptr<GlTexture> GlTexture::Load(std::string path) {
     BOOST_LOG_TRIVIAL(info) << "GlTexture::Load('" << path << "')";
-    std::string found = Arch::FindPath(path);
-    SdlSurfacePtr  surf  = std::make_shared<SDL2pp::Surface>(found);
+    std::string   found = Arch::FindPath(path);
+    SdlSurfacePtr surf  = std::make_shared<SDL2pp::Surface>(found);
     return Create(surf);
   }
 
-  GlTexture::sPtr GlTexture::Create(SdlSurfacePtr surf) {
+  shared_ptr<GlTexture> GlTexture::Create(SdlSurfacePtr surf) {
     sPtr created{ Create() };
     created->Set(surf);
     return created;
   }
 
-  GlTexture::sPtr GlTexture::Create() {
+  shared_ptr<GlTexture> GlTexture::Create() {
     GLuint ID;
     glGenTextures(1, &ID);
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    GlNoErrors();
     return sPtr{ new GlTexture(ID) };
   }
 
@@ -27,6 +29,8 @@ namespace holo {
   void GlTexture::Bind() const {
     // BOOST_LOG_TRIVIAL(trace) << "Texture#"<<ID<<" Bound.";
     glBindTexture(GL_TEXTURE_2D, ID);
+    //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    GlNoErrors();
   }
 
   void GlTexture::Set(SdlSurfacePtr surf) {
@@ -34,20 +38,33 @@ namespace holo {
   }
 
   void GlTexture::Set(SdlSurfacePtr surf, GLint ws, GLint wt, GLint mf, GLint Mf) {
-    SDL2pp::Surface converted{ surf->Convert(SDL_PIXELFORMAT_RGBA32) };
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    SdlSurface converted{ surf->Convert(SDL_PIXELFORMAT_RGBA32) };
     Bind();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ws);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wt);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mf);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Mf);
     glTexImage2D(
-      GL_TEXTURE_2D, 0, GL_RGBA32I, converted.GetWidth(), converted.GetHeight(), 0, GL_RGBA32I,
+      GL_TEXTURE_2D, 0, GL_RGBA, converted.GetWidth(), converted.GetHeight(), 0, GL_RGBA,
       GL_UNSIGNED_BYTE, (converted.Get()->pixels)
     );
+    GlNoErrors();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ws);
+
+    GlNoErrors();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wt);
+
+    GlNoErrors();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mf);
+
+    GlNoErrors();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Mf);
+
+    GlNoErrors();
     glGenerateMipmap(GL_TEXTURE_2D);
+    GlNoErrors();
   }
 
   GlTexture::~GlTexture() {
     glDeleteTextures(1, &ID);
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    GlNoErrors();
   }
 }

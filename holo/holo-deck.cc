@@ -1,5 +1,5 @@
-#include <holo/sdl/PaneGl.hh>
 #include "holo/holo-cfg.hh"
+#include <holo/sdl/PaneGl.hh>
 
 using namespace holo;
 
@@ -7,7 +7,10 @@ int main(int ac, char** av) {
   try {
     Arch::Configure(ac, av);
     SdlPaneGl::sPtr win{ SdlPaneGl::Create("Holo-Deck", 300, 200, SDL_WINDOW_RESIZABLE) };
-
+    win->events->Window->Resized->On([&win](SDL_Event& e) {
+      SdlPoint drawableSize{win->GetDrawableSize()};
+      glViewport(0,0,drawableSize.x,drawableSize.y);
+    });
     GlSlProgram::sPtr glProgram{ GlSlProgram::Create() };
     {
       GlShader::sPtr glVertexShader{ GlShader::Load(GL_VERTEX_SHADER, "shaders/v1.vert") };
@@ -28,7 +31,7 @@ int main(int ac, char** av) {
       glProgram->Validate();
       glProgram->GetLog();
     }
-    GlVertexArray::sPtr VAO{GlVertexArray::Create()};
+    auto VAO{ GlVertexArray::Create() };
     VAO->Bind();
     GLint vertPos2D   = glProgram->GetAttribLocation("vPos"),
           vertColor3D = glProgram->GetAttribLocation("vColor"),
@@ -63,9 +66,8 @@ int main(int ac, char** av) {
 
     bool wireframe = false;
 
-    SdlEvt::CallbackFunction requestQuit{ [win](const SDL_Event& evt) { win->arch->RequestQuit(); } };
-    win->events->Quit->On(requestQuit);
-    win->events->Key->Code(SDLK_ESCAPE)->On(requestQuit);
+    win->events->Quit->VOID->On(&Arch::RequestQuit);
+    win->events->Key->Code(SDLK_ESCAPE)->VOID->On(&Arch::RequestQuit);
     win->events->Key->Code(SDLK_w)->Down->On([&wireframe](SDL_Event& e) {
       if (!e.key.repeat)
         wireframe = !wireframe;
@@ -78,7 +80,7 @@ int main(int ac, char** av) {
       glClear(GL_COLOR_BUFFER_BIT);
     });
     win->render->On([VAO, &wireframe, firstTex, vertPos2D, vertColor3D, vertTex2D, glProgram, VBO,
-                           IBO]() {
+                     IBO]() {
       glProgram->Use();
       VAO->Bind();
       IBO->Bind();

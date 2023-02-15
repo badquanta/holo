@@ -1,7 +1,7 @@
-#include <holo/Gl.hh>
 #include <boost/log/trivial.hpp>
 #include <fstream>
 #include <holo/Arch.hh>
+#include <holo/Gl.hh>
 namespace holo {
 
   GlShader::sPtr GlShader::Create(GLenum type) {
@@ -17,7 +17,7 @@ namespace holo {
   GlShader::sPtr GlShader::Load(GLenum type, const std::string& srcFile) {
 
     std::string searchPath{ Arch::FindPath(srcFile) };
-
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << srcFile;
     std::ifstream file(searchPath);
     if (!file.is_open()) {
       throw std::runtime_error("Unable to load source file.");
@@ -32,23 +32,26 @@ namespace holo {
     if (ID == 0) {
       throw std::runtime_error("Unable to create shader.");
     }
-    BOOST_LOG_TRIVIAL(trace) << "GlShader#" << ID << " created.";
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << "#" << ID ;
   }
 
   GlShader::~GlShader() {
-    BOOST_LOG_TRIVIAL(trace) << "GlShader#" << ID << " destroyed.";
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << "#" << ID ;
     glDeleteShader(ID);
+    GlNoErrors();
   }
 
   void GlShader::SetSource(const GLchar* src) {
-    BOOST_LOG_TRIVIAL(debug) << "GlShader#" << ID << " source set:\n" << src << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << __PRETTY_FUNCTION__ << "#" << ID << "\n"
+                             << src << std::endl;
     glShaderSource(ID, 1, &src, nullptr);
+    GlNoErrors();
   }
 
   bool GlShader::GetCompileStatus() {
     GLint compileStatus = GL_FALSE;
     glGetShaderiv(ID, GL_COMPILE_STATUS, &compileStatus);
-    BOOST_LOG_TRIVIAL(debug) << "GlShader#" << ID << " compile status: " << compileStatus;
+    BOOST_LOG_TRIVIAL(debug) << __PRETTY_FUNCTION__ << "#" << ID  << " compile status: " << compileStatus;
     return compileStatus == GL_TRUE;
   }
 
@@ -68,12 +71,12 @@ namespace holo {
         log = logStr;
       }
       delete[] logStr;
-      BOOST_LOG_TRIVIAL(debug) << "GlShader#" << ID << " LOG maxLength=" << maxLength
+      BOOST_LOG_TRIVIAL(debug) << __PRETTY_FUNCTION__ << "#" << ID  << " LOG maxLength=" << maxLength
                                << " logLength=" << logLength << "\n"
                                << log;
       return log;
     } else {
-      BOOST_LOG_TRIVIAL(error) << "GlShader#" << ID << " unable to get log.";
+      BOOST_LOG_TRIVIAL(error) << __PRETTY_FUNCTION__ << "#" << ID  << " unable to get log.";
       return "Invalid shader ID";
     }
   }

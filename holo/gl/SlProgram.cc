@@ -12,19 +12,19 @@ namespace holo {
   shared_ptr<GlSlProgram> GlSlProgram::Build(string vertSrc, string fragSrc) {
     auto created = Create();
     auto vertShader{ GlShader::Load(GL_VERTEX_SHADER, vertSrc) };
-    if(!vertShader->Compile()){
+    if (!vertShader->Compile()) {
       throw std::runtime_error(vertShader->GetLog());
     }
     auto fragShader{ GlShader::Load(GL_FRAGMENT_SHADER, fragSrc) };
-    if(!fragShader->Compile()){
+    if (!fragShader->Compile()) {
       throw std::runtime_error(fragShader->GetLog());
     }
     created->Attach(vertShader);
     created->Attach(fragShader);
-    if(!created->Link()){
+    if (!created->Link()) {
       throw std::runtime_error(created->GetLog());
     }
-    if(!created->Validate()){
+    if (!created->Validate()) {
       throw std::runtime_error(created->GetLog());
     };
 

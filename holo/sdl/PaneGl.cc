@@ -41,7 +41,6 @@ namespace holo {
   }
 
   void SdlPaneGl::GlActivateContext() {
-
     if (SDL_GL_MakeCurrent(sdlWin->Get(), glContext) != 0) {
       string errStr{SDL_GetError()};
       throw std::runtime_error(SDL_GetError());

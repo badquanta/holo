@@ -1,8 +1,11 @@
 #pragma once
-#include <GL/glew.h>
+#include <holo/gl/Errors.hh>
+#include <holo/gl/base.hh>
 #include <holo/sdl/Primitives.hh>
-
 namespace holo {
+  /**
+   * \see https://www.opengl.org/sdk/docs/tutorials/CodeColony/vertexarrays.php
+   */
   class GlVertexArray {
     public:
       using sPtr = std::shared_ptr<GlVertexArray>;
@@ -14,7 +17,9 @@ namespace holo {
 
     public:
       virtual ~GlVertexArray();
-      void Bind() const;
+      /** static global bind, stack unaffected, last updated.*/
+      GLuint        Bind() const;
+      static GLuint Bind(GLuint);
   };
   /** Manage the lifetime of a texture via shared_ptr */
   class GlTexture {

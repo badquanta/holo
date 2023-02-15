@@ -17,4 +17,11 @@ namespace holo {
     return Sym[code];
   }
 
+  void SdlKeyCodeEvt::Off(CallbackID id){
+    SdlKeyPressEvt::Off(id);
+    for(auto pair : Sym){
+      pair.second->Off(id);
+    }
+  }
+
 }

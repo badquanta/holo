@@ -15,6 +15,7 @@ set(HOLO_SDL_SOURCES
 )
 
 set(HOLO_GL_SOURCES
+  "gl/Errors.cc"
   "gl/SlProgram.cc"
   "gl/SlShader.cc"
   "gl/Texture.cc"
