@@ -13,7 +13,7 @@ namespace holo {
     public:
       shared_ptr<Arch> const    arch{ Arch::Get() };
       static shared_ptr<SdlSys> Get();
-      static map<Uint32, weak_ptr<SdlEvtRoot>> windows;
+      static map<Uint32, weak_ptr<SdlEvtRoot>> mapWindowIdEvt;
     protected:
       SdlSys();
       static weak_ptr<SdlSys> instance;

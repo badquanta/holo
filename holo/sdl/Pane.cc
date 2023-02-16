@@ -60,12 +60,12 @@ namespace holo {
     , SetResizable{ bind(&SdlWin::SetResizable, w, _1) }
 #endif
   {
-    sdl->windows[GetID()]=events;
+    sdl->mapWindowIdEvt[GetID()]=events;
     BOOST_LOG_TRIVIAL(trace) <<  __PRETTY_FUNCTION__ << " ID=" << GetID();
   }
   /** virtual */
   SdlPane::~SdlPane() {
-    sdl->windows.erase(GetID());
+    sdl->mapWindowIdEvt.erase(GetID());
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
   /** virtual */

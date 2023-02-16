@@ -1,10 +1,12 @@
 #include <holo/sdl/EvtMouse.hh>
 namespace holo {
-  SdlEvtMouseButton::SdlEvtMouseButton()
-    : SdlEvtTypeSwitch(SpecialHandlers_t{
-        {SDL_MOUSEBUTTONDOWN,   Up},
-        {  SDL_MOUSEBUTTONUP, Down}
-  }) {}
+  SdlEvtMouseButton::SdlEvtMouseButton() {
+    SpecialHandlers = SpecialHandlers_t{
+      {SDL_MOUSEBUTTONDOWN,   Up},
+      {  SDL_MOUSEBUTTONUP, Down}
+    };
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+  }
 
   shared_ptr<SdlEvtMouseButton> SdlEvtMouseButtonList::Get(Uint8 buttonID) {
     if (!mapButtonIDs.contains(buttonID)) {
@@ -14,7 +16,7 @@ namespace holo {
   }
   void SdlEvtMouseButtonList::Trigger(SDL_Event& e) {
     SdlEvtMouseButton::Trigger(e);
-    Get(GetMouseButtonID(e))->Trigger(e);
+    Get(e.button.button)->Trigger(e);
   }
   void SdlEvtMouseButtonList::Off(CallbackID id) {
     SdlEvtMouseButton::Off(id);
@@ -23,21 +25,16 @@ namespace holo {
     }
   }
 
-  SdlEvtMouse::SdlEvtMouse()
-    : SdlEvtTypeSwitch(SpecialHandlers_t{
-        {    SDL_MOUSEMOTION, Motion},
-        {SDL_MOUSEBUTTONDOWN, Button},
-        {  SDL_MOUSEBUTTONUP, Button},
-        {     SDL_MOUSEWHEEL,  Wheel}
-  }) {}
-
-  SDL_EventType SdlEvtMouse::ExtractSwitch(SDL_Event& e) const {
-    assert(
-      (e.type == SDL_MOUSEMOTION) || (e.type == SDL_MOUSEBUTTONDOWN) ||
-      (e.type == SDL_MOUSEBUTTONUP) || (e.type == SDL_MOUSEWHEEL)
-    );
-    return (SDL_EventType)e.type;
+  SdlEvtMouse::SdlEvtMouse(){
+    SpecialHandlers = SpecialHandlers_t{
+      {    SDL_MOUSEMOTION, Motion},
+      {SDL_MOUSEBUTTONDOWN, Button},
+      {  SDL_MOUSEBUTTONUP, Button},
+      {     SDL_MOUSEWHEEL,  Wheel}
+    };
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
+
   /** SdlEvtMouseList*/
   map<Uint32, shared_ptr<SdlEvtMouse>> SdlEvtMouseList::mapMouseIDs{};
   void                                 SdlEvtMouseList::Trigger(SDL_Event& e) {

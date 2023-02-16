@@ -24,6 +24,7 @@ int main(int ac, char** av) {
     } };
     pane->events->Key->Code(SDLK_SPACE)->Up->VOID->Once(CancelQuitTimeoutOnce);
     pane->events->Mouse->Button->Down->VOID->Once(CancelQuitTimeoutOnce);
+    pane->sdl->events->On(SdlEvt::PrintTo(std::cout));
     pane->GlActivateContext();
     auto glProgram{ GlSlProgram::Build("share/shaders/test1.vert", "share/shaders/test1.frag") };
     auto VAO{ GlVertexArray::Create() };

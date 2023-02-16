@@ -20,7 +20,7 @@ set(SDL2PP_WITH_MIXER ON)
 set(SDL2PP_WITH_TTF ON)
 add_subdirectory("ext/libSDL2pp")
 # Boost
-set(BOOST_INCLUDE_LIBRARIES json log filesystem program_options)
+set(BOOST_INCLUDE_LIBRARIES test json log filesystem program_options)
 add_subdirectory("ext/boost")
 
 # Project assets

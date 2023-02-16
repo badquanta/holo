@@ -3,7 +3,7 @@
 namespace holo {
   /** Protected */
   weak_ptr<SdlSys>                  SdlSys::instance;
-  map<Uint32, weak_ptr<SdlEvtRoot>> SdlSys::windows;
+  map<Uint32, weak_ptr<SdlEvtRoot>> SdlSys::mapWindowIdEvt;
   /** */
   SdlSys::SdlSys()
     : InputID{ arch->Input->On(bind(&SdlSys::Input, this)) } {
@@ -22,14 +22,14 @@ namespace holo {
       Uint32 winId = SdlEvt::GetWindowID(evt);
       if (winId != 0) {
         // Dispatch ONLY to the specified window ID
-        if (windows.contains(winId)) {
-          if (!(windows.at(winId).expired())) {
-            windows[winId].lock()->Trigger(evt);
+        if (mapWindowIdEvt.contains(winId)) {
+          if (!(mapWindowIdEvt.at(winId).expired())) {
+            mapWindowIdEvt[winId].lock()->Trigger(evt);
           }
         }
       } else {
         // Dispatch to ALL windows
-        for (auto pair : windows) {
+        for (auto pair : mapWindowIdEvt) {
           if (!pair.second.expired())
             pair.second.lock()->Trigger(evt);
         }

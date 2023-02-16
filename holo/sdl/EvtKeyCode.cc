@@ -1,8 +1,10 @@
 #include <holo/sdl/EvtKeyCode.hh>
 namespace holo {
 
-  void SdlKeyCodeEvt::Trigger(SDL_Event& e)  {
-    assert((e.type == SDL_KEYDOWN) || (e.type == SDL_KEYUP));
+  void SdlKeyCodeEvt::Trigger(SDL_Event& e) {
+    if ((e.type != SDL_KEYDOWN) && (e.type != SDL_KEYUP)) {
+      return;
+    }
     SDL_Keycode sym = e.key.keysym.sym;
     if (Sym.contains(sym)) {
       Sym.at(sym)->Trigger(e);
@@ -17,9 +19,9 @@ namespace holo {
     return Sym[code];
   }
 
-  void SdlKeyCodeEvt::Off(CallbackID id){
+  void SdlKeyCodeEvt::Off(CallbackID id) {
     SdlKeyPressEvt::Off(id);
-    for(auto pair : Sym){
+    for (auto pair : Sym) {
       pair.second->Off(id);
     }
   }

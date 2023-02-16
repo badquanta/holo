@@ -22,7 +22,7 @@ namespace holo {
   class SdlEvtMouse : public SdlEvtTypeSwitch {
     public:
       shared_ptr<SdlEvt> const Motion{ make_shared<SdlEvt>() };
-      shared_ptr<SdlEvt> const Button{ make_shared<SdlEvt>() };
+      shared_ptr<SdlEvtMouseButtonList> const Button{ make_shared<SdlEvtMouseButtonList>() };
       shared_ptr<SdlEvt> const Wheel{ make_shared<SdlEvt>() };
       SdlEvtMouse();
       //virtual SDL_EventType ExtractSwitch(SDL_Event&) const override;
