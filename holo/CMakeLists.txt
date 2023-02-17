@@ -1,9 +1,10 @@
 configure_file(holo-cfg.hh.in holo-cfg.hh)
 configure_file(.input.holo.hh holo.hh)
-file(GLOB_RECURSE HOLO_GLSL_FS_SOURCES RELATIVE "${CURRENT_SOURCE_DIR}" "gl/sl/*.fs")
-file(GLOB_RECURSE HOLO_GLSL_VS_SOURCES RELATIVE "${CURRENT_SOURCE_DIR}" "gl/sl/*.vs")
+file(GLOB_RECURSE HOLO_GLSL_FS_SOURCES RELATIVE "${PROJECT_SOURCE_DIR}/holo/gl/sl" "*.fs")
+file(GLOB_RECURSE HOLO_GLSL_VS_SOURCES RELATIVE "${PROJECT_SOURCE_DIR}/holo/gl/sl" "*.vs")
 foreach(GLSL_SOURCE IN LISTS HOLO_GLSL_FS_SOURCES HOLO_GLSL_VS_SOURCES)
   message("GLSL Source: ${GLSL_SOURCE}")
+  configure_file("gl/sl/${GLSL_SOURCE}" "gl/sl/${GLSL_SOURCE}")
 endforeach()
 
 set(HOLO_SDL_SOURCES

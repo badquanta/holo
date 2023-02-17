@@ -16,12 +16,19 @@ set(DOXYGEN_REFERENCED_BY_RELATION YES)
 set(DOXYGEN_REFERENCES_RELATION YES)
 set(DOXYGEN_USE_HTAGS NO)
 set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md )
+set(DOXYGEN_HAVE_DOT YES)
+set(DOXYGEN_DOT_NUM_THREADS 2)
+set(DOXYGEN_INTERACTIVE_SVG YES)
+set(DOXYGEN_DOT_IMAGE_FORMAT svg)
+set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
+set(DOXYGEN_PROJECT_LOGO "${PROJECT_SOURCE_DIR}/share/textures/holo-logo.256x64.v0.1.png")
 doxygen_add_docs(docs
     ${PROJECT_SOURCE_DIR}/holo
     ${PROJECT_SOURCE_DIR}/README.md
     "${PROJECT_SOURCE_DIR}/test/Testing.md"
     "${PROJECT_SOURCE_DIR}/share/Credits.md"
+
+    "${PROJECT_SOURCE_DIR}/share/textures/holo-grid.v0.1.png"
     COMMENT "Generate documentation"
 )
-
 add_custom_target(open-docs "xdg-open" "${PROJECT_BINARY_DIR}/docs/html/index.html" DEPENDS docs)
