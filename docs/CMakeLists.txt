@@ -15,7 +15,12 @@ set(DOXYGEN_SOURCE_BROWSER YES)
 set(DOXYGEN_REFERENCED_BY_RELATION YES)
 set(DOXYGEN_REFERENCES_RELATION YES)
 set(DOXYGEN_USE_HTAGS NO)
-set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md )
+set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
+set(DOXYGEN_HAVE_DOT YES)
+set(DOXYGEN_DOT_NUM_THREADS 2)
+set(DOXYGEN_INTERACTIVE_SVG YES)
+set(DOXYGEN_DOT_IMAGE_FORMAT svg)
+
 doxygen_add_docs(docs
     ${PROJECT_SOURCE_DIR}/holo
     ${PROJECT_SOURCE_DIR}/README.md
@@ -23,5 +28,11 @@ doxygen_add_docs(docs
     "${PROJECT_SOURCE_DIR}/share/Credits.md"
     COMMENT "Generate documentation"
 )
-
 add_custom_target(open-docs "xdg-open" "${PROJECT_BINARY_DIR}/docs/html/index.html" DEPENDS docs)
+add_custom_target(release-doxygen DEPENDS docs copy-doxygen)
+
+add_custom_command(
+    OUTPUT copy-doxygen
+    COMMAND "mkdir" "-p" "${HOLO_RELEASE_DIR}/doxygen"
+    COMMAND "cp" "-rfv" "${PROJECT_BINARY_DIR}/docs/html/*" "${HOLO_RELEASE_DIR}/doxygen"
+)

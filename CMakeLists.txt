@@ -4,6 +4,7 @@ project(holo
   DESCRIPTION "SDL2/OpenGL Game Engine"
   HOMEPAGE_URL "https://github.com/BadQuanta/holo"
 )
+set(HOLO_RELEASE_DIR "${PROJECT_SOURCE_DIR}/release/v${PROJECT_VERSION}/")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OpenGL_GL_PREFERENCE GLVND)
