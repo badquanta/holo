@@ -124,13 +124,16 @@ namespace holo {
   }
   void Arch::MainLoop() {
     CancelQuit();
+    Hrc_t lastLoopStep = high_resolution_clock::now();
     while ((!exitRequested) || (exitRequestedAt > steady_clock::now())) {
       Hrc_t loopStartTime = high_resolution_clock::now();
       NEXT->Trigger();
       NEXT->Clear();
 
       Input->Trigger();
-      Step->Trigger();
+      Hrc_t thisLoopStep = high_resolution_clock::now();
+      Step->Trigger(duration_cast<milliseconds>(thisLoopStep-lastLoopStep));
+      lastLoopStep = thisLoopStep;
       Output->Trigger();
       NextTimeouts();
 

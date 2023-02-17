@@ -49,10 +49,10 @@ namespace holo {
       // SDL      sdl;
       // SDLTTF   ttf;
       // Renderer renderer;
-
+      using EvtStepMs = EvtAbstractType<milliseconds>;
       shared_ptr<EvtVoid> const NEXT{ make_shared<EvtVoid>() };
       shared_ptr<EvtVoid> const Input{ make_shared<EvtVoid>() };
-      shared_ptr<EvtVoid> const Step{ make_shared<EvtVoid>() };
+      shared_ptr<EvtStepMs> const Step{ make_shared<EvtStepMs>() };
       shared_ptr<EvtVoid> const Output{ make_shared<EvtVoid>() };
 
       CycleID     GetCycle();

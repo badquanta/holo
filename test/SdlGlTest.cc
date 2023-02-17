@@ -111,10 +111,46 @@ int main(int ac, char** av) {
     glProgram->SetInt("texture2", 1);
 
     mat4 model{ rotate(mat4{ 1.0f }, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f)) };
-    mat4 view{ translate(mat4{ 1.0f }, vec3{ 0.0f, 0.0f, -3.0f }) };
+    vec3 cameraMomentum{0.0f,0.0f,0.0f};
+    vec3 cameraPos{0.0f,0.0f,3.0f};
+    vec3 cameraFront{0.0f,0.0f,-1.0f};
+    vec3 cameraUp{0.0f,1.0f,0.0f};
+
+
     mat4 projection{ glm::perspective(
       radians(45.0f), (float)pane->GetWidth() / (float)pane->GetHeight(), 0.1f, 100.0f
     ) };
+
+    pane->arch->Step->On([&](milliseconds deltaTime){
+      std::cout << "Step deltaTime: "<<deltaTime<<std::endl;
+      cameraPos += ((deltaTime/1000.0f).count()*cameraMomentum);
+    });
+
+    pane->events->Key->Code(SDLK_w)->FirstDown->VOID->On([&](){
+      cameraMomentum+=vec3{0.0f,0.0f,-1.0f};
+    });
+    pane->events->Key->Code(SDLK_w)->Up->VOID->On([&](){
+      cameraMomentum+=vec3{0.0f,0.0f,+1.0f};
+    });
+    pane->events->Key->Code(SDLK_s)->FirstDown->VOID->On([&](){
+      cameraMomentum+=vec3{0.0f,0.0f,1.0f};
+    });
+    pane->events->Key->Code(SDLK_s)->Up->VOID->On([&](){
+      cameraMomentum+=vec3{0.0f,0.0f,-1.0f};
+    });
+    pane->events->Key->Code(SDLK_a)->FirstDown->VOID->On([&](){
+      cameraMomentum-= glm::normalize(glm::cross(cameraFront, cameraUp));
+    });
+    pane->events->Key->Code(SDLK_a)->Up->VOID->On([&](){
+      cameraMomentum+= glm::normalize(glm::cross(cameraFront, cameraUp));
+    });
+    pane->events->Key->Code(SDLK_d)->FirstDown->VOID->On([&](){
+      cameraMomentum+= glm::normalize(glm::cross(cameraFront, cameraUp));
+    });
+    pane->events->Key->Code(SDLK_d)->Up->VOID->On([&](){
+      cameraMomentum-= glm::normalize(glm::cross(cameraFront, cameraUp));
+    });
+
 
     pane->render->On([&]() {
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -127,6 +163,7 @@ int main(int ac, char** av) {
       glProgram->Use();
       // auto viewLoc = glProgram->GetUniformLocation("view");
       // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+      mat4 view{ glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp)};
       glProgram->SetMat4("view", view);
       glProgram->SetMat4("projection", projection);
       VAO->Bind();

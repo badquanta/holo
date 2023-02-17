@@ -5,6 +5,9 @@ namespace holo {
     assert((e.type == SDL_KEYDOWN) || (e.type == SDL_KEYUP));
     switch (e.type) {
       case SDL_KEYDOWN:
+        if(e.key.repeat==0){
+          FirstDown->Trigger(e);
+        }
         Down->Trigger(e);
         break;
       case SDL_KEYUP:
