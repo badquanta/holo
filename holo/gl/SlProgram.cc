@@ -109,23 +109,73 @@ namespace holo {
 
   void GlSlProgram::Use() {
     glUseProgram(ID);
+    GlNoErrors();
   }
 
   void GlSlProgram::StopUse() {
     glUseProgram(0);
+    GlNoErrors();
   }
 
-  void GlSlProgram::Set(const std::string& n, bool b) {
+  void GlSlProgram::SetBool(const std::string& n, bool b) {
     glUniform1i(GetUniformLocation(n), (int)b);
+    GlNoErrors();
   }
 
-  void GlSlProgram::Set(const std::string& n, int i) {
+  void GlSlProgram::SetInt(const std::string& n, int i) {
     glUniform1i(GetUniformLocation(n), i);
+    GlNoErrors();
   }
 
-  void GlSlProgram::Set(const std::string& n, float f) {
+  void GlSlProgram::SetFloat(const std::string& n, float f) {
     glUniform1f(GetUniformLocation(n), f);
+    GlNoErrors();
   }
+
+  void GlSlProgram::SetVec2(const std::string& n, const vec2& v) {
+    glUniform2fv(GetUniformLocation(n), 1, &v[0]);
+    GlNoErrors();
+  }
+
+  void GlSlProgram::SetVec2(const string& n, float x, float y) {
+    glUniform2f(GetUniformLocation(n), x, y);
+    GlNoErrors();
+  }
+
+  void GlSlProgram::SetVec3(const string& n, const vec3& v) {
+    glUniform3fv(GetUniformLocation(n), 1, &v[0]);
+    GlNoErrors();
+  }
+
+  void GlSlProgram::SetVec3(const string& n, float x, float y, float z) {
+    glUniform3f(GetUniformLocation(n), x, y, z);
+    GlNoErrors();
+  }
+
+  void GlSlProgram::SetVec4(const string& n, const vec4& v) {
+    glUniform4fv(GetUniformLocation(n), 1, &v[0]);
+    GlNoErrors();
+  }
+
+  void GlSlProgram::SetVec4(const string& n, float x, float y, float z, float w) {
+    glUniform4f(GetUniformLocation(n), x, y, z, w);
+    GlNoErrors();
+  }
+  void GlSlProgram::SetMat2(const string& n, const mat2& m) {
+    glUniformMatrix2fv(GetUniformLocation(n), 1, GL_FALSE, &m[0][0]);
+    GlNoErrors();
+  };
+
+  void GlSlProgram::SetMat3(const string& n, const mat3& m) {
+    glUniformMatrix3fv(GetUniformLocation(n), 1, GL_FALSE, &m[0][0]);
+    GlNoErrors();
+  };
+
+  void GlSlProgram::SetMat4(const string& n, const mat4& m) {
+    glUniformMatrix4fv(GetUniformLocation(n), 1, GL_FALSE, &m[0][0]);
+    GlNoErrors();
+  };
+  ;
 
   int GlSlProgram::GetMaxAttributeLength() {
     int length;

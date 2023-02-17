@@ -82,6 +82,9 @@ namespace holo {
   shared_ptr<SdlPaneGl> SdlPaneGl::Create(std::string t){
     return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, NEXT.f);
   }
+  shared_ptr<SdlPaneGl> SdlPaneGl::Create(std::string t, int f){
+    return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, f);
+  }
 
   SdlPaneGl::sPtr SdlPaneGl::Create(int w, int h) {
     return Create("Untitled", w, h);

@@ -1,7 +1,9 @@
 #pragma once
+/** \todo REMOVE */
+#include <holo/sdl/Primitives.hh>
 #include <holo/gl/Errors.hh>
 #include <holo/gl/base.hh>
-#include <holo/sdl/Primitives.hh>
+#include <holo/gl/math.hh>
 namespace holo {
   /**
    * \see https://www.opengl.org/sdk/docs/tutorials/CodeColony/vertexarrays.php
@@ -110,24 +112,33 @@ namespace holo {
 
     public:
       ~GlSlProgram();
-      void                     Attach(GlShader::sPtr);
-      bool                     Link();
-      bool                     GetLinkStatus();
-      bool                     Validate();
-      bool                     GetValidateStatus();
-      int                      GetAttributeCount();
-      int                      GetUniformCount();
-      int                      GetMaxAttributeLength();
-      std::vector<std::string> GetAttributeList();
-      std::string              GetAttributeName(int index);
-      std::string              GetLog();
-      GLint                    GetAttribLocation(const std::string&);
-      GLint                    GetUniformLocation(const std::string&);
-      void                     Use();
-      static void              StopUse();
+      void           Attach(GlShader::sPtr);
+      bool           Link();
+      bool           GetLinkStatus();
+      bool           Validate();
+      bool           GetValidateStatus();
+      int            GetAttributeCount();
+      int            GetUniformCount();
+      int            GetMaxAttributeLength();
+      vector<string> GetAttributeList();
+      string         GetAttributeName(int index);
+      string         GetLog();
+      GLint          GetAttribLocation(const std::string&);
+      GLint          GetUniformLocation(const std::string&);
+      void           Use();
+      static void    StopUse();
 
-      void Set(const std::string&, bool);
-      void Set(const std::string&, int);
-      void Set(const std::string&, float);
+      void SetBool(const string&, bool);
+      void SetInt(const string&, int);
+      void SetFloat(const string&, float);
+      void SetVec2(const string&, const vec2&);
+      void SetVec2(const string&, float, float);
+      void SetVec3(const string&, const vec3&);
+      void SetVec3(const string&, float, float, float);
+      void SetVec4(const string&, const vec4&);
+      void SetVec4(const string&, float, float, float, float);
+      void SetMat2(const string&, const mat2&);
+      void SetMat3(const string&, const mat3&);
+      void SetMat4(const string&, const mat4&);
   };
 }

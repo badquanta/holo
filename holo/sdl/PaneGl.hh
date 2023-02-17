@@ -2,6 +2,7 @@
 #include <holo/Gl.hh>
 #include <holo/sdl/Pane.hh>
 #include <holo/sdl/GlSys.hh>
+
 namespace holo {
   /** Engine-level Window wrapper.
    * \ingroup windows

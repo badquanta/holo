@@ -5,7 +5,12 @@ int main(int ac, char** av) {
   try {
     using namespace holo;
     Arch::Configure(ac, av);
-    shared_ptr<SdlPaneGl> pane{ SdlPaneGl::Create("Sdl & OpenGL tests..") };
+    shared_ptr<SdlPaneGl> pane{ SdlPaneGl::Create("Sdl & OpenGL tests..", SDL_WINDOW_RESIZABLE) };
+    pane->events->Window->Resized->On([&](SDL_Event& e) {
+      SdlPoint drawableSize{ pane->GetDrawableSize() };
+      pane->GlActivateContext();
+      glViewport(0, 0, drawableSize.x, drawableSize.y);
+    });
     // Hitting escape in any window means the test failed.
     pane->sdl->events->Key->Code(SDLK_ESCAPE)->Up->VOID->On([]() {
       throw std::runtime_error("Escape key pressed.");
@@ -26,17 +31,66 @@ int main(int ac, char** av) {
     pane->events->Mouse->Button->Down->VOID->Once(CancelQuitTimeoutOnce);
     pane->sdl->events->On(SdlEvt::PrintTo(std::cout));
     pane->GlActivateContext();
+
+    glEnable(GL_DEPTH_TEST);
     auto glProgram{ GlSlProgram::Build("share/shaders/test1.vert", "share/shaders/test1.frag") };
     auto VAO{ GlVertexArray::Create() };
     VAO->Bind();
     vector<float> vertices{
-      // positions          // texture coords
-      0.5f,  0.5f,  0.0f, 1.0f, 1.0f, // top right
-      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f, 0.0f, 1.0f  // top left
-    };
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, //
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  //
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,   //
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,   //
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,  //
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, //
+                                       //
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,  //
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,   //
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,    //
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,    //
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,   //
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,  //
+                                       //
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,   //
+      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,  //
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,  //
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,   //
+                                       //
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,    //
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,   //
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,  //
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f,   //
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,    //
 
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
+      0.5f, -0.5f, -0.5f, 1.0f, 1.0f,  //
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,   //
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,   //
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,  //
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
+
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, //
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,  //
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,   //
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,   //
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,  //
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f  //
+    };
+    vector<vec3> cubePositions{                             //
+                                vec3(0.0f, 0.0f, 0.0f),     //
+                                vec3(2.0f, 5.0f, -15.0f),   //
+                                vec3(-1.5f, -2.2f, -2.5f),  //
+                                vec3(-3.8f, -2.0f, -12.3f), //
+                                vec3(2.4f, -0.4f, -3.5f),   //
+                                vec3(-1.7f, 3.0f, -7.5f),   //
+                                vec3(1.3f, -2.0f, -2.5f),   //
+                                vec3(1.5f, 2.0f, -2.5f),    //
+                                vec3(1.5f, 0.2f, -1.5f),    //
+                                vec3(-1.3f, 1.0f, -1.5f)
+    };
     auto             VBO{ GlBuffer<GL_ARRAY_BUFFER, GLfloat, GL_STATIC_DRAW>::Create(vertices) };
     vector<uint32_t> indices{
       0, 1, 3, // first triangle
@@ -49,30 +103,38 @@ int main(int ac, char** av) {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    auto texture1{ GlTexture::Load("share/textures/PlasmaRGB.512x512.png") };
+    auto texture1{ GlTexture::Load("share/models/Crate/clear_01.png") };
     auto texture2{ GlTexture::Load("textures/Untitled.png") };
 
     glProgram->Use();
-    glProgram->Set("texture1", 0);
-    glProgram->Set("texture2", 1);
+    glProgram->SetInt("texture1", 0);
+    glProgram->SetInt("texture2", 1);
+
+    mat4 model{ rotate(mat4{ 1.0f }, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f)) };
+    mat4 view{ translate(mat4{ 1.0f }, vec3{ 0.0f, 0.0f, -3.0f }) };
+    mat4 projection{ glm::perspective(
+      radians(45.0f), (float)pane->GetWidth() / (float)pane->GetHeight(), 0.1f, 100.0f
+    ) };
 
     pane->render->On([&]() {
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glActiveTexture(GL_TEXTURE0);
       texture1->Bind();
       glActiveTexture(GL_TEXTURE1);
       texture2->Bind();
 
-      glm::mat4 transform{ 1.0f };
-      transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.5f));
-      transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
       glProgram->Use();
-      auto transformLoc = glProgram->GetUniformLocation("transform");
-      glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-
+      // auto viewLoc = glProgram->GetUniformLocation("view");
+      // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+      glProgram->SetMat4("view", view);
+      glProgram->SetMat4("projection", projection);
       VAO->Bind();
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+      for (auto cubePosition : cubePositions) {
+        model = translate(mat4{ 1.0f }, cubePosition);
+        glProgram->SetMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+      }
     });
     pane->arch->MainLoop();
   } catch (holo::Arch::CliHelp& e) {
