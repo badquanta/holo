@@ -23,7 +23,7 @@ inadvertent behavior modifications of various use cases.
 
 ## this repository
 
-[HOLO_GITHUB]:(https://github.com/BadQuanta/holo)
+[HOLO_GITHUB]:https://github.com/BadQuanta/holo
 
   Available on [github][HOLO_GITHUB].
 
@@ -68,17 +68,16 @@ is in flux being prototyped.
 
 ## various useful external links
 
-
 The source code depends on [libSDL2pp][libSDL2pp] & [boost][boost] along with
 
 Various external references used in building.
 
-[boost]:(https://github.com/boostorg/boost)
-[boost_log_trivial]:(https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/log/tutorial.html)
-[glm]:(https://github.com/g-truc/glm)
-[libSDL2pp]:(https://github.com/libSDL2pp/libSDL2pp)
-[libSDL2pp_API]:(https://sdl2pp.amdmi3.ru/)
-[libSDL2_API]:(https://wiki.libsdl.org/SDL2/CategoryAPI)
+[boost]:https://github.com/boostorg/boost
+[boost_log_trivial]:https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/log/tutorial.html
+[glm]:https://github.com/g-truc/glm
+[libSDL2pp]:https://github.com/libSDL2pp/libSDL2pp
+[libSDL2pp_API]:https://sdl2pp.amdmi3.ru/
+[libSDL2_API]:https://wiki.libsdl.org/SDL2/CategoryAPI
 
 * [glm][glm]
 * SDL2

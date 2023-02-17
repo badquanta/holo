@@ -1,4 +1,22 @@
 #include <holo/sdl/Evt.hh>
+/** \file
+ *  \copyright
+holo
+Copyright (C) 2023  Jon David Sawyer
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
 namespace holo {
   Uint32 SdlEvt::GetMouseID(SDL_Event& e) {
     Uint32 mouseID = 0;
@@ -124,7 +142,7 @@ namespace holo {
     stringstream  str("SDL_Event");
     SDL_EventType eType{ (SDL_EventType)e.type };
     if (mapEvtIdName.contains(eType)) {
-      str << e.common.timestamp << mapEvtIdName.at(eType);
+      str << "@" << e.common.timestamp << " " << mapEvtIdName.at(eType);
     } else {
       str << " UNKNOWN EVENT TYPE:" << eType;
     }
@@ -435,23 +453,19 @@ namespace holo {
     {     SDL_RENDER_DEVICE_RESET,        &SdlCommonEvtToString}
   };
 
-  function<void(SDL_Event&)> SdlEvt::PrintTo(std::ostream& stream){
-    return [&stream](SDL_Event&e){
-      stream << GetString(e) << endl;
-    };
+  function<void(SDL_Event&)> SdlEvt::PrintTo(std::ostream& stream) {
+    return [&stream](SDL_Event& e) { stream << GetString(e) << endl; };
   }
 
-  string SdlEvt::GetString(SDL_Event&e){
+  string SdlEvt::GetString(SDL_Event& e) {
     SDL_EventType eType = (SDL_EventType)e.type;
-    if(mapSdlEvtIdToString.contains(eType)){
+    if (mapSdlEvtIdToString.contains(eType)) {
       return mapSdlEvtIdToString[eType](e);
     } else {
       return "UNKNOWN EVENT TYPE...";
     }
   }
 
-  void SdlEvt::PrintString(SDL_Event&e){
-
-  }
+  void SdlEvt::PrintString(SDL_Event& e) {}
 
 }

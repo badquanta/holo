@@ -1,6 +1,7 @@
 #include <holo/Gl.hh>
 #include <holo/gl/math.hh>
 #include <holo/sdl/PaneGl.hh>
+#include <holo/gl/Camera.hh>
 int main(int ac, char** av) {
   try {
     using namespace holo;
@@ -29,7 +30,7 @@ int main(int ac, char** av) {
     } };
     pane->events->Key->Code(SDLK_SPACE)->Up->VOID->Once(CancelQuitTimeoutOnce);
     pane->events->Mouse->Button->Down->VOID->Once(CancelQuitTimeoutOnce);
-    pane->sdl->events->On(SdlEvt::PrintTo(std::cout));
+    //pane->sdl->events->On(SdlEvt::PrintTo(std::cout));
     pane->GlActivateContext();
 
     glEnable(GL_DEPTH_TEST);
@@ -111,47 +112,19 @@ int main(int ac, char** av) {
     glProgram->SetInt("texture2", 1);
 
     mat4 model{ rotate(mat4{ 1.0f }, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f)) };
-    vec3 cameraMomentum{0.0f,0.0f,0.0f};
-    vec3 cameraPos{0.0f,0.0f,3.0f};
-    vec3 cameraFront{0.0f,0.0f,-1.0f};
-    vec3 cameraUp{0.0f,1.0f,0.0f};
-
-
+    SdlGlCamera camera;
     mat4 projection{ glm::perspective(
       radians(45.0f), (float)pane->GetWidth() / (float)pane->GetHeight(), 0.1f, 100.0f
     ) };
 
-    pane->arch->Step->On([&](milliseconds deltaTime){
-      std::cout << "Step deltaTime: "<<deltaTime<<std::endl;
-      cameraPos += ((deltaTime/1000.0f).count()*cameraMomentum);
-    });
-
-    pane->events->Key->Code(SDLK_w)->FirstDown->VOID->On([&](){
-      cameraMomentum+=vec3{0.0f,0.0f,-1.0f};
-    });
-    pane->events->Key->Code(SDLK_w)->Up->VOID->On([&](){
-      cameraMomentum+=vec3{0.0f,0.0f,+1.0f};
-    });
-    pane->events->Key->Code(SDLK_s)->FirstDown->VOID->On([&](){
-      cameraMomentum+=vec3{0.0f,0.0f,1.0f};
-    });
-    pane->events->Key->Code(SDLK_s)->Up->VOID->On([&](){
-      cameraMomentum+=vec3{0.0f,0.0f,-1.0f};
-    });
-    pane->events->Key->Code(SDLK_a)->FirstDown->VOID->On([&](){
-      cameraMomentum-= glm::normalize(glm::cross(cameraFront, cameraUp));
-    });
-    pane->events->Key->Code(SDLK_a)->Up->VOID->On([&](){
-      cameraMomentum+= glm::normalize(glm::cross(cameraFront, cameraUp));
-    });
-    pane->events->Key->Code(SDLK_d)->FirstDown->VOID->On([&](){
-      cameraMomentum+= glm::normalize(glm::cross(cameraFront, cameraUp));
-    });
-    pane->events->Key->Code(SDLK_d)->Up->VOID->On([&](){
-      cameraMomentum-= glm::normalize(glm::cross(cameraFront, cameraUp));
-    });
-
-
+    pane->arch->Step->On(camera.Step);
+    auto& kbEvt= pane->events->Key;
+    kbEvt->Code(SDLK_w)->Down->VOID->On(camera.ForwardMomentum);
+    kbEvt->Code(SDLK_s)->Down->VOID->On(camera.ReverseMomentum);
+    kbEvt->Code(SDLK_a)->Down->VOID->On(camera.LeftMomentum);
+    kbEvt->Code(SDLK_d)->Down->VOID->On(camera.RightMomentum);
+    pane->events->Mouse->Motion->On(camera.SdlMouseMotion);
+    pane->events->Mouse->Wheel->On(camera.SdlMouseWheel);
     pane->render->On([&]() {
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -163,7 +136,7 @@ int main(int ac, char** av) {
       glProgram->Use();
       // auto viewLoc = glProgram->GetUniformLocation("view");
       // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-      mat4 view{ glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp)};
+      mat4 view{camera.GetView()};
       glProgram->SetMat4("view", view);
       glProgram->SetMat4("projection", projection);
       VAO->Bind();
