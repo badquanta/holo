@@ -143,8 +143,8 @@ namespace holo {
       if ((cycles % reportEvery) == (reportEvery - 1)) {
         microseconds sumTicks =
           std::accumulate(lastCycleTicks.begin(), lastCycleTicks.end(), microseconds(0));
-        microseconds avgTicks = (sumTicks / reportEvery);
-        BOOST_LOG_TRIVIAL(debug) << "Loop Cycle #" << cycles << ", avg:" << avgTicks << " ns.";
+        milliseconds avgTicks = duration_cast<milliseconds>(sumTicks / reportEvery);
+        BOOST_LOG_TRIVIAL(debug) << "Loop Cycle #" << cycles << ", avg:" << avgTicks;
       }
       cycles++;
     }

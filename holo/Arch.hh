@@ -41,7 +41,7 @@ namespace holo {
       typedef high_resolution_clock::time_point Hrc_t;
       typedef uint64_t                          CycleID;
       CycleID                                   cycles{ 0 };
-      CycleID const                             reportEvery{ 10000 };
+      CycleID const                             reportEvery{ 1000 };
       std::vector<microseconds>                 lastCycleTicks{ reportEvery, microseconds{ 0 } };
 
     public:

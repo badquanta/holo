@@ -1,18 +1,18 @@
-#include <holo/Pane.hh>
+#include <holo/Emitter.hh>
 namespace holo {
   using namespace std::placeholders;
   using std::bind;
-  Pane::Pane()
+  Emitter::Emitter()
     : OutputID{ arch->Output->On([this]() { this->Render(); }) } {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
 
-  Pane::~Pane() {
+  Emitter::~Emitter() {
     arch->Output->Off(OutputID);
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
 
-  void Pane::Render() {
+  void Emitter::Render() {
     render->Trigger();
     //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }

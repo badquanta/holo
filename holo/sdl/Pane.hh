@@ -1,9 +1,9 @@
 #pragma once
-#include <holo/Pane.hh>
+#include <holo/Emitter.hh>
 #include <holo/sdl/Sys.hh>
 namespace holo {
   /** Common SDL . */
-  class SdlPane : public Pane {
+  class SdlPane : public Emitter {
 
     public: /** SDL interface */
       shared_ptr<SdlWin> const              sdlWin;

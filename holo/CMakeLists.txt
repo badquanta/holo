@@ -1,5 +1,10 @@
 configure_file(holo-cfg.hh.in holo-cfg.hh)
 configure_file(.input.holo.hh holo.hh)
+file(GLOB_RECURSE HOLO_GLSL_FS_SOURCES RELATIVE "${CURRENT_SOURCE_DIR}" "gl/sl/*.fs")
+file(GLOB_RECURSE HOLO_GLSL_VS_SOURCES RELATIVE "${CURRENT_SOURCE_DIR}" "gl/sl/*.vs")
+foreach(GLSL_SOURCE IN LISTS HOLO_GLSL_FS_SOURCES HOLO_GLSL_VS_SOURCES)
+  message("GLSL Source: ${GLSL_SOURCE}")
+endforeach()
 
 set(HOLO_SDL_SOURCES
   "sdl/Sys.cc"
@@ -22,12 +27,13 @@ set(HOLO_GL_SOURCES
   "gl/SlShader.cc"
   "gl/Texture.cc"
   "gl/VertexArray.cc"
+  "gl/Camera.cc"
 )
 
 set(HOLO_SOURCES
   "Evt.cc"
   "Arch.cc"
-  "Pane.cc"
+  "Emitter.cc"
 )
 
 add_library(holo ${HOLO_SOURCES} ${HOLO_SDL_SOURCES} ${HOLO_GL_SOURCES})

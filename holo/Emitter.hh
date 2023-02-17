@@ -3,18 +3,18 @@
 
 namespace holo {
 
-  class Pane {
+  class Emitter {
     public: /** Shared references */
-      using sPtr = shared_ptr<Pane>;
+      using sPtr = shared_ptr<Emitter>;
       shared_ptr<Arch> const     arch{ Arch::Get() };
       shared_ptr<EvtVoid> render{ make_shared<EvtVoid>() };
       CallbackID const           OutputID;
 
     protected: /** inaccessible constructor */
-      explicit Pane();
+      explicit Emitter();
 
     public: /** accessible destructor */
-      virtual ~Pane();
+      virtual ~Emitter();
       virtual void Render();
   };
 }
