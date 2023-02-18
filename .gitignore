@@ -2,3 +2,6 @@
 .project
 .vscode
 build/
+*.fbx
+*.obj
+*.mtl
