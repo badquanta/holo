@@ -24,23 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/ShareFiles.hh>
 namespace holo {
   weak_ptr<Arch> Arch::instance;
-  vector<string> Arch::FileSearchPaths{};
 
   Arch::TimeoutID Arch::exitRequestedAt;
   bool Arch::exitRequested{false};
   bool            Arch::Configure(int ac, char* av[]) {
     namespace logging = boost::log;
     namespace po      = boost::program_options;
-    FileSearchPaths.push_back(boost::dll::program_location().parent_path().parent_path().string());
-    ShareFiles::SearchAbsolutes.push_back(boost::dll::program_location().parent_path().parent_path().string());
-    FileSearchPaths.push_back((boost::filesystem::path(CMAKE_BINARY_DIR) / "share").string());
-    std::string share_path =
-      (boost::dll::program_location().parent_path().parent_path() / "share").string();
-    if (std::filesystem::exists(share_path))
-      FileSearchPaths.push_back(share_path);
-    for (int i = 0; i < FileSearchPaths.size(); i++) {
-      BOOST_LOG_TRIVIAL(info) << "File Search Paths[" << i << "] ='" << FileSearchPaths[i] << "'";
-    }
 
     po::options_description desc("Allowed options");
     desc.add_options()                 //
@@ -181,27 +170,6 @@ namespace holo {
   void Arch::RequestQuit() {
     RequestQuitAt(milliseconds(100));
   }
-  /** \details */
-  std::string Arch::FindPath(const std::string& path) {
-    return FindPath(path, FileSearchPaths);
-  }
-  std::string Arch::FindPath(
-    const std::string& originalPath, const std::vector<std::string>& searchPaths
-  ) {
-    using std::filesystem::exists;
-    using std::filesystem::path;
-    // First just check if the string we got works:
-    if (std::filesystem::exists(originalPath)) {
-      return originalPath;
-    } else {
-      for (std::string parent : searchPaths) {
-        path search = path(parent) / originalPath;
-        if (exists(search)) {
-          return search.string();
-        }
-      }
-      throw std::runtime_error("Unable to find file path for: `" + originalPath + "`.");
-    }
-  }
+
 
 }

@@ -2,13 +2,14 @@
 #include <holo/gl/Errors.hh>
 #include <holo/sdl/GlTexture.hh>
 #include <holo/Arch.hh>
+#include <holo/ShareFiles.hh>
 namespace holo {
   SdlGlTexture::SdlGlTexture(GLuint id)
     : GlTexture(id) {}
 
   shared_ptr<SdlGlTexture> SdlGlTexture::Load(std::string path) {
     BOOST_LOG_TRIVIAL(info) << __PRETTY_FUNCTION__ << path << "')";
-    std::string   found = Arch::FindPath(path);
+    std::string   found = ShareFiles::Require(path);
     SdlSurfacePtr surf  = std::make_shared<SDL2pp::Surface>(found);
     return Create(surf);
   }

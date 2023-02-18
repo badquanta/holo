@@ -34,12 +34,9 @@ namespace holo {
       using sPtr    = std::shared_ptr<Arch>;
       using CliHelp = boost::program_options::options_description;
       typedef steady_clock::time_point TimeoutID;
-      static std::vector<string>       FileSearchPaths;
 
       static shared_ptr<Arch> Get();
       static bool             Configure(int, char*[]);
-      static string           FindPath(const string&);
-      static string           FindPath(const string& aPath, const vector<string>& searchPaths);
 
       TimeoutID Timeout(unsigned int, EvtVoid::CallbackFunction);
       bool      CancelTimeout(TimeoutID);

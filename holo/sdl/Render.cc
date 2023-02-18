@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/Render.hh>
+#include <holo/ShareFiles.hh>
 namespace holo {
   SdlRender::SdlRender(shared_ptr<SdlWin> ptr)
     : SdlWindow::SdlWindow(ptr)
@@ -54,7 +55,7 @@ namespace holo {
   }
 
   shared_ptr<SdlTexture> SdlRender::LoadTexture(string path){
-    string found = Arch::FindPath(path);
+    string found = ShareFiles::Require(path);
     return CreateTexture(make_shared<SdlSurface>(found));
   }
 

@@ -1,4 +1,5 @@
 #include <holo/sdl/Render.hh>
+#include <holo/ShareFiles.hh>
 using namespace holo;
 class entity {
   public:
@@ -15,8 +16,7 @@ int main(int ac, char** av) {
   try {
     Arch::Configure(ac, av);
     auto whPane{ SdlRender::Create("Sdl rendering tests.", 320, 200, SDL_WINDOW_RESIZABLE) };
-    auto fontHackRegular{ make_shared<SdlFont>(Arch::FindPath("share/Hack-Regular.ttf"), 24, 0) };
-
+    auto fontHackRegular{ make_shared<SdlFont>(ShareFiles::Require("share/Hack-Regular.ttf"), 24, 0) };
     auto msgEnterSkip{ whPane->CreateTexture(
       fontHackRegular->RenderUTF8_Blended("Press enter to skip.", { 255, 255, 255, 255 })
     ) };

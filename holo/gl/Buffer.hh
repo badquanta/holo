@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#include<holo/gl/base.hh>
+#include <holo/gl/base.hh>
 namespace holo {
   template<GLenum BufferType, typename DataType, GLenum DataUsage>
   class GlBuffer {
@@ -52,4 +52,5 @@ namespace holo {
         glBufferData(Kind, length * sizeof(DataType), data, Usage);
       };
   };
+  using GlBufferVertDraw = GlBuffer<GL_ARRAY_BUFFER, float, GL_STATIC_DRAW>;
 }

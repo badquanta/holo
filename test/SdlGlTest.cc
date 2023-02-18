@@ -120,7 +120,7 @@ int main(int ac, char** av) {
     glEnableVertexAttribArray(1);
 
     auto texture1{ SdlGlTexture::Load("share/models/Crate/clear_01.png") };
-    auto texture2{ SdlGlTexture::Load("textures/Untitled.png") };
+    auto texture2{ SdlGlTexture::Load("share/textures/Untitled.png") };
 
     glProgram->Use();
     glProgram->SetInt("texture1", 0);
