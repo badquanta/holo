@@ -1,5 +1,6 @@
 #pragma once
-/** \copyright
+/** \file
+ * \copyright
 holo
 Copyright (C) 2023  Jon David Sawyer
 
@@ -18,26 +19,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
 #include <holo/Gl.hh>
-#include <holo/sdl/Pane.hh>
+#include <holo/sdl/Window.hh>
 #include <holo/sdl/GlSys.hh>
 
 namespace holo {
   /** Engine-level Window wrapper.
    * \ingroup windows
    */
-  class SdlPaneGl : public SdlPane {
+  class SdlGlContext : public SdlWindow {
     private:
       /** \note Inaccessible constructor */
-      SdlPaneGl(shared_ptr<SdlWin>);
+      SdlGlContext(shared_ptr<SdlWin>);
 
     public: /** Typedefs **********************************/
       shared_ptr<SdlGlSys> const sdlGl { SdlGlSys::Get()};
       /** Strong ref. to `Pane` */
-      using sPtr             = std::shared_ptr<SdlPaneGl>;
+      using sPtr             = std::shared_ptr<SdlGlContext>;
       /** Weak ref. to `Pane` */
-      using wPtr             = std::weak_ptr<SdlPaneGl>;
+      using wPtr             = std::weak_ptr<SdlGlContext>;
       /** \todo Maybe make this a virtual function? */
-      using RenderDispatcher = EvtAbstractType<SdlPaneGl::sPtr>;
+      using RenderDispatcher = EvtAbstractType<SdlGlContext::sPtr>;
 
 
 
@@ -61,7 +62,7 @@ namespace holo {
       CallbackID renderID;
     public: /** Instance Methods *****************************************************/
       /** \brief Ensures `open` map is updated. */
-      virtual ~SdlPaneGl();
+      virtual ~SdlGlContext();
 
     public: /** Instance Methods ****************************************/
       void GlActivateContext();

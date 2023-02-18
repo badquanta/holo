@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/sdl/Sys.hh>
 namespace holo {
   /** Common SDL . */
-  class SdlPane : public Emitter {
+  class SdlWindow : public Emitter {
 
     public: /** SDL interface */
       shared_ptr<SdlWin> const              sdlWin;
@@ -42,13 +42,13 @@ namespace holo {
       } NEXT;
 
     protected:
-      SdlPane(shared_ptr<SdlWin>);
+      SdlWindow(shared_ptr<SdlWin>);
       // Instances of SDL Windows that are open.
-      static map<Uint32, weak_ptr<SdlPane>> open;
+      static map<Uint32, weak_ptr<SdlWindow>> open;
 
     public:
       /** Destructor */
-      virtual ~SdlPane() override;
+      virtual ~SdlWindow() override;
       /** Retrieve the Window ID */
       Uint32 GetID() const;
 

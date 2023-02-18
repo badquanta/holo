@@ -1,22 +1,24 @@
 #include <boost/log/trivial.hpp>
 #include <fstream>
 #include <holo/Arch.hh>
-#include <holo/Gl.hh>
+#include <holo/ShareFiles.hh>
+#include <holo/gl/SlShader.hh>
+#include <holo/gl/Errors.hh>
 namespace holo {
 
-  GlShader::sPtr GlShader::Create(GLenum type) {
-    return sPtr(new GlShader(type));
+  GlSlShader::sPtr GlSlShader::Create(GLenum type) {
+    return sPtr(new GlSlShader(type));
   }
 
-  GlShader::sPtr GlShader::Create(GLenum type, const GLchar* src) {
+  GlSlShader::sPtr GlSlShader::Create(GLenum type, const GLchar* src) {
     sPtr created{ Create(type) };
     created->SetSource(src);
     return created;
   }
 
-  GlShader::sPtr GlShader::Load(GLenum type, const std::string& srcFile) {
+  GlSlShader::sPtr GlSlShader::Load(GLenum type, const std::string& srcFile) {
 
-    std::string searchPath{ Arch::FindPath(srcFile) };
+    std::string searchPath{ ShareFiles::Require(srcFile, {}, {"holo/gl/sl"}) };
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << srcFile;
     std::ifstream file(searchPath);
     if (!file.is_open()) {
@@ -26,7 +28,7 @@ namespace holo {
     return Create(type, source.c_str());
   }
 
-  GlShader::GlShader(GLenum type)
+  GlSlShader::GlSlShader(GLenum type)
     : Type{ type }
     , ID{ glCreateShader(type) } {
     if (ID == 0) {
@@ -35,32 +37,32 @@ namespace holo {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << "#" << ID ;
   }
 
-  GlShader::~GlShader() {
+  GlSlShader::~GlSlShader() {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << "#" << ID ;
     glDeleteShader(ID);
     GlNoErrors();
   }
 
-  void GlShader::SetSource(const GLchar* src) {
+  void GlSlShader::SetSource(const GLchar* src) {
     BOOST_LOG_TRIVIAL(debug) << __PRETTY_FUNCTION__ << "#" << ID << "\n"
                              << src << std::endl;
     glShaderSource(ID, 1, &src, nullptr);
     GlNoErrors();
   }
 
-  bool GlShader::GetCompileStatus() {
+  bool GlSlShader::GetCompileStatus() {
     GLint compileStatus = GL_FALSE;
     glGetShaderiv(ID, GL_COMPILE_STATUS, &compileStatus);
     BOOST_LOG_TRIVIAL(debug) << __PRETTY_FUNCTION__ << "#" << ID  << " compile status: " << compileStatus;
     return compileStatus == GL_TRUE;
   }
 
-  bool GlShader::Compile() {
+  bool GlSlShader::Compile() {
     glCompileShader(ID);
     return GetCompileStatus();
   }
 
-  std::string GlShader::GetLog() {
+  std::string GlSlShader::GetLog() {
     if (glIsShader(ID)) {
       int maxLength = 0, logLength = 0;
       glGetShaderiv(ID, GL_INFO_LOG_LENGTH, &maxLength);

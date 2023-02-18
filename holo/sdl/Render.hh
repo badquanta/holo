@@ -17,27 +17,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include <holo/sdl/Pane.hh>
+#include <holo/sdl/Window.hh>
 namespace holo {
   /** SDL Window & Renderer pair. */
-  class SdlPaneRender : public SdlPane {
+  class SdlRender : public SdlWindow {
     public:
-      using sPtr = shared_ptr<SdlPaneRender>;
+      using sPtr = shared_ptr<SdlRender>;
       SdlRendererPtr                   renderer;
       /** Create a window. **/
-      static shared_ptr<SdlPaneRender> Create(string t, int x, int y, int w, int h, int f);
-      static shared_ptr<SdlPaneRender> Create(string t, int w, int h, int f);
-      static shared_ptr<SdlPaneRender> Create(string t, int w, int h);
+      static shared_ptr<SdlRender> Create(string t, int x, int y, int w, int h, int f);
+      static shared_ptr<SdlRender> Create(string t, int w, int h, int f);
+      static shared_ptr<SdlRender> Create(string t, int w, int h);
 
       shared_ptr<SdlTexture> CreateTexture(shared_ptr<SdlSurface>);
       shared_ptr<SdlTexture> CreateTexture(SdlSurface);
       shared_ptr<SdlTexture> LoadTexture(string);
 
     private:
-      SdlPaneRender(shared_ptr<SdlWin>);
+      SdlRender(shared_ptr<SdlWin>);
 
     public:
-      virtual ~SdlPaneRender() override;
+      virtual ~SdlRender() override;
       virtual void Render() override;
   };
 }

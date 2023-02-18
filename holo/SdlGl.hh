@@ -1,5 +1,5 @@
 /** \file
- * \copyright
+ *  \copyright
 holo
 Copyright (C) 2023  Jon David Sawyer
 
@@ -16,12 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#pragma once
-/** \todo REMOVE */
-#include <holo/gl/Buffer.hh>
-#include <holo/gl/Camera.hh>
-#include <holo/gl/Errors.hh>
-#include <holo/gl/SlProgram.hh>
-#include <holo/gl/Texture.hh>
-#include <holo/gl/VertexArray.hh>
-namespace holo {}
+#include <holo/Sdl.hh>
+#include <holo/sdl/GlTexture.hh>
+#include <holo/sdl/GlContext.hh>
+#include <holo/sdl/GlCamera.hh>

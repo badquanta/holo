@@ -17,11 +17,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #pragma once
-/** \todo REMOVE */
-#include <holo/gl/Buffer.hh>
-#include <holo/gl/Camera.hh>
-#include <holo/gl/Errors.hh>
-#include <holo/gl/SlProgram.hh>
-#include <holo/gl/Texture.hh>
-#include <holo/gl/VertexArray.hh>
-namespace holo {}
+#include <holo/gl/base.hh>
+namespace holo {
+  /**
+   * \see https://www.opengl.org/sdk/docs/tutorials/CodeColony/vertexarrays.php
+   */
+  class GlVertexArray {
+    public:
+      using sPtr = std::shared_ptr<GlVertexArray>;
+      static sPtr  Create();
+      GLuint const ID;
+
+    private:
+      explicit GlVertexArray(GLuint);
+
+    public:
+      virtual ~GlVertexArray();
+      /** static global bind, stack unaffected, last updated.*/
+      GLuint        Bind() const;
+      static GLuint Bind(GLuint);
+  };
+}

@@ -1,3 +1,4 @@
+#pragma once
 /** \file
  * \copyright
 holo
@@ -16,12 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#pragma once
-/** \todo REMOVE */
-#include <holo/gl/Buffer.hh>
-#include <holo/gl/Camera.hh>
-#include <holo/gl/Errors.hh>
-#include <holo/gl/SlProgram.hh>
 #include <holo/gl/Texture.hh>
-#include <holo/gl/VertexArray.hh>
-namespace holo {}
+#include <holo/sdl/Primitives.hh>
+namespace holo {
+  class SdlGlTexture : public GlTexture {
+    public:
+      static shared_ptr<SdlGlTexture> Create();
+      /** Create a new texture from SDL Surface data.*/
+      static shared_ptr<SdlGlTexture> Create(SdlSurfacePtr);
+      /** Load a texture from the hard drive.*/
+      static shared_ptr<SdlGlTexture> Load(std::string);
+      void                            Set(SdlSurfacePtr);
+      void                            Set(SdlSurfacePtr, GLint ws, GLint wt, GLint mf, GLint Mf);
+    protected:
+      SdlGlTexture(GLuint);
+  };
+}

@@ -2,6 +2,19 @@
 
 C++23 framework & examples project. Sdl & OpenGL support. Planned integration of Gtk3 or 4.
 
+## Sub Projects
+
+This repository is prototyping what is essentially seven individual projects at once.
+These will likely be separated in the future:
+
+* `holo-deck`: Demo 3D Game, intended to rely on SDL & OpenGL only.
+* `holo-ed`: Demo files game editor, intended to rely on SDL, OpenGL, & Gtk.
+* `Holo`, possibly `HoloCore` in the future: Core, external library agnostic framework.  Intended to carry zero dependencies on Gtk, Sdl, or OpenGL directly but provides a framework for those external components work cooperatively.
+* `HoloSdl`: Core SDL integration. No dependencies on OpenGL.
+* `HoloGl`: Core OpenGL integration. No dependencies on SDL.
+* `HoloSdlGl`: SDL & OpenGL integration.
+* `HoloGtk`: GTK integration.
+
 ## Goals
 
 ### v0.1.1
@@ -56,6 +69,8 @@ specialization provides a `holo::EvtVoid` proxy named `VOID` which will always b
 #### &lt;holo/Emitter.hh&gt;
 
 `holo::Emitter` provides a base class with which to link into Arch's main loop. See `holo::SdlWindow` for an example implementation.
+
+#### &lt;holo/Sdl.hh&gt;
 
 __TODO__ need to finish documenting major components of the architecture, but beyond here it
 is in flux being prototyped.

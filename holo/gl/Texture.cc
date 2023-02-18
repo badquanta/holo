@@ -1,26 +1,38 @@
+/** \file
+ * \copyright
+holo
+Copyright (C) 2023  Jon David Sawyer
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
 #include <boost/log/trivial.hpp>
 #include <holo/Arch.hh>
-#include <holo/Gl.hh>
+#include <holo/gl/Texture.hh>
+#include <holo/gl/Errors.hh>
 namespace holo {
-  shared_ptr<GlTexture> GlTexture::Load(std::string path) {
-    BOOST_LOG_TRIVIAL(info) << "GlTexture::Load('" << path << "')";
-    std::string   found = Arch::FindPath(path);
-    SdlSurfacePtr surf  = std::make_shared<SDL2pp::Surface>(found);
-    return Create(surf);
-  }
 
-  shared_ptr<GlTexture> GlTexture::Create(SdlSurfacePtr surf) {
-    sPtr created{ Create() };
-    created->Set(surf);
-    return created;
-  }
-
-  shared_ptr<GlTexture> GlTexture::Create() {
+  GLuint GlTexture::CreateID(){
     GLuint ID;
     glGenTextures(1, &ID);
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     GlNoErrors();
-    return sPtr{ new GlTexture(ID) };
+    return ID;
+  }
+
+
+  shared_ptr<GlTexture> GlTexture::Create() {
+    return sPtr{ new GlTexture(CreateID()) };
   }
 
   GlTexture::GlTexture(GLuint id)
@@ -33,34 +45,6 @@ namespace holo {
     GlNoErrors();
   }
 
-  void GlTexture::Set(SdlSurfacePtr surf) {
-    Set(surf, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-  }
-
-  void GlTexture::Set(SdlSurfacePtr surf, GLint ws, GLint wt, GLint mf, GLint Mf) {
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
-    SdlSurface converted{ surf->Convert(SDL_PIXELFORMAT_RGBA32) };
-    Bind();
-    glTexImage2D(
-      GL_TEXTURE_2D, 0, GL_RGBA, converted.GetWidth(), converted.GetHeight(), 0, GL_RGBA,
-      GL_UNSIGNED_BYTE, (converted.Get()->pixels)
-    );
-    GlNoErrors();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ws);
-
-    GlNoErrors();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wt);
-
-    GlNoErrors();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mf);
-
-    GlNoErrors();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Mf);
-
-    GlNoErrors();
-    glGenerateMipmap(GL_TEXTURE_2D);
-    GlNoErrors();
-  }
 
   GlTexture::~GlTexture() {
     glDeleteTextures(1, &ID);

@@ -15,9 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#include <holo/sdl/PaneGl.hh>
+#include <holo/sdl/GlContext.hh>
 namespace holo {
-  void SdlPaneGl::Render(){
+  void SdlGlContext::Render(){
     this->GlActivateContext();
     this->render->Trigger();
     this->GlSwap();
@@ -27,8 +27,8 @@ namespace holo {
    * \details
    *  Creates an OpenGL context.
    */
-  SdlPaneGl::SdlPaneGl(std::shared_ptr<SdlWin> w)
-    : SdlPane::SdlPane(w) {
+  SdlGlContext::SdlGlContext(std::shared_ptr<SdlWin> w)
+    : SdlWindow::SdlWindow(w) {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     glContext = SDL_GL_CreateContext(w->Get());
     if (glContext == NULL) {
@@ -38,8 +38,8 @@ namespace holo {
     if (!initGl())
       throw std::runtime_error("Failed to initialize OpenGL");
   }
-  bool SdlPaneGl::glWasInit{ false };
-  bool SdlPaneGl::initGl() {
+  bool SdlGlContext::glWasInit{ false };
+  bool SdlGlContext::initGl() {
     if (!glWasInit) {
       BOOST_LOG_TRIVIAL(trace) << "Initializing OpenGL";
       glewExperimental = GL_TRUE;
@@ -57,18 +57,18 @@ namespace holo {
     return glWasInit;
   }
 
-  void SdlPaneGl::GlActivateContext() {
+  void SdlGlContext::GlActivateContext() {
     if (SDL_GL_MakeCurrent(sdlWin->Get(), glContext) != 0) {
       string errStr{SDL_GetError()};
       throw std::runtime_error(SDL_GetError());
     }
   }
-  void SdlPaneGl::GlSwap() {
+  void SdlGlContext::GlSwap() {
     SDL_GL_SwapWindow(sdlWin->Get());
   }
 
 
-  SdlPaneGl::~SdlPaneGl() {
+  SdlGlContext::~SdlGlContext() {
     BOOST_LOG_TRIVIAL(trace) << "Window destroyed";
     SDL_GL_DeleteContext(glContext);
     open.erase(GetID());
@@ -83,27 +83,27 @@ namespace holo {
    * \param f Flags
    * \note Flags will always have `SDL_WINDOW_OPENGL` set.
    */
-  SdlPaneGl::sPtr SdlPaneGl::Create(std::string t, int x, int y, int w, int h, int f) {
+  SdlGlContext::sPtr SdlGlContext::Create(std::string t, int x, int y, int w, int h, int f) {
     BOOST_LOG_TRIVIAL(trace) << "Window::Create(t='" << t << "', x=" << x << ", y=" << y
                              << ", w=" << w << ", h=" << h << ", f=" << (f | SDL_WINDOW_OPENGL) << ")";
-    sPtr tmp(new SdlPaneGl(make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
+    sPtr tmp(new SdlGlContext(make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
     open[tmp->GetID()] = tmp;
     return tmp;
   }
-  SdlPaneGl::sPtr SdlPaneGl::Create(std::string t, int w, int h, int f) {
+  SdlGlContext::sPtr SdlGlContext::Create(std::string t, int w, int h, int f) {
     return Create(t, NEXT.x, NEXT.y, w, h, f);
   }
-  SdlPaneGl::sPtr SdlPaneGl::Create(std::string t, int w, int h) {
+  SdlGlContext::sPtr SdlGlContext::Create(std::string t, int w, int h) {
     return Create(t, NEXT.x, NEXT.y, w, h, NEXT.f);
   }
-  shared_ptr<SdlPaneGl> SdlPaneGl::Create(std::string t){
+  shared_ptr<SdlGlContext> SdlGlContext::Create(std::string t){
     return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, NEXT.f);
   }
-  shared_ptr<SdlPaneGl> SdlPaneGl::Create(std::string t, int f){
+  shared_ptr<SdlGlContext> SdlGlContext::Create(std::string t, int f){
     return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, f);
   }
 
-  SdlPaneGl::sPtr SdlPaneGl::Create(int w, int h) {
+  SdlGlContext::sPtr SdlGlContext::Create(int w, int h) {
     return Create("Untitled", w, h);
   }
 }

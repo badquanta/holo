@@ -32,29 +32,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 namespace holo {
   using std::bind;
-  using std::function;
-  using std::make_shared;
-  using std::map;
-  using std::shared_ptr;
-  using std::string;
-  using std::stringstream;
-  using std::unreachable;
-  using std::vector;
-  using std::weak_ptr;
+  using std::chrono::duration;
+  using std::chrono::high_resolution_clock;
   using std::chrono::hours;
   using std::chrono::microseconds;
   using std::chrono::milliseconds;
   using std::chrono::minutes;
   using std::chrono::nanoseconds;
   using std::chrono::seconds;
-  using std::filesystem::path;
-  /** \todo include chrono hours, days, etc? */
-  using std::endl;
-  using std::runtime_error;
-  using std::stack;
-  using std::chrono::duration;
-  using std::chrono::high_resolution_clock;
   using std::chrono::steady_clock;
   using std::chrono::system_clock;
+  using std::endl;
+  using std::function;
+  using std::make_shared;
+  using std::map;
+  using std::runtime_error;
+  using std::shared_ptr;
+  using std::stack;
+  using std::string;
+  using std::stringstream;
+  using std::unreachable;
+  using std::vector;
+  using std::weak_ptr;
+  using std::filesystem::path;
+  namespace filesystem = std::filesystem;
+
+  /** \todo include chrono hours, days, etc? */
 
 }

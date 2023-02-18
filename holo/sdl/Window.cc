@@ -15,14 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#include <holo/sdl/Pane.hh>
+#include <holo/sdl/Window.hh>
 
 namespace holo {
   using namespace std::placeholders;
-  map<Uint32, weak_ptr<SdlPane>> SdlPane::open;
-  SdlPane::Defaults              SdlPane::NEXT;
+  map<Uint32, weak_ptr<SdlWindow>> SdlWindow::open;
+  SdlWindow::Defaults              SdlWindow::NEXT;
   /** inaccessible */
-  SdlPane::SdlPane(shared_ptr<SdlWin> w)
+  SdlWindow::SdlWindow(shared_ptr<SdlWin> w)
     : sdlWin{ w }
     , GetSize{ bind(&SdlWin::GetSize, w) }
     , GetWidth{ bind(&SdlWin::GetWidth, w) }
@@ -81,12 +81,12 @@ namespace holo {
     BOOST_LOG_TRIVIAL(trace) <<  __PRETTY_FUNCTION__ << " ID=" << GetID();
   }
   /** virtual */
-  SdlPane::~SdlPane() {
+  SdlWindow::~SdlWindow() {
     sdl->mapWindowIdEvt.erase(GetID());
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
   /** virtual */
-  Uint32 SdlPane::GetID() const {
+  Uint32 SdlWindow::GetID() const {
     return SDL_GetWindowID(sdlWin->Get());
   }
 

@@ -1,9 +1,6 @@
-#include <filesystem>
 #include <holo/Arch.hh>
-#include <holo/Gl.hh>
-
-#include <stdexcept>
-#include <string>
+#include <holo/gl/Errors.hh>
+#include <holo/gl/SlProgram.hh>
 namespace holo {
   GlSlProgram::sPtr GlSlProgram::Create() {
     return sPtr(new GlSlProgram());
@@ -11,11 +8,11 @@ namespace holo {
 
   shared_ptr<GlSlProgram> GlSlProgram::Build(string vertSrc, string fragSrc) {
     auto created = Create();
-    auto vertShader{ GlShader::Load(GL_VERTEX_SHADER, vertSrc) };
+    auto vertShader{ GlSlShader::Load(GL_VERTEX_SHADER, vertSrc) };
     if (!vertShader->Compile()) {
       throw std::runtime_error(vertShader->GetLog());
     }
-    auto fragShader{ GlShader::Load(GL_FRAGMENT_SHADER, fragSrc) };
+    auto fragShader{ GlSlShader::Load(GL_FRAGMENT_SHADER, fragSrc) };
     if (!fragShader->Compile()) {
       throw std::runtime_error(fragShader->GetLog());
     }
@@ -31,6 +28,10 @@ namespace holo {
     return created;
   }
 
+  shared_ptr<GlSlProgram> GlSlProgram::Build(string name) {
+    return Build(name + ".vs", name + ".fs");
+  }
+
   GlSlProgram::GlSlProgram()
     : ID{ glCreateProgram() } {
     if (ID == 0) {
@@ -44,7 +45,7 @@ namespace holo {
     glDeleteProgram(ID);
   }
 
-  void GlSlProgram::Attach(GlShader::sPtr shader) {
+  void GlSlProgram::Attach(GlSlShader::sPtr shader) {
     glAttachShader(ID, shader->ID);
   }
 
@@ -98,7 +99,7 @@ namespace holo {
         log = logStr;
       }
       delete[] logStr;
-      BOOST_LOG_TRIVIAL(debug) << "GlShader#" << ID << " LOG maxLength=" << maxLength
+      BOOST_LOG_TRIVIAL(debug) << "GlSlShader#" << ID << " LOG maxLength=" << maxLength
                                << " logLength=" << logLength << "\n"
                                << log;
       return log;

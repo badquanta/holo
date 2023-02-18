@@ -17,9 +17,10 @@ set(HOLO_SDL_SOURCES
   "sdl/EvtMouse.cc"
   "sdl/EvtWin.cc"
   "sdl/EvtRoot.cc"
-  "sdl/Pane.cc"
-  "sdl/PaneGl.cc"
-  "sdl/PaneRender.cc"
+  "sdl/Window.cc"
+  "sdl/GlContext.cc"
+  "sdl/GlTexture.cc"
+  "sdl/Render.cc"
 )
 
 set(HOLO_GL_SOURCES
@@ -35,6 +36,7 @@ set(HOLO_SOURCES
   "Evt.cc"
   "Arch.cc"
   "Emitter.cc"
+  "ShareFiles.cc"
 )
 
 add_library(holo ${HOLO_SOURCES} ${HOLO_SDL_SOURCES} ${HOLO_GL_SOURCES})

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
 #include <holo/Arch.hh>
-
+#include <holo/ShareFiles.hh>
 namespace holo {
   weak_ptr<Arch> Arch::instance;
   vector<string> Arch::FileSearchPaths{};
@@ -32,6 +32,7 @@ namespace holo {
     namespace logging = boost::log;
     namespace po      = boost::program_options;
     FileSearchPaths.push_back(boost::dll::program_location().parent_path().parent_path().string());
+    ShareFiles::SearchAbsolutes.push_back(boost::dll::program_location().parent_path().parent_path().string());
     FileSearchPaths.push_back((boost::filesystem::path(CMAKE_BINARY_DIR) / "share").string());
     std::string share_path =
       (boost::dll::program_location().parent_path().parent_path() / "share").string();

@@ -16,27 +16,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#include "holo/holo-cfg.hh"
-#include <holo/sdl/PaneGl.hh>
-
+#include <holo/SdlGl.hh>
 using namespace holo;
 
 int main(int ac, char** av) {
   try {
     Arch::Configure(ac, av);
-    SdlPaneGl::sPtr win{ SdlPaneGl::Create("Holo-Deck", 300, 200, SDL_WINDOW_RESIZABLE) };
+    SdlGlContext::sPtr win{ SdlGlContext::Create("Holo-Deck", 300, 200, SDL_WINDOW_RESIZABLE) };
     win->events->Window->Resized->On([&win](SDL_Event& e) {
       SdlPoint drawableSize{ win->GetDrawableSize() };
       glViewport(0, 0, drawableSize.x, drawableSize.y);
     });
     GlSlProgram::sPtr glProgram{ GlSlProgram::Create() };
     {
-      GlShader::sPtr glVertexShader{ GlShader::Load(GL_VERTEX_SHADER, "shaders/v1.vert") };
+      GlSlShader::sPtr glVertexShader{ GlSlShader::Load(GL_VERTEX_SHADER, "shaders/v1.vert") };
       if (!glVertexShader->Compile()) {
         throw std::runtime_error(glVertexShader->GetLog());
       }
       glVertexShader->GetLog();
-      GlShader::sPtr glFragmentShader{ GlShader::Load(GL_FRAGMENT_SHADER, "shaders/v1.frag") };
+      GlSlShader::sPtr glFragmentShader{ GlSlShader::Load(GL_FRAGMENT_SHADER, "shaders/v1.frag") };
       if (!glFragmentShader->Compile()) {
         throw std::runtime_error(glFragmentShader->GetLog());
       }
@@ -77,7 +75,7 @@ int main(int ac, char** av) {
       );
       glEnableVertexAttribArray(vertTex2D);
     }
-    GlTexture::sPtr firstTex{ GlTexture::Load("textures/Untitled.png") };
+    auto firstTex{ SdlGlTexture::Load("textures/Untitled.png") };
 
     std::vector<GLuint> indexData{ 0, 1, 2, 3 };
     auto IBO{ GlBuffer<GL_ELEMENT_ARRAY_BUFFER, GLuint, GL_STATIC_DRAW>::Create(indexData) };

@@ -1,3 +1,4 @@
+#pragma once
 /** \file
  * \copyright
 holo
@@ -16,12 +17,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#pragma once
-/** \todo REMOVE */
-#include <holo/gl/Buffer.hh>
-#include <holo/gl/Camera.hh>
-#include <holo/gl/Errors.hh>
-#include <holo/gl/SlProgram.hh>
-#include <holo/gl/Texture.hh>
-#include <holo/gl/VertexArray.hh>
-namespace holo {}
+#include <holo/gl/base.hh>
+namespace holo {
+  class GlSlShader {
+    public:
+      using sPtr = std::shared_ptr<GlSlShader>;
+      static sPtr Load(GLenum, const std::string&);
+      static sPtr Create(GLenum);
+      static sPtr Create(GLenum, const GLchar*);
+
+    private:
+      GlSlShader(GLenum type);
+
+    public:
+      ~GlSlShader();
+      void         SetSource(const GLchar*);
+      void         LoadSource(std::string);
+      bool         GetCompileStatus();
+      bool         Compile();
+      std::string  GetLog();
+      GLuint const ID;
+      GLenum const Type;
+  };
+}
