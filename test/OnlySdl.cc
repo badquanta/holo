@@ -1,4 +1,4 @@
-#include <holo/sdl/PaneRender.hh>
+#include <holo/sdl/Render.hh>
 using namespace holo;
 class entity {
   public:
@@ -14,7 +14,7 @@ class entity {
 int main(int ac, char** av) {
   try {
     Arch::Configure(ac, av);
-    auto whPane{ SdlPaneRender::Create("Sdl rendering tests.", 320, 200, SDL_WINDOW_RESIZABLE) };
+    auto whPane{ SdlRender::Create("Sdl rendering tests.", 320, 200, SDL_WINDOW_RESIZABLE) };
     auto fontHackRegular{ make_shared<SdlFont>(Arch::FindPath("share/Hack-Regular.ttf"), 24, 0) };
 
     auto msgEnterSkip{ whPane->CreateTexture(

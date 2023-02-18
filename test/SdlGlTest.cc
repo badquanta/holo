@@ -1,12 +1,27 @@
-#include <holo/Gl.hh>
-#include <holo/gl/math.hh>
-#include <holo/sdl/PaneGl.hh>
-#include <holo/gl/Camera.hh>
+/** \file
+ * \copyright
+holo
+Copyright (C) 2023  Jon David Sawyer
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**/
+#include <holo/SdlGl.hh>
 int main(int ac, char** av) {
   try {
     using namespace holo;
     Arch::Configure(ac, av);
-    shared_ptr<SdlPaneGl> pane{ SdlPaneGl::Create("Sdl & OpenGL tests..", SDL_WINDOW_RESIZABLE) };
+    shared_ptr<SdlGlContext> pane{ SdlGlContext::Create("Sdl & OpenGL tests..", SDL_WINDOW_RESIZABLE) };
     pane->events->Window->Resized->On([&](SDL_Event& e) {
       SdlPoint drawableSize{ pane->GetDrawableSize() };
       pane->GlActivateContext();
@@ -30,7 +45,7 @@ int main(int ac, char** av) {
     } };
     pane->events->Key->Code(SDLK_SPACE)->Up->VOID->Once(CancelQuitTimeoutOnce);
     pane->events->Mouse->Button->Down->VOID->Once(CancelQuitTimeoutOnce);
-    //pane->sdl->events->On(SdlEvt::PrintTo(std::cout));
+    // pane->sdl->events->On(SdlEvt::PrintTo(std::cout));
     pane->GlActivateContext();
 
     glEnable(GL_DEPTH_TEST);
@@ -104,27 +119,33 @@ int main(int ac, char** av) {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    auto texture1{ GlTexture::Load("share/models/Crate/clear_01.png") };
-    auto texture2{ GlTexture::Load("textures/Untitled.png") };
+    auto texture1{ SdlGlTexture::Load("share/models/Crate/clear_01.png") };
+    auto texture2{ SdlGlTexture::Load("textures/Untitled.png") };
 
     glProgram->Use();
     glProgram->SetInt("texture1", 0);
     glProgram->SetInt("texture2", 1);
 
-    mat4 model{ rotate(mat4{ 1.0f }, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f)) };
+    mat4        model{ rotate(mat4{ 1.0f }, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f)) };
     SdlGlCamera camera;
-    mat4 projection{ glm::perspective(
+    mat4        projection{ glm::perspective(
       radians(45.0f), (float)pane->GetWidth() / (float)pane->GetHeight(), 0.1f, 100.0f
     ) };
 
     pane->arch->Step->On(camera.Step);
-    auto& kbEvt= pane->events->Key;
+    auto& kbEvt = pane->events->Key;
     kbEvt->Code(SDLK_w)->Down->VOID->On(camera.ForwardMomentum);
     kbEvt->Code(SDLK_s)->Down->VOID->On(camera.ReverseMomentum);
     kbEvt->Code(SDLK_a)->Down->VOID->On(camera.LeftMomentum);
     kbEvt->Code(SDLK_d)->Down->VOID->On(camera.RightMomentum);
     pane->events->Mouse->Motion->On(camera.SdlMouseMotion);
     pane->events->Mouse->Wheel->On(camera.SdlMouseWheel);
+
+    kbEvt->Code(SDLK_m)->FirstDown->VOID->On([&]() {
+      // pane->SetGrab(!pane->GetGrab());
+      SDL_SetRelativeMouseMode((SDL_GetRelativeMouseMode() == SDL_TRUE) ? SDL_FALSE : SDL_TRUE);
+    });
+
     pane->render->On([&]() {
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -136,7 +157,7 @@ int main(int ac, char** av) {
       glProgram->Use();
       // auto viewLoc = glProgram->GetUniformLocation("view");
       // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-      mat4 view{camera.GetView()};
+      mat4 view{ camera.GetView() };
       glProgram->SetMat4("view", view);
       glProgram->SetMat4("projection", projection);
       VAO->Bind();
