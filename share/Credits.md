@@ -10,7 +10,7 @@ From [learnopengl.com](https://learnopengl.com/) much of the initial Fragment So
 
 ## Textures
 
-* [learnopengl.com lighting maps]((https://learnopengl.com/Lighting/Lighting-maps))
+* [learnopengl.com lighting maps](https://learnopengl.com/Lighting/Lighting-maps)
   * container2.png
   * container2_specular.png
 * [JWC on OpenGameArt](https://opengameart.org/content/wood-texture-tiles)
