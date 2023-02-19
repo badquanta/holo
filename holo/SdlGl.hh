@@ -16,6 +16,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
+/**
+ * \defgroup sdl-gl Holo sdl & open gl integration.
+ * \details TODO: details.
+ * \example test/SdlGlTest.cc
+*/
 #include <holo/Sdl.hh>
 #include <holo/sdl/GlTexture.hh>
 #include <holo/sdl/GlContext.hh>

@@ -33,8 +33,8 @@ namespace holo {
     const vector<string>& tryAbsolutes
   ) {
     if (!(Found.contains(path))) {
-      BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
       BOOST_LOG_TRIVIAL(info) << "holo::ShareFiles::Find('" << path << "')";
+      /**
       if (trySuffixes.size() > 0) {
         for (auto s : trySuffixes) {
           BOOST_LOG_TRIVIAL(debug) << "trySuffix:" << s;
@@ -56,6 +56,7 @@ namespace holo {
       } else {
         BOOST_LOG_TRIVIAL(debug) << "tryAbsolutes is empty";
       }
+      **/
       vector<string> suffixVariations{ path };
 
       for (const string& suffix : trySuffixes) {

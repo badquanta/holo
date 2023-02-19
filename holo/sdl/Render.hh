@@ -19,25 +19,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <holo/sdl/Window.hh>
 namespace holo {
-  /** SDL Window & Renderer pair. */
+  /** SDL Window & Renderer pair.
+   * \todo Unit test holo::SdlRender
+   * \ingroup sdl
+   */
   class SdlRender : public SdlWindow {
     public:
+      /** \todo Remove, stop using sPtr */
       using sPtr = shared_ptr<SdlRender>;
-      SdlRendererPtr                   renderer;
-      /** Create a window. **/
-      static shared_ptr<SdlRender> Create(string t, int x, int y, int w, int h, int f);
+      /** \todo Refactor, use shared_ptr<...> instead. */
+      SdlRendererPtr               renderer;
+      /** Create a window & renderer pair. **/
+      static shared_ptr<SdlRender> Create(
+        string t, int x, int y, int w, int h, int f
+      );
+      /** ... default position */
       static shared_ptr<SdlRender> Create(string t, int w, int h, int f);
+      /** ... default position & flags */
       static shared_ptr<SdlRender> Create(string t, int w, int h);
-
-      shared_ptr<SdlTexture> CreateTexture(shared_ptr<SdlSurface>);
-      shared_ptr<SdlTexture> CreateTexture(SdlSurface);
-      shared_ptr<SdlTexture> LoadTexture(string);
+      /** Create a texture for this renderer from this shared surface. */
+      shared_ptr<SdlTexture>       CreateTexture(shared_ptr<SdlSurface>);
+      /** Create a texture for this render from this surface */
+      shared_ptr<SdlTexture>       CreateTexture(SdlSurface);
+      /** Load an image file directly as a texture. */
+      shared_ptr<SdlTexture>       LoadTexture(string);
 
     private:
+      /** inaccessible constructor, use Create instead.*/
       SdlRender(shared_ptr<SdlWin>);
 
     public:
+      /** accessible destructor */
       virtual ~SdlRender() override;
+      /** override `SdlWindow` and `Emitter` implementations.
+       *  \todo: review of `Render` is implemented correctly in `SdlWindow`,
+       * possibly refactor `Render` into `Emit` or something else.*/
       virtual void Render() override;
   };
 }

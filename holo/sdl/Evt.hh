@@ -17,22 +17,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#include <holo/Evt.hh>
 #include <SDL2/SDL_events.h>
-#include <holo/sdl/Primitives.hh>
+#include <holo/Evt.hh>
 #include <holo/boostPrimitives.hh>
+#include <holo/sdl/Primitives.hh>
 namespace holo {
-  /** \brief Basic SDL_Event dispatcher */
+  /** \brief Basic SDL_Event dispatcher.
+   * \ingroup sdl
+   * \todo unit test
+   */
   class SdlEvt : public EvtAbstractType<SDL_Event&> {
     public:
-      /** \depreciated */
+      /** \deprecate \todo remove */
       using sPtr = shared_ptr<SdlEvt>;
-
+      /** Creates a function that outputs events to a ostream */
       static function<void(SDL_Event&)> PrintTo(std::ostream&);
-      static void PrintString(SDL_Event&);
-      static string GetString(SDL_Event&);
-      static string GetEventID_string(SDL_EventType);
-      static Uint32 GetWindowID(SDL_Event&);
-      static Uint32 GetMouseID(SDL_Event&);
+      /** Converts an SDL_Event to a string */
+      static string                     GetString(SDL_Event&);
+      /** Gets the name of the SDL_Event type field as a string*/
+      static string                     GetEventID_string(SDL_EventType);
+      /** Pulls out the WindowID an event may have. */
+      static Uint32                     GetWindowID(SDL_Event&);
+      /** Pulls out a MouseID an event may have. */
+      static Uint32                     GetMouseID(SDL_Event&);
   };
 }

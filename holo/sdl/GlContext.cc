@@ -17,12 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/GlContext.hh>
 namespace holo {
-  void SdlGlContext::Render(){
+  /** \details ensures this is the active GL context.
+   * \todo review if not calling base implementation is correct.
+   */
+  void SdlGlContext::Render() {
     this->GlActivateContext();
     this->render->Trigger();
     this->GlSwap();
   }
-
   /** CONSTRUCT a window.
    * \details
    *  Creates an OpenGL context.
@@ -38,7 +40,9 @@ namespace holo {
     if (!initGl())
       throw std::runtime_error("Failed to initialize OpenGL");
   }
+  /** to prevent double initialization */
   bool SdlGlContext::glWasInit{ false };
+  /** initialize GLEW unless it was already done. */
   bool SdlGlContext::initGl() {
     if (!glWasInit) {
       BOOST_LOG_TRIVIAL(trace) << "Initializing OpenGL";
@@ -56,18 +60,21 @@ namespace holo {
     }
     return glWasInit;
   }
-
+  /** make this SDL Window be the active OpenGL Context.*/
   void SdlGlContext::GlActivateContext() {
     if (SDL_GL_MakeCurrent(sdlWin->Get(), glContext) != 0) {
-      string errStr{SDL_GetError()};
+      string errStr{ SDL_GetError() };
       throw std::runtime_error(SDL_GetError());
     }
   }
+  /** Swap the SDL Window & OpenGL context buffers. */
   void SdlGlContext::GlSwap() {
     SDL_GL_SwapWindow(sdlWin->Get());
   }
-
-
+  /** Destroy this GlContext
+   * \todo Possible duplicate call of open.erase below? I think this should be
+   * implemented in SdlWindow or Emitter. If so remove it.
+   */
   SdlGlContext::~SdlGlContext() {
     BOOST_LOG_TRIVIAL(trace) << "Window destroyed";
     SDL_GL_DeleteContext(glContext);
@@ -83,26 +90,35 @@ namespace holo {
    * \param f Flags
    * \note Flags will always have `SDL_WINDOW_OPENGL` set.
    */
-  SdlGlContext::sPtr SdlGlContext::Create(std::string t, int x, int y, int w, int h, int f) {
-    BOOST_LOG_TRIVIAL(trace) << "Window::Create(t='" << t << "', x=" << x << ", y=" << y
-                             << ", w=" << w << ", h=" << h << ", f=" << (f | SDL_WINDOW_OPENGL) << ")";
-    sPtr tmp(new SdlGlContext(make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)));
+  SdlGlContext::sPtr SdlGlContext::Create(
+    std::string t, int x, int y, int w, int h, int f
+  ) {
+    BOOST_LOG_TRIVIAL(trace)
+      << "Window::Create(t='" << t << "', x=" << x << ", y=" << y << ", w=" << w
+      << ", h=" << h << ", f=" << (f | SDL_WINDOW_OPENGL) << ")";
+    sPtr tmp(new SdlGlContext(
+      make_shared<SdlWin>(t, x, y, w, h, f | SDL_WINDOW_OPENGL)
+    ));
     open[tmp->GetID()] = tmp;
     return tmp;
   }
+  /* uses `NEXT` for default x & y. */
   SdlGlContext::sPtr SdlGlContext::Create(std::string t, int w, int h, int f) {
     return Create(t, NEXT.x, NEXT.y, w, h, f);
   }
+  /* uses `NEXT` for default x, y & f. */
   SdlGlContext::sPtr SdlGlContext::Create(std::string t, int w, int h) {
     return Create(t, NEXT.x, NEXT.y, w, h, NEXT.f);
   }
-  shared_ptr<SdlGlContext> SdlGlContext::Create(std::string t){
+  /* uses `NEXT` for default x, y, w, h, & f. */
+  shared_ptr<SdlGlContext> SdlGlContext::Create(std::string t) {
     return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, NEXT.f);
   }
-  shared_ptr<SdlGlContext> SdlGlContext::Create(std::string t, int f){
+  /* uses `NEXT` for default x, y w, & h. */
+  shared_ptr<SdlGlContext> SdlGlContext::Create(std::string t, int f) {
     return Create(t, NEXT.x, NEXT.y, NEXT.w, NEXT.h, f);
   }
-
+  /* uses `NEXT` for default t, x, y, & f. */
   SdlGlContext::sPtr SdlGlContext::Create(int w, int h) {
     return Create("Untitled", w, h);
   }

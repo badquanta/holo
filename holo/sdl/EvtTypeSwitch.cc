@@ -18,17 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/EvtTypeSwitch.hh>
 namespace holo {
+  /** Default extractor just reads `type` field. */
   SdlEvtTypeSwitch::SwitchTypeExtractor SdlEvtTypeSwitch::DefaultExtractor{
     [](SDL_Event& e) -> SDL_EventType { return (SDL_EventType)e.type; }
   };
-  SdlEvtTypeSwitch::SdlEvtTypeSwitch(SwitchTypeExtractor extractor, const SpecialHandlers_t& sh)
-    : EvtAbstractTypeSwitch<SDL_EventType, SDL_Event&>::EvtAbstractTypeSwitch(extractor, sh) {
+  /** \todo remove tracing. */
+  SdlEvtTypeSwitch::SdlEvtTypeSwitch(
+    SwitchTypeExtractor extractor, const SpecialHandlers_t& sh
+  )
+    : EvtAbstractTypeSwitch<SDL_EventType, SDL_Event&>::EvtAbstractTypeSwitch(
+        extractor, sh
+      ) {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
+  /** \todo remove tracing. */
   SdlEvtTypeSwitch::SdlEvtTypeSwitch()
     : SdlEvtTypeSwitch(DefaultExtractor, {}) {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
+  /** \todo remove tracing. */
   SdlEvtTypeSwitch::SdlEvtTypeSwitch(const SpecialHandlers_t& sh)
     : SdlEvtTypeSwitch(DefaultExtractor, sh) {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;

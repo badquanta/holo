@@ -16,23 +16,34 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
-#include <holo/sdl/Window.hh>
 #include <holo/sdl/Sys.hh>
+#include <holo/sdl/Window.hh>
 namespace holo {
-  /** Protected */
+  /** Protected singleton reference.  */
   weak_ptr<SdlSys>                  SdlSys::instance;
+  /** Map of WindowID values to weak references of SdlEvtRoot instances. */
   map<Uint32, weak_ptr<SdlEvtRoot>> SdlSys::mapWindowIdEvt;
-  /** */
+  /** Protected constructor.
+   * \note Always binds `arch->Input` to `this->Input` on creation.
+   * \todo replace logging with unit testing.
+   * */
   SdlSys::SdlSys()
     : InputID{ arch->Input->On(bind(&SdlSys::Input, this)) } {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
-  /** */
+  /** Public destructor.
+   * \todo replace logging with unit testing. */
   SdlSys::~SdlSys() {
     arch->Input->Off(InputID);
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
-  /** */
+  /** Override Input handler.
+   * \note uses `GetWindowID` to extract ID.
+   * \note uses `mapWindowIdEvt`
+   * \todo I think that `mapWindowIdEvt` and `open` are being conflated.
+   * If the ID is NOT 0, it dispatches to ONLY that `SdlEvtRoot`.
+   * Otherwise if the ID is 0, it dispatches to EVERY `SdlEvtRoot`.
+   */
   void SdlSys::Input() {
     SDL_Event evt;
     while (SDL_PollEvent(&evt)) {
@@ -54,7 +65,9 @@ namespace holo {
       }
     }
   }
-
+  /** Get, or create, and return singleton.
+   * @returns shared initialization.
+   */
   shared_ptr<SdlSys> SdlSys::Get() {
     shared_ptr<SdlSys> loaded;
     if (instance.expired()) {

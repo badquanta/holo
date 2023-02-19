@@ -20,30 +20,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/Emitter.hh>
 #include <holo/sdl/Sys.hh>
 namespace holo {
-  /** Common SDL . */
+  /** Common SDL.
+   * \ingroup sdl
+   * \todo probably refactor: SdlWindow vs SdlEmitter? Distinguish between Holo
+   * wrapper and SDL2pp class.
+   */
   class SdlWindow : public Emitter {
-
-    public: /** SDL interface */
-      shared_ptr<SdlWin> const              sdlWin;
+    public:
+      /** SDL2pp interface
+       * \todo probably refactoring to `window` in the future. */
+      shared_ptr<SdlWin> const     sdlWin;
+      /** Depends on `SdlSys` singleton .*/
       shared_ptr<SdlSys> const     sdl{ SdlSys::Get() };
       /** Event tree associated w+ith this window instance. */
       shared_ptr<SdlEvtRoot> const events{ make_shared<SdlEvtRoot>() };
       /** Dispatches an SDL_Event to the appropriate window(s)
        * \details
-       *  If the event specifies a WindowID then it will be dispatched only to that specific window.
-       *  Otherwise all `open` instances of a Window will receive the event.
+       *  If the event specifies a WindowID then it will be dispatched only to
+       * that specific window. Otherwise all `open` instances of a Window will
+       * receive the event.
        */
       static void                  Dispatch(SDL_Event& e);
 
-    public: /** Class-Properties: Defaults for new window, if otherwise unspecified. */
+    public: /** Class-Properties: Defaults for new window, if otherwise
+               unspecified. */
       static struct Defaults {
           std::string title{ "Untitled" };
-          int x{ SDL_WINDOWPOS_CENTERED }, y{ SDL_WINDOWPOS_CENTERED }, w{ 320 }, h{ 230 }, f{ 0 };
+          int         x{ SDL_WINDOWPOS_CENTERED }, y{ SDL_WINDOWPOS_CENTERED },
+            w{ 320 }, h{ 230 }, f{ 0 };
       } NEXT;
 
     protected:
+      /** Inaccessible, use `Create`?*/
       SdlWindow(shared_ptr<SdlWin>);
-      // Instances of SDL Windows that are open.
+      /** Instances of SDL Windows that are open.
+       * \todo review this vs using the map on SdlSys? **/
       static map<Uint32, weak_ptr<SdlWindow>> open;
 
     public:
@@ -61,17 +72,18 @@ namespace holo {
        * \returns int
        * \fn int GetWidth
        */
-      //function<int()> const                       GetWidth;
-      virtual float GetWidth() override;
+      // function<int()> const                       GetWidth;
+      virtual float                               GetWidth() override;
       /** Get the height of the window.
        * \returns int
        * \fn int GetHeight
        */
-      //function<int()> const                       GetHeight;
-      virtual float GetHeight() override;
+      // function<int()> const                       GetHeight;
+      virtual float                               GetHeight() override;
       /** Get the drawable size * \fn SdlPoint GetDrawableSize()
        * \see https://wiki.libsdl.org/SDL2/SDL_GL_GetDrawableSize
-       * \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html#a5b75c003e803029db8a54230dcf2ba7e
+       * \see
+       * https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html#a5b75c003e803029db8a54230dcf2ba7e
        */
       function<SdlPoint()> const                  GetDrawableSize;
       /** Get drawable width \fn int GetDrawableWidth */
@@ -87,36 +99,65 @@ namespace holo {
       function<SdlWin&()> const                   Maximize;
       /** Minimize \fn SDL2pp::Window& Minimize */
       function<SdlWin&()> const                   Minimize;
-      /** */
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&()> const                   Hide;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&()> const                   Restore;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&()> const                   Raise;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&()> const                   Show;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(Uint32)> const             SetFullscreen;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(const SdlPoint&)> const    SetSize;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(int, int)> const           SetSizeWH;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<float()> const                     GetBrightness;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(float)> const              SetBrightness;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlPoint()> const                  GetPosition;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(int, int)> const           SetPositionXY;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(const SdlPoint&)> const    SetPosition;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlPoint()> const                  GetMinimumSize;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(int, int)> const           SetMinimumSizeWH;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(const SdlPoint&)> const    SetMinimumSize;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlPoint()> const                  GetMaximumSize;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(int, int)> const           SetMaximumSizeWH;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(const SdlPoint&)> const    SetMaximumSize;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<bool()> const                      GetGrab;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(bool)> const               SetGrab;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<int()> const                       GetDisplayIndex;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<void(SDL_DisplayMode&)> const      GetDisplayMode;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<Uint32()> const                    GetFlags;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(const SdlSurface&)> const  SetIcon;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(bool)> const               SetBordered;
+
 #if SDL_VERSION_ATLEAST(2, 0, 5)
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(float)> const SetOpacity;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<float()> const        GetOpacity;
+      /** \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html */
       function<SdlWin&(bool)> const  SetResizable;
+
 #endif
   };
 }

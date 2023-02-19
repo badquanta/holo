@@ -18,19 +18,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/sdl/GlSys.hh>
 
 namespace holo {
-
+  /** inaccessible static weak singleton reference to `SdlGlSys` */
   weak_ptr<SdlGlSys> SdlGlSys::instance;
+  /** sets OpenGL Major & Minor versions and sets `CORE` as the `PROFILE_MASK`.
+   * \todo replace logging with unit testing?
+   */
   SdlGlSys::SdlGlSys() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(
+      SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE
+    );
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
 
+  /** Shutdown SDL & OpenGL integration.
+   *  \todo replace logging with unit testing...
+   * \todo review if all things are shut down properly.
+   **/
   SdlGlSys::~SdlGlSys() {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
 
+  /** return singleton instance or created it.*/
   shared_ptr<SdlGlSys> SdlGlSys::Get() {
     shared_ptr<SdlGlSys> loaded;
     if (instance.expired()) {

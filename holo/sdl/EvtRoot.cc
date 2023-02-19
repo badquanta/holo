@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/EvtRoot.hh>
 namespace holo {
+  /** Copy list of members to SpecialHandlers. */
   SdlEvtRoot::SdlEvtRoot()
     : SdlEvtTypeSwitch() {
     SpecialHandlers = SpecialHandlers_t{

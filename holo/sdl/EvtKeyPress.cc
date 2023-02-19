@@ -18,12 +18,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 namespace holo {
-
+  /**
+   * \todo review use of `unreachable`, is it needed?
+   */
   void SdlKeyPressEvt::Trigger(SDL_Event& e) {
     assert((e.type == SDL_KEYDOWN) || (e.type == SDL_KEYUP));
     switch (e.type) {
       case SDL_KEYDOWN:
-        if(e.key.repeat==0){
+        if (e.key.repeat == 0) {
           FirstDown->Trigger(e);
         }
         Down->Trigger(e);
@@ -36,9 +38,11 @@ namespace holo {
     }
     SdlEvt::Trigger(e);
   }
-  /** propagate off signals to Down & Up */
-  void SdlKeyPressEvt::Off(CallbackID id){
-    SdlEvt::Off(id);;
+
+  /** propagate off to Down, FirstDown, & Up */
+  void SdlKeyPressEvt::Off(CallbackID id) {
+    SdlEvt::Off(id);
+    ;
     Down->Off(id);
     Up->Off(id);
   }

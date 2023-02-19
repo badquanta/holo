@@ -19,14 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/Evt.hh>
 namespace holo {
-  /** \brief Up & Down Key dispatcher */
+  /** \brief Up & Down Key dispatcher
+   * \todo unit test
+   * \ingroup sdl */
   class SdlKeyPressEvt : public SdlEvt {
     public:
+      /** \todo Remove all sPtr ??? */
       using sPtr = std::shared_ptr<SdlKeyPressEvt>;
+      /** Key Up handler */
       SdlEvt::sPtr Up{ std::make_shared<SdlEvt>() };
+      /** Key Down handler */
       SdlEvt::sPtr Down{ std::make_shared<SdlEvt>() };
+      /** Key Down handler, only dispatches if `repeat` is 0. */
       SdlEvt::sPtr FirstDown{ std::make_shared<SdlEvt>() };
+      /** Dispatch between Up, Down, & FirstDown. */
       virtual void Trigger(SDL_Event&) override;
+      /** Disconnect from Up, Down, & FirstDown. */
       virtual void Off(CallbackID) override;
   };
 }

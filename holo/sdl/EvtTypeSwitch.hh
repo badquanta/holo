@@ -18,11 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/Evt.hh>
 namespace holo {
-  class SdlEvtTypeSwitch :public EvtAbstractTypeSwitch<SDL_EventType, SDL_Event&>{
+  /** Provides a concrete specialization of EvtAbstractTypeSwitch for SDL_Event&
+   * typed Events. \todo unit test \ingroup sdl*/
+  class SdlEvtTypeSwitch
+    : public EvtAbstractTypeSwitch<SDL_EventType, SDL_Event&> {
     public:
-    static SwitchTypeExtractor DefaultExtractor;
-    SdlEvtTypeSwitch(SwitchTypeExtractor extractor, const SpecialHandlers_t&sh={});
-    SdlEvtTypeSwitch();
-    SdlEvtTypeSwitch(const SpecialHandlers_t&sh);
+      /** Provides a static default Extractor, used if not otherwise
+       * specified.*/
+      static SwitchTypeExtractor DefaultExtractor;
+      /** Specify an extractor to use and an initial list of special handlers.*/
+      SdlEvtTypeSwitch(
+        SwitchTypeExtractor extractor, const SpecialHandlers_t& sh = {}
+      );
+      /** Use the default extractor and a blank list of special handlers.*/
+      SdlEvtTypeSwitch();
+      /** Use the default extractor but specify inital handlers.*/
+      SdlEvtTypeSwitch(const SpecialHandlers_t& sh);
   };
 }

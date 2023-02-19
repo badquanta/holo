@@ -17,7 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/EvtWin.hh>
 namespace holo {
-  /** \todo review implementation of window events*/
+  /** \details provides a custom type value extractor.
+   * \todo review implementation of window events
+   * \note due to problem with initialization order `SpecialHandlers` is set by
+   * copy instead of passed initializer list.
+   * */
   SdlEvtWin::SdlEvtWin()
     : EvtAbstractTypeSwitch::EvtAbstractTypeSwitch(
         [](SDL_Event& e) -> SDL_WindowEventID {
@@ -25,7 +29,6 @@ namespace holo {
             return (SDL_WindowEventID)0;
           return (SDL_WindowEventID)e.window.event;
         }
-
       ) {
     SpecialHandlers = SpecialHandlers_t{
       {          SDL_WINDOWEVENT_SHOWN,          Shown},
@@ -46,11 +49,4 @@ namespace holo {
       {SDL_WINDOWEVENT_ICCPROF_CHANGED, IccProfChanged}
     };
   }
-  /**
-  SDL_WindowEventID SdlEvtWin::ExtractSwitch(SDL_Event& e) const {
-    assert(e.type == SDL_WINDOWEVENT);
-    assert(e.window.event != SDL_WINDOWEVENT_NONE);
-    return (SDL_WindowEventID)e.window.event;
-  }
-  **/
 }

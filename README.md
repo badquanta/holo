@@ -9,12 +9,13 @@
 
 `libHolo` will be a C++23 framework with example games and applications.
 
-
 ## Credits
+
+Please submit an issue if due credit is missing, or a patch correcting it.
 
 ### OpenGL related
 
-Many thanks, and credit, go to [learnopengl.com](https://learnopengl.com/), much early framework design and code comes from these tutorials, including verbatim shaders.
+Many thanks, and credit, go to [learnopengl.com][learnOpenGl], much early framework design and code comes from these tutorials, including verbatim shaders.
 
 #### Font files
 
@@ -153,6 +154,8 @@ Various external references used in building.
 * [cmake](https://cmake.org/cmake/help/v3.24/manual/cmake-commands.7.html)
 
 ## Build setup
+
+_WARNING_ __DANGER__ : PLEASE NOTE RECURSIVELY COPYING THIS REPOSITORY WILL REQUIRE ROUGHLY TWO GIGABYTES, ~2GB, OF SOURCE CODE.  This is mostly from the dependency on [boost][boost].
 
 Ensure all submodules are initialized with something like:
 

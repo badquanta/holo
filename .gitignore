@@ -3,5 +3,3 @@
 .vscode
 build/
 *.fbx
-*.obj
-*.mtl

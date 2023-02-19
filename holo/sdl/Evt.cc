@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 namespace holo {
+  /** \details simple switch between DOWN, UP, MOTION, and WHEEL SDL_Event type
+   * values. */
   Uint32 SdlEvt::GetMouseID(SDL_Event& e) {
     Uint32 mouseID = 0;
     switch (e.type) {
@@ -33,6 +35,11 @@ namespace holo {
     }
     return mouseID;
   }
+  /** \details Pulls the WindowID from SDL DROP*,MOUSE*, TEXT*, KEY*, WINDOW or
+   * USER* events.
+   * @returns the windowID if this was one of those events.
+   * @returns 0 if this was not one of those events.
+   */
   Uint32 SdlEvt::GetWindowID(SDL_Event& e) {
     Uint32 winId = 0;
     switch (e.type) {
@@ -74,7 +81,7 @@ namespace holo {
     }
     return winId;
   }
-
+  /** a constant map of SDL_EventType values and strings. */
   map<SDL_EventType, string> const mapEvtIdName{
     {                    SDL_QUIT,                        "quit"},
     {         SDL_APP_TERMINATING,             "app Terminating"},
@@ -131,6 +138,10 @@ namespace holo {
     {    SDL_RENDER_TARGETS_RESET,        "Render targets reset"},
     {     SDL_RENDER_DEVICE_RESET,         "Render device reset"}
   };
+  /** Return a string that represents the `SDL_EventType.type` value
+   *  @return "type string" when name is found in map.
+   *  @return "UKNOWN EVENT" when value is not found in map.
+   ***/
   string SdlEvt::GetEventID_string(SDL_EventType eType) {
     if (mapEvtIdName.contains(eType)) {
       return mapEvtIdName.at(eType);
@@ -138,6 +149,8 @@ namespace holo {
       return "UNKNOWN EVENT";
     }
   }
+  /** @returns  a `stringstream` describing the common values of SDL_Event
+   */
   stringstream SdlCommonEvtToStream(SDL_Event& e) {
     stringstream  str("SDL_Event");
     SDL_EventType eType{ (SDL_EventType)e.type };
@@ -148,9 +161,11 @@ namespace holo {
     }
     return str;
   }
+  /** @returns a string describing the common values of SDL_Event */
   string SdlCommonEvtToString(SDL_Event& e) {
     return SdlCommonEvtToStream(e).str();
   }
+  /** @returns a string describing an DISPLAY event. **/
   string SdlEvtDisplayToString(SDL_Event& e) {
     stringstream strm{ SdlCommonEvtToStream(e) };
     strm << "id#" << e.display.display;
@@ -169,6 +184,7 @@ namespace holo {
     }
     return strm.str();
   }
+  /** english representation of SDL_WindowEventID values. */
   map<SDL_WindowEventID, string> SdlWindowEventTypeNames{
     {          SDL_WINDOWEVENT_CLOSE,               "close"},
     {SDL_WINDOWEVENT_DISPLAY_CHANGED,     "display changed"},
@@ -189,181 +205,220 @@ namespace holo {
     {   SDL_WINDOWEVENT_SIZE_CHANGED,        "size changed"},
     {     SDL_WINDOWEVENT_TAKE_FOCUS,          "take focus"}
   };
-
+  /** @return a stringstream describing the common fields of a WINDOW event. */
   stringstream SdlEvtWindowToStream(SDL_Event& e) {
     stringstream strm{ SdlCommonEvtToStream(e) };
-    strm << " " << SdlWindowEventTypeNames[(SDL_WindowEventID)e.window.event] << " ID#"
-         << e.window.windowID;
+    strm << " " << SdlWindowEventTypeNames[(SDL_WindowEventID)e.window.event]
+         << " ID#" << e.window.windowID;
     return strm;
   }
-
+  /** @return a string describing the common fields of a WINDOW event. */
   string SdlEvtWindowToString(SDL_Event& e) {
     return SdlEvtWindowToStream(e).str();
   }
+  /** @return description of Window Display Change event.  */
   string SdlWinEvtDisplayChangeToString(SDL_Event& e) {
     stringstream strm{ SdlEvtWindowToStream(e) };
     strm << " display#" << e.window.data1;
     return strm.str();
   }
+  /** @return description of Window Moved event. **/
   string SdlWinEvtMovedToString(SDL_Event& e) {
     stringstream strm{ SdlEvtWindowToStream(e) };
     strm << " to " << e.window.data1 << ", " << e.window.data2;
     return strm.str();
   }
+  /** @return description of Window Resized event **/
   string SdlWinEvtResizedToString(SDL_Event& e) {
     stringstream strm{ SdlEvtWindowToStream(e) };
     strm << " to " << e.window.data1 << "x" << e.window.data2;
     return strm.str();
   }
-
-  map<SDL_WindowEventID, function<string(SDL_Event& e)>> SdlWindowEventTypeToStrings{
-    {          SDL_WINDOWEVENT_CLOSE,           &SdlEvtWindowToString},
-    {SDL_WINDOWEVENT_DISPLAY_CHANGED, &SdlWinEvtDisplayChangeToString},
-    {          SDL_WINDOWEVENT_ENTER,           &SdlEvtWindowToString},
-    {        SDL_WINDOWEVENT_EXPOSED,           &SdlEvtWindowToString},
-    {   SDL_WINDOWEVENT_FOCUS_GAINED,           &SdlEvtWindowToString},
-    {     SDL_WINDOWEVENT_FOCUS_LOST,           &SdlEvtWindowToString},
-    {         SDL_WINDOWEVENT_HIDDEN,           &SdlEvtWindowToString},
-    {       SDL_WINDOWEVENT_HIT_TEST,           &SdlEvtWindowToString},
-    {SDL_WINDOWEVENT_ICCPROF_CHANGED,           &SdlEvtWindowToString},
-    {          SDL_WINDOWEVENT_LEAVE,           &SdlEvtWindowToString},
-    {      SDL_WINDOWEVENT_MAXIMIZED,           &SdlEvtWindowToString},
-    {      SDL_WINDOWEVENT_MINIMIZED,           &SdlEvtWindowToString},
-    {          SDL_WINDOWEVENT_MOVED,         &SdlWinEvtMovedToString},
-    {        SDL_WINDOWEVENT_RESIZED,       &SdlWinEvtResizedToString},
-    {       SDL_WINDOWEVENT_RESTORED,           &SdlEvtWindowToString},
-    {          SDL_WINDOWEVENT_SHOWN,           &SdlEvtWindowToString},
-    {   SDL_WINDOWEVENT_SIZE_CHANGED,       &SdlWinEvtResizedToString},
-    {     SDL_WINDOWEVENT_TAKE_FOCUS,           &SdlEvtWindowToString}
+  /** map of functions that will translate various window event sub-types */
+  map<SDL_WindowEventID, function<string(SDL_Event& e)>>
+    SdlWindowEventTypeToStrings{
+      {          SDL_WINDOWEVENT_CLOSE,           &SdlEvtWindowToString},
+      {SDL_WINDOWEVENT_DISPLAY_CHANGED, &SdlWinEvtDisplayChangeToString},
+      {          SDL_WINDOWEVENT_ENTER,           &SdlEvtWindowToString},
+      {        SDL_WINDOWEVENT_EXPOSED,           &SdlEvtWindowToString},
+      {   SDL_WINDOWEVENT_FOCUS_GAINED,           &SdlEvtWindowToString},
+      {     SDL_WINDOWEVENT_FOCUS_LOST,           &SdlEvtWindowToString},
+      {         SDL_WINDOWEVENT_HIDDEN,           &SdlEvtWindowToString},
+      {       SDL_WINDOWEVENT_HIT_TEST,           &SdlEvtWindowToString},
+      {SDL_WINDOWEVENT_ICCPROF_CHANGED,           &SdlEvtWindowToString},
+      {          SDL_WINDOWEVENT_LEAVE,           &SdlEvtWindowToString},
+      {      SDL_WINDOWEVENT_MAXIMIZED,           &SdlEvtWindowToString},
+      {      SDL_WINDOWEVENT_MINIMIZED,           &SdlEvtWindowToString},
+      {          SDL_WINDOWEVENT_MOVED,         &SdlWinEvtMovedToString},
+      {        SDL_WINDOWEVENT_RESIZED,       &SdlWinEvtResizedToString},
+      {       SDL_WINDOWEVENT_RESTORED,           &SdlEvtWindowToString},
+      {          SDL_WINDOWEVENT_SHOWN,           &SdlEvtWindowToString},
+      {   SDL_WINDOWEVENT_SIZE_CHANGED,       &SdlWinEvtResizedToString},
+      {     SDL_WINDOWEVENT_TAKE_FOCUS,           &SdlEvtWindowToString}
   };
+  /** return a string describing the specifics of the window event sub-type */
   string SdlWinEvtToString(SDL_Event& e) {
-    return SdlWindowEventTypeToStrings[(SDL_WindowEventID)e.window.event](e);
+    if (SdlWindowEventTypeToStrings.contains((SDL_WindowEventID)e.window.event
+        )) {
+      return SdlWindowEventTypeToStrings[(SDL_WindowEventID)e.window.event](e);
+    } else {
+      return (SdlEvtWindowToStream(e) << " UNKNOWN WINDOW EVENT SUB TYPE")
+        .str();
+    }
   }
+  /** @return a string describing the specifics of an SDL_KEY... ...DOWN or
+   * ...UP events.*/
   string SdlKeyEvtToString(SDL_Event& e) {
     stringstream strm{ SdlCommonEvtToStream(e) };
     strm << " windowID#" << e.key.windowID << " repeat#" << e.key.repeat
-         << "key:" << e.key.keysym.sym << " state:" << ((e.key.state == SDL_PRESSED)
-      ? "PRESSED"
-      : "RELEASED");
+         << "key:" << e.key.keysym.sym << " state:"
+         << ((e.key.state == SDL_PRESSED) ? "PRESSED" : "RELEASED");
     return strm.str();
   }
+  /** @return a string dumping the fields of a SDL_TEXTEDITING event. */
   string SdlTextEditingEvtToString(SDL_Event& e) {
     stringstream strm{ SdlCommonEvtToStream(e) };
-    strm << " windowID#" << e.edit.windowID << " text:`" << e.edit.text << " start:" << e.edit.start
-         << " length:" << e.edit.length;
+    strm << " windowID#" << e.edit.windowID << " text:`" << e.edit.text
+         << " start:" << e.edit.start << " length:" << e.edit.length;
     return strm.str();
   }
+  /** @return a string dumping the fields of a SDL_TEXTINPUT event. */
   string SdlTextInputEvtToString(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e)
-            << " windowID#" << e.text.windowID << " text:'" << e.text.text << "'")
+    return (SdlCommonEvtToStream(e) << " windowID#" << e.text.windowID
+                                    << " text:'" << e.text.text << "'")
       .str();
   }
+  /** @return a string dumping the fields of a SDL_MOUSEMOTION event. */
   string SdlMouseMotionEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " windowID#" << e.motion.windowID << " mouseID#" << e.motion.which
-            << " state:" << e.motion.state << " abs:" << e.motion.x << "," << e.motion.y
+            << " windowID#" << e.motion.windowID << " mouseID#"
+            << e.motion.which << " state:" << e.motion.state
+            << " abs:" << e.motion.x << "," << e.motion.y
             << " rel:" << e.motion.xrel << "," << e.motion.yrel)
       .str();
   }
+  /** @return a string dumping the fields of a SDL_MOUSEBUTTON event*/
   string SdlMouseButtonEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " windowID#" << e.button.windowID << " mouseID#" << e.button.which << " buttonID#"
-            << e.button.button
-            << " state:" << ((e.button.state == SDL_PRESSED) ? "PRESSED" : "RELEASED") << " clicks#"
-            << e.button.clicks << " position:" << e.button.x << "," << e.button.y)
+            << " windowID#" << e.button.windowID << " mouseID#"
+            << e.button.which << " buttonID#" << e.button.button << " state:"
+            << ((e.button.state == SDL_PRESSED) ? "PRESSED" : "RELEASED")
+            << " clicks#" << e.button.clicks << " position:" << e.button.x
+            << "," << e.button.y)
       .str();
   }
+  /** @return a string dumping the fields of a SDL_MOUSEWHEEL event*/
   string SdlMouseWheelEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
             << " windowID#" << e.wheel.windowID << " mouseID#" << e.wheel.which
-            << " direction:" << e.wheel.direction << " pos:" << e.wheel.x << "," << e.wheel.y
-            << " precision pos:" << e.wheel.preciseX << "," << e.wheel.preciseY)
+            << " direction:" << e.wheel.direction << " pos:" << e.wheel.x << ","
+            << e.wheel.y << " precision pos:" << e.wheel.preciseX << ","
+            << e.wheel.preciseY)
       .str();
   }
+  /** @return a string dumping the fields of a SDL_JOYAXIS event*/
   string SdlJoyAxisMotionEvtToString(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e) << " joystickID#" << e.jaxis.which << " axis#" << e.jaxis.axis
-                                    << " value:" << e.jaxis.value)
-      .str();
-  }
-  string SdlJoyBallEvtToString(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e) << " joystickID#" << e.jball.which << " ball#" << e.jball.ball
-                                    << " rel:" << e.jball.xrel << "," << e.jball.yrel)
-      .str();
-  }
-  string SdlJoyHatEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " joystickID#" << e.jhat.which << " hat#" << e.jhat.hat << " value:" << e.jhat.value)
+            << " joystickID#" << e.jaxis.which << " axis#" << e.jaxis.axis
+            << " value:" << e.jaxis.value)
       .str();
   }
+  /** @return a string dumping the fields of a SDL_JOYBALL event*/
+  string SdlJoyBallEvtToString(SDL_Event& e) {
+    return (SdlCommonEvtToStream(e)
+            << " joystickID#" << e.jball.which << " ball#" << e.jball.ball
+            << " rel:" << e.jball.xrel << "," << e.jball.yrel)
+      .str();
+  }
+  /** @return a string dumping the fields of a SDL_JOYHAT event*/
+  string SdlJoyHatEvtToString(SDL_Event& e) {
+    return (SdlCommonEvtToStream(e) << " joystickID#" << e.jhat.which << " hat#"
+                                    << e.jhat.hat << " value:" << e.jhat.value)
+      .str();
+  }
+  /** @return a string dumping the fields of a SDL_JOYBUTTON event*/
   string SdlJoyButtonEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " joystickID#" << e.jbutton.which << " button#" << e.jbutton.button
-            << " state:" << ((e.jbutton.state == SDL_PRESSED) ? "PRESSED" : "RELEASED"))
+            << " joystickID#" << e.jbutton.which << " button#"
+            << e.jbutton.button << " state:"
+            << ((e.jbutton.state == SDL_PRESSED) ? "PRESSED" : "RELEASED"))
       .str();
   }
+  /** @return a string dumping the fields of a SDL_JOYDEVICE* event*/
   string SdlJoyDeviceEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e) << " joystickID#" << e.jdevice.which).str();
   }
-
+  /** @return a string dumping the fields of a SDL_JOYBATTERY event*/
   string SdlJoyBatteryEvtToString(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e)
-            << " joystickID#" << e.jbattery.which << " level:" << e.jbattery.level)
+    return (SdlCommonEvtToStream(e) << " joystickID#" << e.jbattery.which
+                                    << " level:" << e.jbattery.level)
       .str();
   }
-
+  /** @return a string dumping the fields of a SDL_CONTROLLERDEVICE event*/
   string SdlCDeviceEvtToString(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e) << " controllerID#" << e.cdevice.which).str();
-  }
-
-  string SdlCAxisEvtToString(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e) << " joystickID#" << e.caxis.which << " axis#" << e.caxis.axis
-                                    << " value:" << e.caxis.value)
+    return (SdlCommonEvtToStream(e) << " controllerID#" << e.cdevice.which)
       .str();
   }
-
+  /** @return a string dumping the fields of a SDL_CONTROLLERAXIS event*/
+  string SdlCAxisEvtToString(SDL_Event& e) {
+    return (SdlCommonEvtToStream(e)
+            << " joystickID#" << e.caxis.which << " axis#" << e.caxis.axis
+            << " value:" << e.caxis.value)
+      .str();
+  }
+  /** @return a string dumping the fields of a SDL_CONTROLLERBUTTON event*/
   string SdlCButtonEvtToString(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " joystickID#" << e.cbutton.which << " button#" << e.cbutton.button
-            << " state:" << ((e.cbutton.state == SDL_PRESSED) ? "PRESSED" : "RELEASED"))
+            << " joystickID#" << e.cbutton.which << " button#"
+            << e.cbutton.button << " state:"
+            << ((e.cbutton.state == SDL_PRESSED) ? "PRESSED" : "RELEASED"))
       .str();
   }
-
+  /** @return a string dumping the fields of a SDL_CONTROLLERTOUCHPAD event*/
   string SdlEvtCTouchpad_String(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " joystickID#" << e.ctouchpad.which << " toucpad#" << e.ctouchpad.touchpad
-            << " finger#" << e.ctouchpad.finger << " pressure:" << e.ctouchpad.pressure
-            << " pos:" << e.ctouchpad.x << "," << e.ctouchpad.y)
+            << " joystickID#" << e.ctouchpad.which << " toucpad#"
+            << e.ctouchpad.touchpad << " finger#" << e.ctouchpad.finger
+            << " pressure:" << e.ctouchpad.pressure << " pos:" << e.ctouchpad.x
+            << "," << e.ctouchpad.y)
       .str();
   }
-
+  /** @return a string dumping the fields of a SDL_CONTROLLERSENSOR event*/
   string SdlEvtCSensor_string(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " joystickID#" << e.csensor.which << " sensor#" << e.csensor.sensor << " data: { "
-            << e.csensor.data[0] << ", " << e.csensor.data[1] << ", " << e.csensor.data[2] << " }")
+            << " joystickID#" << e.csensor.which << " sensor#"
+            << e.csensor.sensor << " data: { " << e.csensor.data[0] << ", "
+            << e.csensor.data[1] << ", " << e.csensor.data[2] << " }")
       .str();
   }
-
+  /** @return a string dumping the fields of a SDL_TOUCHFINGER event*/
   string SdlEvtTFinger_string(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " windowID#" << e.tfinger.windowID << " touchId#" << e.tfinger.touchId
-            << " fingerId#" << e.tfinger.fingerId << " pressure:" << e.tfinger.pressure << " pos:"
-            << e.tfinger.x << "," << e.tfinger.y << " dis:" << e.tfinger.dx << "," << e.tfinger.dy)
+            << " windowID#" << e.tfinger.windowID << " touchId#"
+            << e.tfinger.touchId << " fingerId#" << e.tfinger.fingerId
+            << " pressure:" << e.tfinger.pressure << " pos:" << e.tfinger.x
+            << "," << e.tfinger.y << " dis:" << e.tfinger.dx << ","
+            << e.tfinger.dy)
       .str();
   }
+  /** @return a string dumping the fields of a SDL_DOLLARGESTURE* event*/
   string SdlEvtDGesture_string(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " touchId#" << e.dgesture.touchId << " gestureId#" << e.dgesture.gestureId
-            << " numFingers:" << e.dgesture.numFingers << " pos:" << e.dgesture.x << ","
-            << e.dgesture.y)
+            << " touchId#" << e.dgesture.touchId << " gestureId#"
+            << e.dgesture.gestureId << " numFingers:" << e.dgesture.numFingers
+            << " pos:" << e.dgesture.x << "," << e.dgesture.y)
       .str();
   }
+  /** @return a string dumping the fields of a SDL_MULTIGESTURE* event*/
   string SdlEvtMGesture_string(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
-            << " touchId#" << e.mgesture.touchId << " dTheta:" << e.mgesture.dTheta
-            << " dDist:" << e.mgesture.dDist << " numFingers:" << e.mgesture.numFingers
+            << " touchId#" << e.mgesture.touchId
+            << " dTheta:" << e.mgesture.dTheta << " dDist:" << e.mgesture.dDist
+            << " numFingers:" << e.mgesture.numFingers
             << " pos:" << e.mgesture.x << "," << e.mgesture.y)
       .str();
   }
+  /** @todo remove this placeholder? event*/
   string SdlEvtTodo_string(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)
             << " TODO: Implement to string for this type of event:" << e.type)
@@ -374,16 +429,17 @@ namespace holo {
    * \see https://wiki.libsdl.org/SDL2/SDL_DropEvent
    */
   string SdlEvtDrop_string(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e)
-            << " windowID#" << e.drop.windowID << " file:'" << e.drop.file << "'")
+    return (SdlCommonEvtToStream(e) << " windowID#" << e.drop.windowID
+                                    << " file:'" << e.drop.file << "'")
       .str();
   }
-
+  /** @return description of audio device event. */
   string SdlEvtADevice_string(SDL_Event& e) {
-    return (SdlCommonEvtToStream(e)
-            << " deviceID#" << e.adevice.which << " iscapture:" << e.adevice.iscapture)
+    return (SdlCommonEvtToStream(e) << " deviceID#" << e.adevice.which
+                                    << " iscapture:" << e.adevice.iscapture)
       .str();
   }
+  /** @return description of sensor event. */
   string SdlEvtSensor_string(SDL_Event& e) {
     return (SdlCommonEvtToStream(e)                                    //
             << " sensorID#"                                            //
@@ -395,7 +451,8 @@ namespace holo {
             << e.sensor.data[5] << "}")
       .str();
   }
-
+  /** tie SDL_EventType values to functions that can describe them as strings.
+   */
   map<SDL_EventType, function<string(SDL_Event& e)>> mapSdlEvtIdToString{
     {                    SDL_QUIT,        &SdlCommonEvtToString},
     {         SDL_APP_TERMINATING,        &SdlCommonEvtToString},
@@ -452,11 +509,12 @@ namespace holo {
     {    SDL_RENDER_TARGETS_RESET,        &SdlCommonEvtToString},
     {     SDL_RENDER_DEVICE_RESET,        &SdlCommonEvtToString}
   };
-
+  /** return a function that will print events to an ostream */
   function<void(SDL_Event&)> SdlEvt::PrintTo(std::ostream& stream) {
     return [&stream](SDL_Event& e) { stream << GetString(e) << endl; };
   }
 
+  /** return a string representation of an SDL_Event value */
   string SdlEvt::GetString(SDL_Event& e) {
     SDL_EventType eType = (SDL_EventType)e.type;
     if (mapSdlEvtIdToString.contains(eType)) {
@@ -465,7 +523,5 @@ namespace holo {
       return "UNKNOWN EVENT TYPE...";
     }
   }
-
-  void SdlEvt::PrintString(SDL_Event& e) {}
 
 }

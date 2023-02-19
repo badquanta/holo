@@ -19,12 +19,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/sdl/EvtKeyPress.hh>
 namespace holo {
-  /** \brief */
+  /** \brief break out events by keycode to specific handlers
+   * \todo unit test
+   * \ingroup sdl */
   class SdlKeyCodeEvt : public SdlKeyPressEvt {
     public:
+      /** connect SDL_Keycode values to SdlKeyPressEvt handlers.
+       * \todo Perhaps this should be private or protected?
+       */
       map<SDL_Keycode, SdlKeyPressEvt::sPtr> Sym;
+      /** Return the SdlKeyPressEvt handler for this specific keycode.
+       * \note if it does not yet exist it will be created and returned.
+       */
       shared_ptr<SdlKeyPressEvt>             Code(SDL_Keycode code);
+      /** dispatches to handler for each specific SDL_Keycode value if a handler
+       * exists. **/
       virtual void                           Trigger(SDL_Event&) override;
+      /** disconnects this callback ID from this and all specialized handlers.
+       */
       virtual void                           Off(CallbackID id) override;
   };
 }

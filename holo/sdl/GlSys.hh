@@ -20,17 +20,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/sdl/Sys.hh>
 namespace holo {
 
-
+  /**
+   * Encapsulates SDL & OpenGL integration initialization and shutdown.
+   * \note singleton.
+   * \todo Refactoring: I don't like "Sys" but I am not sure what we should call
+   * it instead yet. Will revisit after `Gtk` integration. \ingroup sdl-gl
+   */
   class SdlGlSys {
     public:
+      /** This system requires that `SdlSys` is initialized. */
       shared_ptr<SdlSys> const    sdlSys{ SdlSys::Get() };
+      /** Get/initialize a reference to `SdlGlSys`.  */
       static shared_ptr<SdlGlSys> Get();
 
     protected:
+      /** inaccessible constructor to enforce singleton. */
       SdlGlSys();
+      /** singleton reference */
       static weak_ptr<SdlGlSys> instance;
 
     public:
+      /** accessible destructor */
       ~SdlGlSys();
   };
 }

@@ -17,4 +17,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
+/**
+ * \defgroup sdl Holo libSDL 2.x & SDL2pp integration.
+ * \details TODO: details.
+ * \example test/OnlySdl.cc
+*/
 #include <holo/sdl/Window.hh>
+
