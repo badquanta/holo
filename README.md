@@ -1,4 +1,9 @@
-# Holo v0.1.0
+# NOT YET RELEASED Holo v0.1.0
+
+[learnOpenGl]:https://learnopengl.com/
+
+
+__DO NOT USE__ this repository. I am learning and prototyping. Currently working on SDL & OpenGL, following [tutorials on learnOpenGL.com][learnOpenGl].
 
 C++23 framework & examples project. Sdl & OpenGL support. Planned integration of Gtk3 or 4.
 
@@ -19,6 +24,7 @@ These will likely be separated in the future:
 
 ### v0.1.1
 
+* sdl & opengl
 * demo 3d game
 * demo 2d game
 * demo editor application (suite?)
@@ -28,11 +34,17 @@ inadvertent behavior modifications of various use cases.
 
 ### v0.2.0
 
+* sdl, opengl, & gtk
 * better/fine grained unit testing
 * fully packaging for installation with CPack.
 * support running Gl with Gtk without SDL & Vice-versa.
 * support running Gtk without Gl or SDL.
 * support running a mix of all three.
+
+### v0.3.0
+
+* other windowing toolkits?
+* other multimedia, device i/o, frameworks?
 
 ## this repository
 

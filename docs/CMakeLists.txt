@@ -1,5 +1,9 @@
+
 find_package(Doxygen REQUIRED dot dia)
+set(DOXYGEN_CALL_GRAPH YES)
+set(DOXYGEN_CALLER_GRAPH YES)
 set(DOXYGEN_CREATE_SUBDIRS YES)
+set(DOXYGEN_EXAMPLE_PATH "${PROJECT_SOURCE_DIR}")
 set(DOXYGEN_JAVADOC_AUTOBRIEF YES)
 set(DOXYGEN_TAB_SIZE 2)
 set(DOXYGEN_EXTRACT_ALL YES)
@@ -24,11 +28,11 @@ set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
 set(DOXYGEN_PROJECT_LOGO "${PROJECT_SOURCE_DIR}/share/textures/holo-logo.256x64.v0.1.png")
 doxygen_add_docs(docs
     ${PROJECT_SOURCE_DIR}/holo
+
     ${PROJECT_SOURCE_DIR}/README.md
+    "${PROJECT_SOURCE_DIR}/test"
     "${PROJECT_SOURCE_DIR}/test/Testing.md"
     "${PROJECT_SOURCE_DIR}/share/Credits.md"
-
-    "${PROJECT_SOURCE_DIR}/share/textures/holo-grid.v0.1.png"
     COMMENT "Generate documentation"
 )
 add_custom_target(open-docs "xdg-open" "${PROJECT_BINARY_DIR}/docs/html/index.html" DEPENDS docs)
