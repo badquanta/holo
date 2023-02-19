@@ -32,7 +32,6 @@ doxygen_add_docs(docs
     ${PROJECT_SOURCE_DIR}/README.md
     "${PROJECT_SOURCE_DIR}/test"
     "${PROJECT_SOURCE_DIR}/test/Testing.md"
-    "${PROJECT_SOURCE_DIR}/share/Credits.md"
     COMMENT "Generate documentation"
 )
 add_custom_target(open-docs "xdg-open" "${PROJECT_BINARY_DIR}/docs/html/index.html" DEPENDS docs)

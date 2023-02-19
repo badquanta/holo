@@ -2,10 +2,36 @@
 
 [learnOpenGl]:https://learnopengl.com/
 
+* _DO NOT RECURSIVE CLONE_
+  * __WARNING__ : This repository currently includes many external repositories linked, including the root [boostorg library][boost] which is H.U.G.E. (~2GB) ; I am considering removing this, obviously. But for now it's fine for me.
 
-__DO NOT USE__ this repository. I am learning and prototyping. Currently working on SDL & OpenGL, following [tutorials on learnOpenGL.com][learnOpenGl].
+* __DO NOT USE__ this repository, not fit for use.
 
-C++23 framework & examples project. Sdl & OpenGL support. Planned integration of Gtk3 or 4.
+`libHolo` will be a C++23 framework with example games and applications.
+
+
+## Credits
+
+### OpenGL related
+
+Many thanks, and credit, go to [learnopengl.com](https://learnopengl.com/), much early framework design and code comes from these tutorials, including verbatim shaders.
+
+#### Font files
+
+* Hack-Regular by [Source-Foundery](https://github.com/source-foundry/Hack)
+
+#### Textures files & sources
+
+* [learnopengl.com lighting maps](https://learnopengl.com/Lighting/Lighting-maps)
+  * container2.png
+  * container2_specular.png
+* [JWC on OpenGameArt](https://opengameart.org/content/wood-texture-tiles)
+  * `wood1.jpg`
+  * `wood2.jpg`
+
+#### Models
+
+* [crate-5 by Kutejnikof on opengameart.org](https://opengameart.org/content/crate-5)
 
 ## Sub Projects
 
