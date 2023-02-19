@@ -37,5 +37,8 @@ namespace holo {
     public: /** accessible destructor */
       virtual ~Emitter();
       virtual void Render();
+      virtual float GetWidth()=0;
+      virtual float GetHeight()=0;
+
   };
 }

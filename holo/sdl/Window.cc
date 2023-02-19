@@ -25,8 +25,8 @@ namespace holo {
   SdlWindow::SdlWindow(shared_ptr<SdlWin> w)
     : sdlWin{ w }
     , GetSize{ bind(&SdlWin::GetSize, w) }
-    , GetWidth{ bind(&SdlWin::GetWidth, w) }
-    , GetHeight{ bind(&SdlWin::GetHeight, w) }
+    // , GetWidth{ bind(&SdlWin::GetWidth, w) }
+    // , GetHeight{ bind(&SdlWin::GetHeight, w) }
     , GetDrawableSize{ bind(&SdlWin::GetDrawableSize, w) }
     , GetDrawableWidth{ bind(&SdlWin::GetDrawableWidth, w) }
     , GetDrawableHeight{ bind(&SdlWin::GetDrawableHeight, w) }
@@ -88,6 +88,14 @@ namespace holo {
   /** virtual */
   Uint32 SdlWindow::GetID() const {
     return SDL_GetWindowID(sdlWin->Get());
+  }
+
+  float SdlWindow::GetWidth() {
+    return sdlWin->GetWidth();
+  }
+
+  float SdlWindow::GetHeight() {
+    return sdlWin->GetHeight();
   }
 
 }

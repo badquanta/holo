@@ -61,12 +61,14 @@ namespace holo {
        * \returns int
        * \fn int GetWidth
        */
-      function<int()> const                       GetWidth;
+      //function<int()> const                       GetWidth;
+      virtual float GetWidth() override;
       /** Get the height of the window.
        * \returns int
        * \fn int GetHeight
        */
-      function<int()> const                       GetHeight;
+      //function<int()> const                       GetHeight;
+      virtual float GetHeight() override;
       /** Get the drawable size * \fn SdlPoint GetDrawableSize()
        * \see https://wiki.libsdl.org/SDL2/SDL_GL_GetDrawableSize
        * \see https://sdl2pp.amdmi3.ru/classSDL2pp_1_1Window.html#a5b75c003e803029db8a54230dcf2ba7e
