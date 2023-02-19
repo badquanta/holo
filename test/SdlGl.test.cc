@@ -1,3 +1,6 @@
+/**
+ * \example test/SdlGl.test.cc
+ */
 #define BOOST_TEST_MODULE HoloSdlGl_tests
 #include <boost/test/included/unit_test.hpp>
 #include <holo/SdlGl.hh>
@@ -45,28 +48,6 @@ vector<float> cubeVertices{
   -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f, //
   -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f  //
 };
-BOOST_AUTO_TEST_CASE(firstRun) {
-  auto glc{ SdlGlContext::Create("firstRun") };
-  // so something worth-while and like clear the screen.
-  glc->render->On([]() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-  });
-  glc->arch->Timeout(250, &Arch::RequestQuit);
-  glc->arch->MainLoop();
-}
-
-BOOST_AUTO_TEST_CASE(secondRun) {
-  auto glc{ SdlGlContext::Create("firstRun") };
-  // so something worth-while and like clear the screen.
-  glc->render->On([]() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-  });
-  glc->arch->Timeout(250, &Arch::RequestQuit);
-  glc->arch->MainLoop();
-}
-
 BOOST_AUTO_TEST_CASE(SdlGlBasicLighting2_2) {
   auto        glc{ SdlGlContext::Create("basic lighting", 800, 600) };
   SdlGlCamera camera{
@@ -207,7 +188,7 @@ class TestProgram {
   public:
     const shared_ptr<SdlGlContext> glc;
     SdlGlCamera                    camera{ vec3(0.0f, 0.0f, 3.0f) };
-    vec3                           lightPos{1.2f, 1.0f, 2.0f};
+    vec3                           lightPos{ 1.2f, 1.0f, 2.0f };
     TestProgram(string title)
       : glc{ SdlGlContext::Create(title, SDL_WINDOW_RESIZABLE) } {
       glc->GlActivateContext();
@@ -357,5 +338,141 @@ BOOST_AUTO_TEST_CASE(SdlGlLightingMaps) {
     glDrawArrays(GL_TRIANGLES, 0, 36);
   });
 
+  test.glc->arch->MainLoop();
+}
+
+BOOST_AUTO_TEST_CASE(SdlGlDirectionalLight) {
+  TestProgram test("LearnOpenGL.com Multiple Lights");
+  auto        lightingShader{ GlSlProgram::Build("6.multiple_lights") };
+  auto        lightCubeShader{ GlSlProgram::Build("6.light_cube") };
+
+  vector<vec3> cubePositions{ glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+                              glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+                              glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+                              glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+                              glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f) };
+
+  vector<vec3> pointLightPositions{ glm::vec3(0.7f, 0.2f, 2.0f), glm::vec3(2.3f, -3.3f, -4.0f),
+                                    glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f) };
+
+  auto cubeVAO{ GlVertexArray::Create() };
+  auto VBO{ GlBufferVertDraw::Create(cubeVertNormTexts) };
+  cubeVAO->Bind();
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+  glEnableVertexAttribArray(2);
+  auto lightCubeVAO{ GlVertexArray::Create() };
+  lightCubeVAO->Bind();
+  VBO->Bind();
+  // note that we update the lamp's position attribute's stride to reflect the updated buffer data
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+
+  auto diffuseMap{ SdlGlTexture::Load("share/textures/container2.png") };
+  auto specularMap{ SdlGlTexture::Load("share/textures/container2_specular.png") };
+  lightingShader->Use();
+  lightingShader->SetInt("material.diffuse", 0);
+  lightingShader->SetInt("material.specular", 1);
+
+  test.glc->render->On([&]() {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    lightingShader->Use();
+    lightingShader->SetVec3("viewPos", test.camera.Position);
+    lightingShader->SetFloat("material.shininess", 32.0f);
+    /*
+           Here we set all the uniforms for the 5/6 types of lights we have. We have to set them
+       manually and index the proper PointLight struct in the array to set each uniform variable.
+       This can be done more code-friendly by defining light types as classes and set their values
+       in there, or by using a more efficient uniform approach by using 'Uniform buffer objects',
+       but that is something we'll discuss in the 'Advanced GLSL' tutorial.
+        */
+    // directional light
+    lightingShader->SetVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    lightingShader->SetVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+    lightingShader->SetVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+    lightingShader->SetVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+    // point light 1
+    lightingShader->SetVec3("pointLights[0].position", pointLightPositions[0]);
+    lightingShader->SetVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+    lightingShader->SetVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+    lightingShader->SetVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+    lightingShader->SetFloat("pointLights[0].constant", 1.0f);
+    lightingShader->SetFloat("pointLights[0].linear", 0.09f);
+    lightingShader->SetFloat("pointLights[0].quadratic", 0.032f);
+    // point light 2
+    lightingShader->SetVec3("pointLights[1].position", pointLightPositions[1]);
+    lightingShader->SetVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+    lightingShader->SetVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+    lightingShader->SetVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+    lightingShader->SetFloat("pointLights[1].constant", 1.0f);
+    lightingShader->SetFloat("pointLights[1].linear", 0.09f);
+    lightingShader->SetFloat("pointLights[1].quadratic", 0.032f);
+    // point light 3
+    lightingShader->SetVec3("pointLights[2].position", pointLightPositions[2]);
+    lightingShader->SetVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+    lightingShader->SetVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+    lightingShader->SetVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+    lightingShader->SetFloat("pointLights[2].constant", 1.0f);
+    lightingShader->SetFloat("pointLights[2].linear", 0.09f);
+    lightingShader->SetFloat("pointLights[2].quadratic", 0.032f);
+    // point light 4
+    lightingShader->SetVec3("pointLights[3].position", pointLightPositions[3]);
+    lightingShader->SetVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+    lightingShader->SetVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+    lightingShader->SetVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+    lightingShader->SetFloat("pointLights[3].constant", 1.0f);
+    lightingShader->SetFloat("pointLights[3].linear", 0.09f);
+    lightingShader->SetFloat("pointLights[3].quadratic", 0.032f);
+    // spotLight
+    lightingShader->SetVec3("spotLight.position", test.camera.Position);
+    lightingShader->SetVec3("spotLight.direction", test.camera.Front);
+    lightingShader->SetVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+    lightingShader->SetVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+    lightingShader->SetVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+    lightingShader->SetFloat("spotLight.constant", 1.0f);
+    lightingShader->SetFloat("spotLight.linear", 0.09f);
+    lightingShader->SetFloat("spotLight.quadratic", 0.032f);
+    lightingShader->SetFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+    lightingShader->SetFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+
+    mat4 projection{ glm::perspective(
+      glm::radians(test.camera.Zoom), test.glc->GetWidth() / test.glc->GetHeight(), 0.1f, 100.0f
+    ) };
+    mat4 view{ test.camera.GetView() };
+    lightingShader->SetMat4("projection", projection);
+    lightingShader->SetMat4("view", view);
+    mat4 model{ 1.0f };
+    lightingShader->SetMat4("model", model);
+
+    diffuseMap->Bind(GL_TEXTURE0);
+    specularMap->Bind(GL_TEXTURE1);
+
+    cubeVAO->Bind();
+    // render containers
+    for (uint32_t i = 0; i < 10; i++) {
+      lightingShader->SetMat4(
+        "model", glm::rotate(
+                   glm::translate(mat4{ 1.0f }, cubePositions[i]), glm::radians(20.0f * i),
+                   vec3{ 1.0f, 0.3f, 0.5f }
+                 )
+      );
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+    lightCubeShader->Use();
+    lightCubeShader->SetMat4("projection", projection);
+    lightCubeShader->SetMat4("view", view);
+    lightCubeVAO->Bind();
+    for (uint32_t i = 0; i < 4; i++) {
+      lightCubeShader->SetMat4(
+        "model", glm::scale(glm::translate(mat4{ 1.0f }, pointLightPositions[i]), vec3{ 0.2f })
+      );
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+  });
   test.glc->arch->MainLoop();
 }
