@@ -39,5 +39,6 @@ namespace holo {
     public:
       ~GlTexture();
       void Bind() const;
+      void Bind(GLenum TEXTURE_NUMBER) const;
   };
 }

@@ -45,6 +45,12 @@ namespace holo {
     GlNoErrors();
   }
 
+  void GlTexture::Bind(GLuint T_NUM) const {
+    glActiveTexture(T_NUM);
+    GlNoErrors();
+    Bind();
+  }
+
 
   GlTexture::~GlTexture() {
     glDeleteTextures(1, &ID);
