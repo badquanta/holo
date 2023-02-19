@@ -57,9 +57,11 @@ namespace holo {
         BOOST_LOG_TRIVIAL(debug) << "tryAbsolutes is empty";
       }
       vector<string> suffixVariations{ path };
+
       for (const string& suffix : trySuffixes) {
         suffixVariations.push_back(path + suffix);
       }
+
       vector<string> prefixVariations{ suffixVariations };
       for (const string& prefix : tryPrefixes) {
         filesystem::path prefixPath(prefix);
@@ -71,9 +73,11 @@ namespace holo {
         }
       }
       vector<string> absoluteVariations{ prefixVariations };
-      for (const string& absolute : tryAbsolutes) {
+      vector<string> allAbsolutes{ SearchAbsolutes };
+      allAbsolutes.insert(allAbsolutes.end(), tryAbsolutes.begin(), tryAbsolutes.end());
+      for (const string& absolute : allAbsolutes) {
         filesystem::path absolutePath(absolute);
-        for (const filesystem::path& variation : prefixVariations) {
+        for (const filesystem::path variation : prefixVariations) {
           if (variation.is_relative()) {
             absoluteVariations.push_back((absolutePath / variation).string());
           }
@@ -105,7 +109,7 @@ namespace holo {
     const string& path, const vector<string>& trySuffixes, const vector<string>& tryPrefixes,
     const vector<string>& tryAbsolutes
   ) {
-    string found{ Find(path,trySuffixes,tryPrefixes,tryAbsolutes) };
+    string found{ Find(path, trySuffixes, tryPrefixes, tryAbsolutes) };
     if (!Found.contains(path)) {
       throw std::runtime_error("ShareFiles::Require() file not found: `" + path + "`.");
     }

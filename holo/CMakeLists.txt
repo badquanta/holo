@@ -30,6 +30,8 @@ set(HOLO_GL_SOURCES
   "gl/Texture.cc"
   "gl/VertexArray.cc"
   "gl/Camera.cc"
+  "gl/Model.cc"
+  "gl/Mesh.cc"
 )
 
 set(HOLO_SOURCES

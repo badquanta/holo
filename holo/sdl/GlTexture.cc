@@ -7,9 +7,9 @@ namespace holo {
   SdlGlTexture::SdlGlTexture(GLuint id)
     : GlTexture(id) {}
 
-  shared_ptr<SdlGlTexture> SdlGlTexture::Load(std::string path) {
+  shared_ptr<SdlGlTexture> SdlGlTexture::Load(std::string path, const vector<string>&ts,const vector<string>&tp,const vector<string>&ta) {
     BOOST_LOG_TRIVIAL(info) << __PRETTY_FUNCTION__ << path << "')";
-    std::string   found = ShareFiles::Require(path);
+    std::string   found = ShareFiles::Require(path, ts,tp,ta);
     SdlSurfacePtr surf  = std::make_shared<SDL2pp::Surface>(found);
     return Create(surf);
   }

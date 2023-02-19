@@ -30,11 +30,11 @@ namespace holo {
        */
       static string Find(
         const string& path, const vector<string>& trySuffixes = {},
-        const vector<string>& tryPrefixes = {}, const vector<string>& tryAbsolutes = SearchAbsolutes
+        const vector<string>& tryPrefixes = {}, const vector<string>& tryAbsolutes = {}
       );
       static string Require(
         const string& path, const vector<string>& trySuffixes = {},
-        const vector<string>& tryPrefixes = {}, const vector<string>& tryAbsolutes = SearchAbsolutes
+        const vector<string>& tryPrefixes = {}, const vector<string>& tryAbsolutes = {}
       );
   };
 }

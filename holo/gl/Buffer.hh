@@ -52,5 +52,6 @@ namespace holo {
         glBufferData(Kind, length * sizeof(DataType), data, Usage);
       };
   };
-  using GlBufferVertDraw = GlBuffer<GL_ARRAY_BUFFER, float, GL_STATIC_DRAW>;
+  using GlBufferFloatDraw = GlBuffer<GL_ARRAY_BUFFER, float, GL_STATIC_DRAW>;
+  using GlBufferElements = GlBuffer<GL_ELEMENT_ARRAY_BUFFER, unsigned int, GL_STATIC_DRAW>;
 }

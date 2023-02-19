@@ -26,7 +26,7 @@ namespace holo {
       /** Create a new texture from SDL Surface data.*/
       static shared_ptr<SdlGlTexture> Create(SdlSurfacePtr);
       /** Load a texture from the hard drive.*/
-      static shared_ptr<SdlGlTexture> Load(std::string);
+      static shared_ptr<SdlGlTexture> Load(std::string, const vector<string>&ts={},const vector<string>&tp={},const vector<string>&ta={});
       void                            Set(SdlSurfacePtr);
       void                            Set(SdlSurfacePtr, GLint ws, GLint wt, GLint mf, GLint Mf);
     protected:

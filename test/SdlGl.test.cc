@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(SdlGlLightingMaps) {
   auto        lightingShader{ GlSlProgram::Build("4.2.lighting_maps") };
   auto        lightCubeShader{ GlSlProgram::Build("4.2.light_cube") };
   auto        cubeVAO{ GlVertexArray::Create() };
-  auto        cubeVertBuffer{ GlBufferVertDraw::Create(cubeVertNormTexts) };
+  auto        cubeVertBuffer{ GlBufferFloatDraw::Create(cubeVertNormTexts) };
   cubeVertBuffer->Bind();
   cubeVAO->Bind();
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(SdlGlDirectionalLight) {
                                     glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f) };
 
   auto cubeVAO{ GlVertexArray::Create() };
-  auto VBO{ GlBufferVertDraw::Create(cubeVertNormTexts) };
+  auto VBO{ GlBufferFloatDraw::Create(cubeVertNormTexts) };
   cubeVAO->Bind();
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(SdlGlDirectionalLight) {
   lightingShader->SetInt("material.specular", 1);
 
   test.glc->render->On([&]() {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     lightingShader->Use();
@@ -473,6 +473,33 @@ BOOST_AUTO_TEST_CASE(SdlGlDirectionalLight) {
       );
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
+  });
+  test.glc->arch->MainLoop();
+}
+
+#include <holo/ShareFiles.hh>
+#include <holo/gl/Model.hh>
+
+BOOST_AUTO_TEST_CASE(SdlGlModelLoading) {
+  TestProgram test("LearnOpenGL.com Model Loading");
+  auto        ourShader{ GlSlProgram::Build("1.model_loading") };
+  GlModel     ourModel(ShareFiles::Find("share/models/backpack/backpack.obj"));
+  test.glc->render->On([&]() {
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ourShader->Use();
+    mat4 projection = glm::perspective(
+      glm::radians(test.camera.Zoom), test.glc->GetWidth()/ test.glc->GetHeight(), 0.1f, 100.0f
+    );
+    mat4 view = test.camera.GetView();
+    ourShader->SetMat4("projection", projection);
+    ourShader->SetMat4("view", view);
+
+    mat4 model{ 1.0f };
+    model = glm::translate(model, vec3(0.0f));
+    model = glm::scale(model, vec3(1.0f));
+    ourShader->SetMat4("model", model);
+    ourModel.Draw(ourShader);
   });
   test.glc->arch->MainLoop();
 }

@@ -17,25 +17,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <boost/log/trivial.hpp>
-#include <holo/gl/VertexArray.hh>
 #include <holo/gl/Errors.hh>
+#include <holo/gl/VertexArray.hh>
 namespace holo {
   /** \details Request open gl*/
   shared_ptr<GlVertexArray> GlVertexArray::Create() {
     GLuint id;
     glGenVertexArrays(1, &id);
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     GlNoErrors();
     return sPtr(new GlVertexArray(id));
   }
   /** \details const instance constructor. */
   GlVertexArray::GlVertexArray(GLuint id)
     : ID{ id } {
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ <<"#" << ID;
+    //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << "#" << ID;
   }
   /** \details const instance destructor. */
   GlVertexArray::~GlVertexArray() {
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ <<"#"<< ID ;
+    //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__ << "#" << ID;
     glDeleteVertexArrays(1, &ID);
     GlNoErrors();
   }
@@ -44,13 +43,20 @@ namespace holo {
    */
   GLuint GlVertexArray::Bind(GLuint id) {
     glBindVertexArray(id);
+    BOUND = id;
     GlNoErrors();
-
     return id;
+  }
+  GLuint GlVertexArray::Unbind() const {
+    Bind(0);
+    return 0;
   }
   GLuint GlVertexArray::Bind() const {
     Bind(ID);
-    GlNoErrors();
     return ID;
+  }
+  GLuint GlVertexArray::BOUND{ 0 };
+  bool   GlVertexArray::IsBound() const {
+    return BOUND == ID;
   }
 }

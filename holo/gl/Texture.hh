@@ -31,6 +31,11 @@ namespace holo {
       /** Read-only ID*/
       const GLuint ID;
 
+      /** \todo implement or remove*/
+      string type{"TODO"};
+      /** \todo implement or remove*/
+      string path{"TODO"};
+
     protected:
       /** inaccessible, use `Create()` */
       GlTexture(GLuint);

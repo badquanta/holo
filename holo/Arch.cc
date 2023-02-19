@@ -159,7 +159,6 @@ namespace holo {
   }
   void Arch::CancelQuit() {
     exitRequested = false;
-    exitRequestedAt;
   }
   void Arch::RequestQuitAt(milliseconds at) {
     exitRequestedAt = steady_clock::now() + at;

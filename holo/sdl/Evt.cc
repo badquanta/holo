@@ -242,9 +242,9 @@ namespace holo {
   string SdlKeyEvtToString(SDL_Event& e) {
     stringstream strm{ SdlCommonEvtToStream(e) };
     strm << " windowID#" << e.key.windowID << " repeat#" << e.key.repeat
-         << "key:" << e.key.keysym.sym << " state:" << (e.key.state == SDL_PRESSED)
+         << "key:" << e.key.keysym.sym << " state:" << ((e.key.state == SDL_PRESSED)
       ? "PRESSED"
-      : "RELEASED";
+      : "RELEASED");
     return strm.str();
   }
   string SdlTextEditingEvtToString(SDL_Event& e) {

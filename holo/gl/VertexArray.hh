@@ -26,6 +26,7 @@ namespace holo {
     public:
       using sPtr = std::shared_ptr<GlVertexArray>;
       static sPtr  Create();
+      static GLuint BOUND;
       GLuint const ID;
 
     private:
@@ -35,6 +36,8 @@ namespace holo {
       virtual ~GlVertexArray();
       /** static global bind, stack unaffected, last updated.*/
       GLuint        Bind() const;
+      GLuint        Unbind() const;
       static GLuint Bind(GLuint);
+      bool IsBound() const;
   };
 }

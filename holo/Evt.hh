@@ -125,13 +125,14 @@ namespace holo {
     public:
       /** \deprecated **/
       using sPtr = std::shared_ptr<EvtAbstractTypeSwitch<SwitchType, TypeName, MoreTypes...>>;
+      using SwitchTypeExtractor = function<SwitchType(TypeName, MoreTypes...)>;
+      SwitchTypeExtractor ExtractSwitch;
       /** \todo give this a better name. */
       using SpecialHandlers_t =
         std::map<SwitchType, std::shared_ptr<EvtAbstract<TypeName, MoreTypes...>>>;
       /** \todo give this a better name. */
-      SpecialHandlers_t SpecialHandlers;
-      using SwitchTypeExtractor = function<SwitchType(TypeName, MoreTypes...)>;
-      SwitchTypeExtractor ExtractSwitch;
+      SpecialHandlers_t   SpecialHandlers;
+
       EvtAbstractTypeSwitch(SwitchTypeExtractor extractor, const SpecialHandlers_t& h = {})
         : ExtractSwitch{ extractor }
         , SpecialHandlers{ h } {}

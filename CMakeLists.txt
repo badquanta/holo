@@ -23,6 +23,12 @@ add_subdirectory("ext/libSDL2pp")
 set(BOOST_INCLUDE_LIBRARIES test json log filesystem program_options)
 add_subdirectory("ext/boost")
 
+# Asset Importer Dependency
+# @see https://github.com/assimp/assimp/blob/master/Build.md
+set(ASSIMP_INSTALL OFF)
+set(ASSIMP_BUILD_TESTS OFF)
+add_subdirectory("ext/assimp")
+
 # Project assets
 add_subdirectory("share")
 # Main library & main demo.

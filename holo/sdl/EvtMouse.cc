@@ -63,7 +63,7 @@ namespace holo {
     }
   }
   void SdlEvtMouseList::Off(CallbackID id) {
-    SdlEvtMouseList::Off(id);
+    SdlEvtMouse::Off(id);
     for (auto pair : mapMouseIDs) {
       pair.second->Off(id);
     }
