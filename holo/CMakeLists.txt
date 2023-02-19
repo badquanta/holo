@@ -40,10 +40,19 @@ set(HOLO_SOURCES
 )
 
 add_library(holo ${HOLO_SOURCES} ${HOLO_SDL_SOURCES} ${HOLO_GL_SOURCES})
+# see: https://blog.feabhas.com/2021/07/cmake-part-2-release-and-debug-builds/
+target_compile_options(holo
+  PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion
+    $<$<CONFIG:DEBUG>:-g3>
+    $<$<CONFIG:DEBUG>:-Og>
+    $<$<CONFIG:RELEASE>:-O3>
+    $<$<CONFIG:RELEASE>:-Werror>
+)
+
 target_include_directories(holo PUBLIC "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}")
 
-target_link_libraries(holo glm SDL2pp::SDL2pp Boost::log Boost::program_options Boost::filesystem GLEW OpenGL)
+target_link_libraries(holo glm assimp SDL2pp::SDL2pp Boost::log Boost::program_options Boost::filesystem GLEW OpenGL)
 
 add_executable(holo-deck holo-deck.cc)
 
