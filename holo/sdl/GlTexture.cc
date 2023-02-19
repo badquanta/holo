@@ -1,15 +1,17 @@
+#include <holo/Arch.hh>
+#include <holo/ShareFiles.hh>
 #include <holo/boostPrimitives.hh>
 #include <holo/gl/Errors.hh>
 #include <holo/sdl/GlTexture.hh>
-#include <holo/Arch.hh>
-#include <holo/ShareFiles.hh>
 namespace holo {
   SdlGlTexture::SdlGlTexture(GLuint id)
     : GlTexture(id) {}
 
-  shared_ptr<SdlGlTexture> SdlGlTexture::Load(std::string path, const vector<string>&ts,const vector<string>&tp,const vector<string>&ta) {
+  shared_ptr<SdlGlTexture> SdlGlTexture::Load(
+    std::string path, const vector<string>& ts, const vector<string>& tp, const vector<string>& ta
+  ) {
     BOOST_LOG_TRIVIAL(info) << __PRETTY_FUNCTION__ << path << "')";
-    std::string   found = ShareFiles::Require(path, ts,tp,ta);
+    std::string   found = ShareFiles::Require(path, ts, tp, ta);
     SdlSurfacePtr surf  = std::make_shared<SDL2pp::Surface>(found);
     return Create(surf);
   }
@@ -31,6 +33,13 @@ namespace holo {
   void SdlGlTexture::Set(SdlSurfacePtr surf, GLint ws, GLint wt, GLint mf, GLint Mf) {
     BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     SdlSurface converted{ surf->Convert(SDL_PIXELFORMAT_RGBA32) };
+    surf->Blit(
+      SdlRect{
+        surf->GetSize(),
+        -surf->GetSize()
+    },
+      converted, SdlRect{ {0,0}, -surf->GetSize() }
+    );
     Bind();
     glTexImage2D(
       GL_TEXTURE_2D, 0, GL_RGBA, converted.GetWidth(), converted.GetHeight(), 0, GL_RGBA,

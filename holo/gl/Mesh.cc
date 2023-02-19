@@ -1,20 +1,23 @@
 #include <holo/gl/Mesh.hh>
+#include <holo/boostPrimitives.hh>
 namespace holo {
   GlMesh::GlMesh(vector<GlVertex> v, vector<uint32_t> i, vector<shared_ptr<GlTexture>> t)
     : vertices{ v }
     , indices{ i }
     , textures{ t } {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     SetupMesh();
   }
 
   void GlMesh::Draw(shared_ptr<GlSlProgram> shader) {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     uint32_t diffuseNr = 1, specularNr = 1, normalNr = 1, heightNr = 1;
     for (uint32_t i = 0; i < textures.size(); i++) {
       glActiveTexture(GL_TEXTURE0 + i);
       string number;
       /** @todo GlTextures may need a type field?? **/
       string typeName = textures[i]->type;
-      if (typeName == "texutre_diffuse") {
+      if (typeName == "texture_diffuse") {
         number = std::to_string(diffuseNr++);
       } else if (typeName == "texture_specular") {
         number = std::to_string(specularNr++);
@@ -22,6 +25,8 @@ namespace holo {
         number = std::to_string(normalNr++);
       } else if (typeName == "texture_height") {
         number = std::to_string(heightNr++);
+      } else {
+        BOOST_LOG_TRIVIAL(error) << "INVALID TYPE NAME: "  << typeName;
       }
       shader->SetInt((typeName + number), i);
       textures[i]->Bind();
@@ -35,6 +40,7 @@ namespace holo {
   }
 
   void GlMesh::SetupMesh() {
+    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     VAO = GlVertexArray::Create();
     VAO->Bind();
     VBO = GlVertexBuffer::Create(vertices);
