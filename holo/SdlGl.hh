@@ -25,3 +25,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/sdl/GlTexture.hh>
 #include <holo/sdl/GlContext.hh>
 #include <holo/sdl/GlCamera.hh>
+#include <holo/gl/Model.hh>

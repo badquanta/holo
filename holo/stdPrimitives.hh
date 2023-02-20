@@ -35,6 +35,7 @@ namespace holo {
   using std::chrono::duration;
   using std::chrono::high_resolution_clock;
   using std::chrono::hours;
+  using namespace std::chrono_literals;
   using std::chrono::microseconds;
   using std::chrono::milliseconds;
   using std::chrono::minutes;

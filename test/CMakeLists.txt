@@ -5,7 +5,7 @@ function(HoloTest arg)
   target_link_libraries(${arg} holo )
   target_include_directories(${arg} PRIVATE ${PROJECT_SOURCE_DIR} "${PROJECT_BINARY_DIR}")
   add_test(${arg} ${arg})
-  message("HoloTest#${arg}")
+  message("HOLO TEST ${arg}")
 endfunction()
 
 #add_executable(OnlySdl OnlySdl.cc)

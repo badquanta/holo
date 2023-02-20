@@ -34,7 +34,7 @@ namespace holo {
 
     private:
       shared_ptr<GlVertexBuffer> VBO;
-      shared_ptr<GlBufferElements> EBO;
+      shared_ptr<GlElementArrayBuffer> EBO;
 
       void SetupMesh();
   };

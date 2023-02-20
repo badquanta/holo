@@ -21,22 +21,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace holo {
   /**
    * \see https://www.opengl.org/sdk/docs/tutorials/CodeColony/vertexarrays.php
+   * \ingroup gl
    */
   class GlVertexArray {
     public:
+      /** \todo Stop using sPtr, remove. */
       using sPtr = std::shared_ptr<GlVertexArray>;
+      /** \todo Stop using sPtr, refactor return value. */
       static sPtr  Create();
+      /** Reference to the last ID that was passed to static Bind() */
       static GLuint BOUND;
+      /** The ID of this Vertex Attribute Array*/
       GLuint const ID;
 
     private:
+      /** Inaccessible, Use `Create`*/
       explicit GlVertexArray(GLuint);
 
     public:
+      /** Shared destructor */
       virtual ~GlVertexArray();
       /** static global bind, stack unaffected, last updated.*/
       GLuint        Bind() const;
+      /** Unset this one. \todo maybe implement a stack?*/
       GLuint        Unbind() const;
+      /** Global rebinding, last call is saved as `BOUND`*/
       static GLuint Bind(GLuint);
       bool IsBound() const;
   };

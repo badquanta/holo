@@ -5,12 +5,12 @@ namespace holo {
     : vertices{ v }
     , indices{ i }
     , textures{ t } {
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+ //   BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     SetupMesh();
   }
 
   void GlMesh::Draw(shared_ptr<GlSlProgram> shader) {
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     uint32_t diffuseNr = 1, specularNr = 1, normalNr = 1, heightNr = 1;
     for (uint32_t i = 0; i < textures.size(); i++) {
       glActiveTexture(GL_TEXTURE0 + i);
@@ -40,11 +40,11 @@ namespace holo {
   }
 
   void GlMesh::SetupMesh() {
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+  //  BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
     VAO = GlVertexArray::Create();
     VAO->Bind();
     VBO = GlVertexBuffer::Create(vertices);
-    EBO = GlBufferElements::Create(indices);
+    EBO = GlElementArrayBuffer::Create(indices);
 
     // set the vertex attribute pointers
     // vertex Positions

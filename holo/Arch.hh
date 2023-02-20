@@ -25,6 +25,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <holo/boostPrimitives.hh>
 #include <holo/holo-cfg.hh>
 namespace holo {
+  struct ArchCFG {
+      boost::program_options::options_description            option;
+      boost::program_options::options_description            hidden;
+      boost::program_options::options_description            config;
+      boost::program_options::positional_options_description positional;
+      boost::program_options::variables_map                  values;
+      string                                                 name;
+      filesystem::path                                       location;
+      ArchCFG();
+  };
 
   /** Program/Engine wrapper.
    * \ingroup general
@@ -33,10 +43,17 @@ namespace holo {
     public:
       using sPtr    = std::shared_ptr<Arch>;
       using CliHelp = boost::program_options::options_description;
+      static ArchCFG                   CFG;
       typedef steady_clock::time_point TimeoutID;
 
       static shared_ptr<Arch> Get();
-      static bool             Configure(int, char*[]);
+
+      static bool Configure(
+        filesystem::path fromFile, const vector<string>& suffixes = {},
+        const vector<string>& prefixes  = {},
+        const vector<string>& absolutes = {}
+      );
+      static bool Configure(int, char*[]);
 
       TimeoutID Timeout(unsigned int, EvtVoid::CallbackFunction);
       bool      CancelTimeout(TimeoutID);
@@ -58,7 +75,8 @@ namespace holo {
       typedef uint64_t                          CycleID;
       CycleID                                   cycles{ 0 };
       CycleID const                             reportEvery{ 1000 };
-      std::vector<microseconds>                 lastCycleTicks{ reportEvery, microseconds{ 0 } };
+      std::vector<microseconds>                 lastCycleTicks{ reportEvery,
+                                                microseconds{ 0 } };
 
     public:
       virtual ~Arch();
@@ -66,10 +84,10 @@ namespace holo {
       // SDLTTF   ttf;
       // Renderer renderer;
       using EvtStepMs = EvtAbstractType<milliseconds>;
-      shared_ptr<EvtVoid> const NEXT{ make_shared<EvtVoid>() };
-      shared_ptr<EvtVoid> const Input{ make_shared<EvtVoid>() };
+      shared_ptr<EvtVoid> const   NEXT{ make_shared<EvtVoid>() };
+      shared_ptr<EvtVoid> const   Input{ make_shared<EvtVoid>() };
       shared_ptr<EvtStepMs> const Step{ make_shared<EvtStepMs>() };
-      shared_ptr<EvtVoid> const Output{ make_shared<EvtVoid>() };
+      shared_ptr<EvtVoid> const   Output{ make_shared<EvtVoid>() };
 
       CycleID     GetCycle();
       void        MainLoop();

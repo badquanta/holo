@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(SdlGlLightingMaps) {
   auto        lightingShader{ GlSlProgram::Build("4.2.lighting_maps") };
   auto        lightCubeShader{ GlSlProgram::Build("4.2.light_cube") };
   auto        cubeVAO{ GlVertexArray::Create() };
-  auto        cubeVertBuffer{ GlBufferFloatDraw::Create(cubeVertNormTexts) };
+  auto        cubeVertBuffer{ GlArrayBuffer::Create(cubeVertNormTexts) };
   cubeVertBuffer->Bind();
   cubeVAO->Bind();
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(SdlGlDirectionalLight) {
                                     glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f) };
 
   auto cubeVAO{ GlVertexArray::Create() };
-  auto VBO{ GlBufferFloatDraw::Create(cubeVertNormTexts) };
+  auto VBO{ GlArrayBuffer::Create(cubeVertNormTexts) };
   cubeVAO->Bind();
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);

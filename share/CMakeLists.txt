@@ -12,6 +12,6 @@ file(GLOB_RECURSE MTL_TEXMET RELATIVE "${PROJECT_SOURCE_DIR}/share"  "*.mtl")
 
 
 foreach(resource IN LISTS FONT_FILES FRAG_SHADERS VERT_SHADERS JPG_IMAGES MTL_TEXMET PNG_IMAGES OBJ_MODELS)
-message("ADD RESOURCE share/${resource}")
+message("HOLO FILE 'share/${resource}'")
 configure_file(${resource} ${resource} COPYONLY)
 endforeach()

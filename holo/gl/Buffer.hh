@@ -19,39 +19,51 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 #include <holo/gl/base.hh>
 namespace holo {
-  template<GLenum BufferType, typename DataType, GLenum DataUsage>
+  /**
+   * Array of memory allocated by the OpenGL context.
+   * \see https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object
+   * \see https://www.khronos.org/opengl/wiki/Buffer_Object
+  */
+  template<GLenum TARGET, typename ELEMENT_TYPE, GLenum USAGE>
   class GlBuffer {
     public:
-      using sPtr = std::shared_ptr<GlBuffer>;
+      /** \todo Remove, stop using `sPtr` */
+      using sPtr = std::shared_ptr<GlBuffer<TARGET, ELEMENT_TYPE, USAGE>>;
+      /** Create a shared buffer without any data set. */
       static sPtr Create() {
         GLuint id;
         glGenBuffers(1, &id);
         return sPtr{ new GlBuffer(id) };
       };
-      static sPtr Create(const std::vector<DataType>& data) {
+      /** Create a shared buffer using data from a vector. */
+      static sPtr Create(const std::vector<ELEMENT_TYPE>& data) {
         sPtr created{ Create() };
         created->Data(data);
         return created;
       };
 
     private:
+      /** Inaccessible, utilize `Create` to initialize new buffer wrapper. */
       explicit GlBuffer(GLuint id)
         : ID{ id }
-        , Kind{ BufferType }
-        , Usage{ DataUsage } {};
+        , Target{ TARGET }
+        , Usage{ USAGE } {};
+      /** The ID/name of the OpenGL buffer*/
       GLuint const ID;
-      GLenum const Kind;
+      /** */
+      GLenum const Target;
       GLenum const Usage;
 
     public:
       ~GlBuffer() { glDeleteBuffers(1, &ID); };
-      void Bind() { glBindBuffer(Kind, ID); };
-      void Data(const std::vector<DataType>& data) { Data(data.size(), data.data()); }
-      void Data(int length, const DataType data[]) {
+      void Bind() { glBindBuffer(Target, ID); };
+      void Data(const std::vector<ELEMENT_TYPE>& data) { Data(data.size(), data.data()); }
+      void Data(int length, const ELEMENT_TYPE data[]) {
         Bind();
-        glBufferData(Kind, length * sizeof(DataType), data, Usage);
+        glBufferData(Target, length * sizeof(ELEMENT_TYPE), data, Usage);
       };
   };
-  using GlBufferFloatDraw = GlBuffer<GL_ARRAY_BUFFER, float, GL_STATIC_DRAW>;
-  using GlBufferElements = GlBuffer<GL_ELEMENT_ARRAY_BUFFER, unsigned int, GL_STATIC_DRAW>;
+  using GlArrayBuffer = GlBuffer<GL_ARRAY_BUFFER, float, GL_STATIC_DRAW>;
+  using GlElementArrayBuffer = GlBuffer<GL_ELEMENT_ARRAY_BUFFER, unsigned int, GL_STATIC_DRAW>;
+
 }

@@ -3,5 +3,5 @@
 #include <GL/glew.h>
 
 namespace holo {
-  /** \todo possibly remove this. */
+  /** \todo `base.hh` just links glew & stdPrimitives.. possibly remove this. */
 }

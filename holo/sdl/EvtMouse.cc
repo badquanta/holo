@@ -24,7 +24,7 @@ namespace holo {
       {SDL_MOUSEBUTTONDOWN,   Up},
       {  SDL_MOUSEBUTTONUP, Down}
     };
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
   /** return or construct and return a handler for a buttonID*/
   shared_ptr<SdlEvtMouseButton> SdlEvtMouseButtonList::Get(Uint8 buttonID) {
@@ -55,7 +55,7 @@ namespace holo {
       {  SDL_MOUSEBUTTONUP, Button},
       {     SDL_MOUSEWHEEL,  Wheel}
     };
-    BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
+    //BOOST_LOG_TRIVIAL(trace) << __PRETTY_FUNCTION__;
   }
 
   /** SdlEvtMouseList*/

@@ -24,8 +24,7 @@ namespace holo {
 
   vector<string> ShareFiles::SearchAbsolutes{
     __program_location_path.parent_path().parent_path().string(),
-    __program_location_path.parent_path().string()
-  };
+    __program_location_path.parent_path().string()  };
   map<string, string> ShareFiles::Found{};
 
   string ShareFiles::Find(
@@ -84,16 +83,16 @@ namespace holo {
           }
         }
       }
-      stringstream vstr;
-      for (const string& variation : absoluteVariations) {
-        vstr << endl << "path: '" << variation << "'";
-      }
-      BOOST_LOG_TRIVIAL(debug) << "holo::ShareFiles(...)"
-                               << " searching paths:" << endl
-                               << vstr.str();
+      //stringstream vstr;
+      //for (const string& variation : absoluteVariations) {
+      //  vstr << endl << "path: '" << variation << "'";
+      //}
+      //BOOST_LOG_TRIVIAL(debug) << "holo::ShareFiles(...)"
+      //                         << " searching paths:" << endl
+      //                         << vstr.str();
       for (const string& variation : absoluteVariations) {
         if (filesystem::exists(variation)) {
-          BOOST_LOG_TRIVIAL(info) << __PRETTY_FUNCTION__ << " found: '" << path << "' at '"
+          BOOST_LOG_TRIVIAL(info) << " found: '" << path << "' at '"
                                   << variation << "'";
           return Found[path] = variation;
         }

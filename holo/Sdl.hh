@@ -22,5 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * \details TODO: details.
  * \example test/OnlySdl.cc
 */
+#include <holo/Holo.hh>
 #include <holo/sdl/Window.hh>
 
