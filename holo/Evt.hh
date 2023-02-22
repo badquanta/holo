@@ -44,7 +44,8 @@ namespace holo {
     public:
       /** \brief Register a callback to be used when `Trigger` is called.
        * \param handler Callback to add.
-       * \return integer id value, for use if `handler` needs to be later removed.
+       * \return integer id value, for use if `handler` needs to be later
+       * removed.
        */
       virtual CallbackID On(CallbackFunction handler) {
         CallbackID id  = NextEvtID();
@@ -72,16 +73,19 @@ namespace holo {
         }
       }
 
-      /** \brief Call all registered handlers passing all parameters that were provided.
-       * \note Once callbacks are not triggered via const calls.
+      /** \brief Call all registered handlers passing all parameters that were
+       * provided. \note Once callbacks are not triggered via const calls.
        */
       virtual void Trigger(Types... eventData) {
         TriggerMap(registered, eventData...);
         TriggerMap(registeredOnce, eventData...);
         registeredOnce.clear();
       }
-      /** \brief Simply an alias for `Trigger`, making the class usable as a `Handler` */
-      void operator()(Types... eventData) { return this->Trigger(eventData...); }
+      /** \brief Simply an alias for `Trigger`, making the class usable as a
+       * `Handler` */
+      void operator()(Types... eventData) {
+        return this->Trigger(eventData...);
+      }
 
     protected:
   };
@@ -116,24 +120,30 @@ namespace holo {
   };
   /** Provide a framework for switching on simple types.
    * \note Must provide override of `ExtractSwitch`.
-   * \details SwitchType is used as key to map of `AbstractDispatch<Types...>` handlers,
-   * on `Trigger(Types...)` use provided `ExtractSwitch` to distill the complex event into a value
-   * used to look up handler. If defined dispatch. Always dispatches local handlers.
+   * \details SwitchType is used as key to map of `AbstractDispatch<Types...>`
+   * handlers, on `Trigger(Types...)` use provided `ExtractSwitch` to distill
+   * the complex event into a value used to look up handler. If defined
+   * dispatch. Always dispatches local handlers.
    */
   template<typename SwitchType, typename TypeName, typename... MoreTypes>
   class EvtAbstractTypeSwitch : public EvtAbstractType<TypeName, MoreTypes...> {
     public:
       /** \deprecated **/
-      using sPtr = std::shared_ptr<EvtAbstractTypeSwitch<SwitchType, TypeName, MoreTypes...>>;
+      using sPtr = std::shared_ptr<
+        EvtAbstractTypeSwitch<SwitchType, TypeName, MoreTypes...>>;
       using SwitchTypeExtractor = function<SwitchType(TypeName, MoreTypes...)>;
       SwitchTypeExtractor ExtractSwitch;
-      /** \todo give this a better name. */
-      using SpecialHandlers_t =
-        std::map<SwitchType, std::shared_ptr<EvtAbstract<TypeName, MoreTypes...>>>;
-      /** \todo give this a better name. */
-      SpecialHandlers_t   SpecialHandlers;
 
-      EvtAbstractTypeSwitch(SwitchTypeExtractor extractor, const SpecialHandlers_t& h = {})
+/* @todo give this a better name. */
+      using SpecialHandlers_t = std::map<
+        SwitchType, std::shared_ptr<EvtAbstract<TypeName, MoreTypes...>>>;
+      /*
+\\\ @todo give this a better name. */
+      SpecialHandlers_t SpecialHandlers;
+
+      EvtAbstractTypeSwitch(
+        SwitchTypeExtractor extractor, const SpecialHandlers_t& h = {}
+      )
         : ExtractSwitch{ extractor }
         , SpecialHandlers{ h } {}
       virtual void Trigger(TypeName data, MoreTypes... eventData) {

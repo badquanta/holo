@@ -63,5 +63,8 @@ function(HoloDemo arg)
   message("HOLO DEMO ${arg}")
 endfunction()
 HoloDemo(holo-deck)
+HoloDemo(holo-ed)
 HoloDemo(holo-view)
+target_include_directories(holo-ed PUBLIC ${GTKMM_INCLUDE_DIRS})
+target_link_libraries(holo-ed ${GTKMM_LIBRARIES})
 

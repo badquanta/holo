@@ -1,6 +1,7 @@
 #include <holo/gl/Errors.hh>
 #include <holo/boostPrimitives.hh>
 namespace holo {
+  /** Simply calls `glGetError` and if not GL_NO_ERROR it throws a runtime error with the error name.*/
   void GlNoErrors(string loc) {
     GLenum errStatus{ glGetError() };
     if (!errStatus == GL_NO_ERROR) {

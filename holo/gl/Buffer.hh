@@ -23,6 +23,7 @@ namespace holo {
    * Array of memory allocated by the OpenGL context.
    * \see https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object
    * \see https://www.khronos.org/opengl/wiki/Buffer_Object
+   * \ingroup gl
   */
   template<GLenum TARGET, typename ELEMENT_TYPE, GLenum USAGE>
   class GlBuffer {
@@ -36,7 +37,7 @@ namespace holo {
         return sPtr{ new GlBuffer(id) };
       };
       /** Create a shared buffer using data from a vector. */
-      static sPtr Create(const std::vector<ELEMENT_TYPE>& data) {
+      static sPtr Create(const vector<ELEMENT_TYPE>& data) {
         sPtr created{ Create() };
         created->Data(data);
         return created;
@@ -50,20 +51,26 @@ namespace holo {
         , Usage{ USAGE } {};
       /** The ID/name of the OpenGL buffer*/
       GLuint const ID;
-      /** */
+      /** \todo document what this does...*/
       GLenum const Target;
+      /** \todo document what this does...*/
       GLenum const Usage;
 
     public:
+      /** ensure `glDeleteBuffers` is called. */
       ~GlBuffer() { glDeleteBuffers(1, &ID); };
+      /** Bind this buffer to `Target` */
       void Bind() { glBindBuffer(Target, ID); };
-      void Data(const std::vector<ELEMENT_TYPE>& data) { Data(data.size(), data.data()); }
+      /** Set the contents of the buffer from vector of element types. **/
+      void Data(const vector<ELEMENT_TYPE>& data) { Data(data.size(), data.data()); }
+      /** Set the contents of the buffer. */
       void Data(int length, const ELEMENT_TYPE data[]) {
         Bind();
         glBufferData(Target, length * sizeof(ELEMENT_TYPE), data, Usage);
       };
   };
+  /** OpenGL buffer with `GL_ARRAY_BUFFER` as `Target` and `GL_STATIC_DRAW` as `Usage`.  \ingroup gl */
   using GlArrayBuffer = GlBuffer<GL_ARRAY_BUFFER, float, GL_STATIC_DRAW>;
+  /** OpenGL buffer with `GL_ELEMENT_ARRAY_BUFFER` as `Target` and `GL_STATIC_DRAW` as `Usage`.  \ingroup gl */
   using GlElementArrayBuffer = GlBuffer<GL_ELEMENT_ARRAY_BUFFER, unsigned int, GL_STATIC_DRAW>;
-
 }

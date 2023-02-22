@@ -5,11 +5,15 @@
 #include <holo/gl/Texture.hh>
 #include <holo/gl/VertexArray.hh>
 namespace holo {
+  /** Implemented with model-view example:
+   * \todo Review, possibly refactor depending on what we need to support various models.
+  */
   struct GlVertexInfluences {
       /** \todo should this be uint32_t? */
       int32_t m_BoneID;
       float   m_Weight;
   };
+  // /** Structure of Vertices expected by `GlMesh` */
   struct GlVertex {
       vec3  Position;
       vec3  Normal;
@@ -19,7 +23,11 @@ namespace holo {
       int   m_BoneIDs[HOLO_MAX_BONE_INFLUENCE];
       float m_Weights[HOLO_MAX_BONE_INFLUENCE];
   };
+  /** Type of buffer `GlMesh` uses..*/
   using GlVertexBuffer = GlBuffer<GL_ARRAY_BUFFER, GlVertex, GL_STATIC_DRAW>;
+  /** Implemented from LearnOpenGL.com's example.
+   * \todo Refactor to split SDL and OpenGL dependencies
+  */
   class GlMesh {
     public:
       vector<GlVertex>              vertices;

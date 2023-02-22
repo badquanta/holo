@@ -33,6 +33,7 @@ Many thanks, and credit, go to [learnopengl.com][learnOpenGl], much early framew
 #### Models
 
 * [crate-5 by Kutejnikof on opengameart.org](https://opengameart.org/content/crate-5)
+* [survival-guitar-backpack on sketchfab.com3d by Berk Gedik](https://sketchfab.com/3d-models/survival-guitar-backpack-799f8c4511f84fab8c3f12887f7e6b36)
 
 ## Sub Projects
 
@@ -132,6 +133,7 @@ Various external references used in building.
 [libSDL2pp]:https://github.com/libSDL2pp/libSDL2pp
 [libSDL2pp_API]:https://sdl2pp.amdmi3.ru/
 [libSDL2_API]:https://wiki.libsdl.org/SDL2/CategoryAPI
+[assimp]:https://github.com/assimp/assimp
 
 * [glm][glm]
 * SDL2
@@ -141,17 +143,22 @@ Various external references used in building.
   * [libSDL 2.0 API][libSDL2_API]
 * OpenGL
   * [opengl api](https://registry.khronos.org/OpenGL-Refpages/gl4/html/index.php)
+  * [opengl wiki](https://www.khronos.org/opengl/wiki/)
 * [boost/][boost]
-
   * [log/trivial][boost_log_trivial]
+  * [program options](https://www.boost.org/doc/libs/1_81_0/doc/html/program_options.html)
 * c++ & std libs
   * [cppreference.com](https://en.cppreference.com/w/cpp)
   * [cplusplus.com](https://cplusplus.com/)
   * [std::chrono](https://cplusplus.com/reference/chrono/)
+* [assimp][assimp] the asset import library.
 * glsl
-  * __TODO__ link to some glsl guidance.
-
+  * [learnOpenGl.com][learnOpenGl]
 * [cmake](https://cmake.org/cmake/help/v3.24/manual/cmake-commands.7.html)
+* gtk
+  * [gtkmm3.24 tutorial](https://developer-old.gnome.org/gtkmm-tutorial/3.24/index.html)
+  * [Glade & Gtk::Builder](https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/chapter-builder.html)
+
 
 ## Build setup
 

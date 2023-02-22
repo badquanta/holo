@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace holo {
   /** \brief Basic SDL_Event dispatcher.
    * \ingroup sdl
-   * \todo unit test
+  /// @todo unit test
    */
   class SdlEvt : public EvtAbstractType<SDL_Event&> {
     public:
-      /** \deprecate \todo remove */
+      /** \deprecate \TODO remove */
       using sPtr = shared_ptr<SdlEvt>;
       /** Creates a function that outputs events to a ostream */
       static function<void(SDL_Event&)> PrintTo(std::ostream&);

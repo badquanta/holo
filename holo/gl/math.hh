@@ -1,7 +1,7 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+/** \todo Perhaps this should be moved to holo::core instead. */
 namespace holo {
   using glm::vec4;
   using glm::vec3;

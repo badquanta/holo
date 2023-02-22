@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OpenGL_GL_PREFERENCE GLVND)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTKMM gtkmm-3.0)
 find_package(OpenGL REQUIRED)
 find_package(GLU REQUIRED)
 find_package(GLEW REQUIRED)
